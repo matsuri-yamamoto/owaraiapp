@@ -7,15 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		506972D7748EC2B1D1651563 /* Pods_owaraimemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 013C498947B8F64B7B6FED63 /* Pods_owaraimemo.framework */; };
 		6381D13127E7319A005BDBE2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6381D13027E7319A005BDBE2 /* AppDelegate.swift */; };
 		6381D13327E7319A005BDBE2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6381D13227E7319A005BDBE2 /* SceneDelegate.swift */; };
 		6381D13527E7319A005BDBE2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6381D13427E7319A005BDBE2 /* ViewController.swift */; };
 		6381D13827E7319A005BDBE2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6381D13627E7319A005BDBE2 /* Main.storyboard */; };
 		6381D13A27E7319D005BDBE2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6381D13927E7319D005BDBE2 /* Assets.xcassets */; };
 		6381D13D27E7319D005BDBE2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6381D13B27E7319D005BDBE2 /* LaunchScreen.storyboard */; };
+		63D7E54327E9942D00E99C75 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7E54227E9942D00E99C75 /* SearchViewController.swift */; };
+		63D7E54527E9947300E99C75 /* MyReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7E54427E9947300E99C75 /* MyReviewViewController.swift */; };
+		63D7E54727E9949200E99C75 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7E54627E9949200E99C75 /* ReviewViewController.swift */; };
+		63D7E54927E9C4DB00E99C75 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7E54827E9C4DB00E99C75 /* LoginViewController.swift */; };
+		63D7E54B27E9CE0100E99C75 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7E54A27E9CE0100E99C75 /* TabBarController.swift */; };
+		63D7E54D27EB1CBA00E99C75 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 63D7E54C27EB1CBA00E99C75 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		013C498947B8F64B7B6FED63 /* Pods_owaraimemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_owaraimemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6381D12D27E7319A005BDBE2 /* owaraimemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = owaraimemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6381D13027E7319A005BDBE2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6381D13227E7319A005BDBE2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -24,6 +32,14 @@
 		6381D13927E7319D005BDBE2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6381D13C27E7319D005BDBE2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6381D13E27E7319D005BDBE2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		63D7E54227E9942D00E99C75 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		63D7E54427E9947300E99C75 /* MyReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReviewViewController.swift; sourceTree = "<group>"; };
+		63D7E54627E9949200E99C75 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
+		63D7E54827E9C4DB00E99C75 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		63D7E54A27E9CE0100E99C75 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		63D7E54C27EB1CBA00E99C75 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7812F7A987490B3A5CD2091A /* Pods-owaraimemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-owaraimemo.debug.xcconfig"; path = "Target Support Files/Pods-owaraimemo/Pods-owaraimemo.debug.xcconfig"; sourceTree = "<group>"; };
+		91BD7D492DEC08C24EC8D8EC /* Pods-owaraimemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-owaraimemo.release.xcconfig"; path = "Target Support Files/Pods-owaraimemo/Pods-owaraimemo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +47,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				506972D7748EC2B1D1651563 /* Pods_owaraimemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5C389A654E79E1BD6CF35195 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7812F7A987490B3A5CD2091A /* Pods-owaraimemo.debug.xcconfig */,
+				91BD7D492DEC08C24EC8D8EC /* Pods-owaraimemo.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		6381D12427E7319A005BDBE2 = {
 			isa = PBXGroup;
 			children = (
 				6381D12F27E7319A005BDBE2 /* owaraimemo */,
 				6381D12E27E7319A005BDBE2 /* Products */,
+				5C389A654E79E1BD6CF35195 /* Pods */,
+				676D7043B340FDF9A582A809 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -59,12 +88,26 @@
 				6381D13027E7319A005BDBE2 /* AppDelegate.swift */,
 				6381D13227E7319A005BDBE2 /* SceneDelegate.swift */,
 				6381D13427E7319A005BDBE2 /* ViewController.swift */,
+				63D7E54827E9C4DB00E99C75 /* LoginViewController.swift */,
+				63D7E54227E9942D00E99C75 /* SearchViewController.swift */,
+				63D7E54427E9947300E99C75 /* MyReviewViewController.swift */,
+				63D7E54627E9949200E99C75 /* ReviewViewController.swift */,
+				63D7E54A27E9CE0100E99C75 /* TabBarController.swift */,
 				6381D13627E7319A005BDBE2 /* Main.storyboard */,
 				6381D13927E7319D005BDBE2 /* Assets.xcassets */,
 				6381D13B27E7319D005BDBE2 /* LaunchScreen.storyboard */,
 				6381D13E27E7319D005BDBE2 /* Info.plist */,
+				63D7E54C27EB1CBA00E99C75 /* GoogleService-Info.plist */,
 			);
 			path = owaraimemo;
+			sourceTree = "<group>";
+		};
+		676D7043B340FDF9A582A809 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				013C498947B8F64B7B6FED63 /* Pods_owaraimemo.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,9 +117,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6381D14127E7319D005BDBE2 /* Build configuration list for PBXNativeTarget "owaraimemo" */;
 			buildPhases = (
+				EAFB05954BB74871C5FA9A8C /* [CP] Check Pods Manifest.lock */,
 				6381D12927E7319A005BDBE2 /* Sources */,
 				6381D12A27E7319A005BDBE2 /* Frameworks */,
 				6381D12B27E7319A005BDBE2 /* Resources */,
+				C05FFB6BEAD934FB0AB4CA60 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -127,18 +172,66 @@
 				6381D13D27E7319D005BDBE2 /* LaunchScreen.storyboard in Resources */,
 				6381D13A27E7319D005BDBE2 /* Assets.xcassets in Resources */,
 				6381D13827E7319A005BDBE2 /* Main.storyboard in Resources */,
+				63D7E54D27EB1CBA00E99C75 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C05FFB6BEAD934FB0AB4CA60 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-owaraimemo/Pods-owaraimemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-owaraimemo/Pods-owaraimemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-owaraimemo/Pods-owaraimemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EAFB05954BB74871C5FA9A8C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-owaraimemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6381D12927E7319A005BDBE2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63D7E54927E9C4DB00E99C75 /* LoginViewController.swift in Sources */,
+				63D7E54B27E9CE0100E99C75 /* TabBarController.swift in Sources */,
 				6381D13527E7319A005BDBE2 /* ViewController.swift in Sources */,
 				6381D13127E7319A005BDBE2 /* AppDelegate.swift in Sources */,
+				63D7E54727E9949200E99C75 /* ReviewViewController.swift in Sources */,
+				63D7E54527E9947300E99C75 /* MyReviewViewController.swift in Sources */,
+				63D7E54327E9942D00E99C75 /* SearchViewController.swift in Sources */,
 				6381D13327E7319A005BDBE2 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -283,12 +376,14 @@
 		};
 		6381D14227E7319D005BDBE2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7812F7A987490B3A5CD2091A /* Pods-owaraimemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LSQ9SX3LQZ;
 				INFOPLIST_FILE = owaraimemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -296,18 +391,20 @@
 				PRODUCT_BUNDLE_IDENTIFIER = jp.owaraiapp.rino.yamamoto.owaraimemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		6381D14327E7319D005BDBE2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 91BD7D492DEC08C24EC8D8EC /* Pods-owaraimemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LSQ9SX3LQZ;
 				INFOPLIST_FILE = owaraimemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -315,7 +412,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = jp.owaraiapp.rino.yamamoto.owaraimemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
