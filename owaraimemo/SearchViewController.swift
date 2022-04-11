@@ -83,7 +83,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         performSegue(withIdentifier: "cellSegue",sender: selectedComedianCell)
 //        tableView.deselectRow(at: indexPath, animated: true)
         
-    
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

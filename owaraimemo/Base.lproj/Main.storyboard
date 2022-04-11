@@ -113,13 +113,10 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="jFw-oV-KAe"/>
-                    <connections>
-                        <segue destination="hz3-6v-pfg" kind="show" identifier="startSegue" id="90D-IY-Qbt"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3pV-Kg-O0B" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3644" y="-28.078817733990149"/>
+            <point key="canvasLocation" x="3252" y="753"/>
         </scene>
         <!--Review View Controller-->
         <scene sceneID="JMa-EN-kmC">
@@ -146,6 +143,9 @@
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="5" translatesAutoresizingMaskIntoConstraints="NO" id="nSC-Hu-0qU">
                                 <rect key="frame" x="88" y="183" width="261" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="sliderValue:" destination="8V6-f2-HvG" eventType="valueChanged" id="Z7e-bt-JJL"/>
+                                </connections>
                             </slider>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="とてもおもしろかったです！" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="M9d-qB-e3A">
                                 <rect key="frame" x="0.0" y="301" width="375" height="260"/>
@@ -185,8 +185,8 @@
                     <navigationItem key="navigationItem" id="EO5-ed-Bsf"/>
                     <connections>
                         <outlet property="label" destination="MVJ-5R-pa5" id="gkd-L9-lko"/>
-                        <outlet property="slider" destination="nSC-Hu-0qU" id="sU0-gd-yMH"/>
-                        <outlet property="sliderValue" destination="1PM-1G-xAd" id="lN1-U9-wvp"/>
+                        <outlet property="slider" destination="nSC-Hu-0qU" id="coE-D9-Uxu"/>
+                        <outlet property="sliderLabel" destination="1PM-1G-xAd" id="evu-Gu-ZQe"/>
                         <outlet property="textView" destination="M9d-qB-e3A" id="Xh9-Yl-7jb"/>
                     </connections>
                 </viewController>
@@ -257,7 +257,7 @@
             <objects>
                 <viewController storyboardIdentifier="Start" id="hz3-6v-pfg" customClass="StartViewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MWE-wQ-9pO">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J6U-Nf-K28">
@@ -486,7 +486,6 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="ewM-gi-V8z"/>
-        <segue reference="90D-IY-Qbt"/>
         <segue reference="YKy-q5-s1g"/>
     </inferredMetricsTieBreakers>
     <resources>

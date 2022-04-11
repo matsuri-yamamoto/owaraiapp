@@ -56,5 +56,4 @@ class CreateNewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
 }

@@ -36,5 +36,4 @@ class ReviewData: NSObject {
         deleteDateTime = reviewDic["delete_datetime"] as? Timestamp
 
     }
-    
 }

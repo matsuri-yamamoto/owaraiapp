@@ -36,9 +36,7 @@ class LoginVIewController: UIViewController {
             
             }
             
-            
         }
-        
         
     }
     

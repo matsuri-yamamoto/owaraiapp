@@ -17,5 +17,4 @@ class ComedianData: NSObject {
         self.id = document.documentID
         self.comedianName = comedianDic["comedian_name"] as? String
     }
-    
 }

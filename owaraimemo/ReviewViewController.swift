@@ -12,11 +12,15 @@ import Firebase
 class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDelegate {
     
     @IBOutlet weak var label: UILabel!
-    @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var slider: UISlider!
+    @IBOutlet weak var sliderLabel: UILabel!
     
-    @IBOutlet weak var sliderValue: UILabel!
-    
+    @IBAction func sliderValue(_ sender: Any) {
+            sliderLabel.text = String(slider.value)
+            
+    }
+        
     var comedianData: ComedianData!
     
     override func viewDidLoad() {
@@ -24,25 +28,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
         
         label.text = comedianData.comedianName
         
-        //sliderの数値をラベルに反映させる
-//        let initialValue: Float? = nil
-//        slider.value = initialValue!
-        
-        sliderValue = UILabel()
-
-//        sliderValue.text = String(initialValue)
-        //↑エラー出る(Unexpectedly found nil while implicitly unwrapping an Optional value nilじゃない)
-        
-//        slider.addTarget(self, action: #selector(sliderDidChangeValue(_:)), for: .valueChanged)
-        
-        
-        
     }
-    
-//    @objc func sliderDidChangeValue(_ sender: UISlider) {
-//        let value = sender.value
-//        sliderValue.text = String(value)
-//    }
     
     
     @IBAction func saveButton(_ sender: Any) {

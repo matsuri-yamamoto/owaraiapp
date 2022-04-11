@@ -35,7 +35,6 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
 
     }
     
-        
     
     // データの数（＝セルの数）を返すメソッド
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
