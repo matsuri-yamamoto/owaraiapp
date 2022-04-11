@@ -3,17 +3,24 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		506972D7748EC2B1D1651563 /* Pods_owaraimemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 013C498947B8F64B7B6FED63 /* Pods_owaraimemo.framework */; };
+		632F88D127F3054B00350624 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D027F3054B00350624 /* SettingViewController.swift */; };
+		632F88D327FA8A7900350624 /* ComedianData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D227FA8A7900350624 /* ComedianData.swift */; };
+		632F88D627FABF9500350624 /* ComedianTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D427FABF9500350624 /* ComedianTableViewCell.swift */; };
+		632F88D727FABF9500350624 /* ComedianTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 632F88D527FABF9500350624 /* ComedianTableViewCell.xib */; };
+		632F88D927FAE64700350624 /* ReviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D827FAE64700350624 /* ReviewData.swift */; };
 		6381D13127E7319A005BDBE2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6381D13027E7319A005BDBE2 /* AppDelegate.swift */; };
 		6381D13327E7319A005BDBE2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6381D13227E7319A005BDBE2 /* SceneDelegate.swift */; };
 		6381D13527E7319A005BDBE2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6381D13427E7319A005BDBE2 /* ViewController.swift */; };
 		6381D13827E7319A005BDBE2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6381D13627E7319A005BDBE2 /* Main.storyboard */; };
 		6381D13A27E7319D005BDBE2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6381D13927E7319D005BDBE2 /* Assets.xcassets */; };
 		6381D13D27E7319D005BDBE2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6381D13B27E7319D005BDBE2 /* LaunchScreen.storyboard */; };
+		638CD1EB27F29812002DCEFC /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638CD1EA27F29812002DCEFC /* StartViewController.swift */; };
+		638CD1ED27F2987B002DCEFC /* CreateNewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638CD1EC27F2987B002DCEFC /* CreateNewViewController.swift */; };
 		63D7E54327E9942D00E99C75 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7E54227E9942D00E99C75 /* SearchViewController.swift */; };
 		63D7E54527E9947300E99C75 /* MyReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7E54427E9947300E99C75 /* MyReviewViewController.swift */; };
 		63D7E54727E9949200E99C75 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7E54627E9949200E99C75 /* ReviewViewController.swift */; };
@@ -24,6 +31,11 @@
 
 /* Begin PBXFileReference section */
 		013C498947B8F64B7B6FED63 /* Pods_owaraimemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_owaraimemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		632F88D027F3054B00350624 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		632F88D227FA8A7900350624 /* ComedianData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianData.swift; sourceTree = "<group>"; };
+		632F88D427FABF9500350624 /* ComedianTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianTableViewCell.swift; sourceTree = "<group>"; };
+		632F88D527FABF9500350624 /* ComedianTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ComedianTableViewCell.xib; sourceTree = "<group>"; };
+		632F88D827FAE64700350624 /* ReviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewData.swift; sourceTree = "<group>"; };
 		6381D12D27E7319A005BDBE2 /* owaraimemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = owaraimemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6381D13027E7319A005BDBE2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6381D13227E7319A005BDBE2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -32,6 +44,8 @@
 		6381D13927E7319D005BDBE2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6381D13C27E7319D005BDBE2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6381D13E27E7319D005BDBE2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		638CD1EA27F29812002DCEFC /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
+		638CD1EC27F2987B002DCEFC /* CreateNewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewViewController.swift; sourceTree = "<group>"; };
 		63D7E54227E9942D00E99C75 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		63D7E54427E9947300E99C75 /* MyReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReviewViewController.swift; sourceTree = "<group>"; };
 		63D7E54627E9949200E99C75 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
@@ -60,7 +74,6 @@
 				7812F7A987490B3A5CD2091A /* Pods-owaraimemo.debug.xcconfig */,
 				91BD7D492DEC08C24EC8D8EC /* Pods-owaraimemo.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -87,12 +100,19 @@
 			children = (
 				6381D13027E7319A005BDBE2 /* AppDelegate.swift */,
 				6381D13227E7319A005BDBE2 /* SceneDelegate.swift */,
+				638CD1EA27F29812002DCEFC /* StartViewController.swift */,
 				6381D13427E7319A005BDBE2 /* ViewController.swift */,
+				638CD1EC27F2987B002DCEFC /* CreateNewViewController.swift */,
 				63D7E54827E9C4DB00E99C75 /* LoginViewController.swift */,
 				63D7E54227E9942D00E99C75 /* SearchViewController.swift */,
 				63D7E54427E9947300E99C75 /* MyReviewViewController.swift */,
 				63D7E54627E9949200E99C75 /* ReviewViewController.swift */,
+				632F88D027F3054B00350624 /* SettingViewController.swift */,
 				63D7E54A27E9CE0100E99C75 /* TabBarController.swift */,
+				632F88D227FA8A7900350624 /* ComedianData.swift */,
+				632F88D827FAE64700350624 /* ReviewData.swift */,
+				632F88D427FABF9500350624 /* ComedianTableViewCell.swift */,
+				632F88D527FABF9500350624 /* ComedianTableViewCell.xib */,
 				6381D13627E7319A005BDBE2 /* Main.storyboard */,
 				6381D13927E7319D005BDBE2 /* Assets.xcassets */,
 				6381D13B27E7319D005BDBE2 /* LaunchScreen.storyboard */,
@@ -170,6 +190,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6381D13D27E7319D005BDBE2 /* LaunchScreen.storyboard in Resources */,
+				632F88D727FABF9500350624 /* ComedianTableViewCell.xib in Resources */,
 				6381D13A27E7319D005BDBE2 /* Assets.xcassets in Resources */,
 				6381D13827E7319A005BDBE2 /* Main.storyboard in Resources */,
 				63D7E54D27EB1CBA00E99C75 /* GoogleService-Info.plist in Resources */,
@@ -226,13 +247,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				63D7E54927E9C4DB00E99C75 /* LoginViewController.swift in Sources */,
+				632F88D127F3054B00350624 /* SettingViewController.swift in Sources */,
 				63D7E54B27E9CE0100E99C75 /* TabBarController.swift in Sources */,
 				6381D13527E7319A005BDBE2 /* ViewController.swift in Sources */,
+				632F88D627FABF9500350624 /* ComedianTableViewCell.swift in Sources */,
+				632F88D927FAE64700350624 /* ReviewData.swift in Sources */,
 				6381D13127E7319A005BDBE2 /* AppDelegate.swift in Sources */,
 				63D7E54727E9949200E99C75 /* ReviewViewController.swift in Sources */,
+				638CD1EB27F29812002DCEFC /* StartViewController.swift in Sources */,
+				632F88D327FA8A7900350624 /* ComedianData.swift in Sources */,
 				63D7E54527E9947300E99C75 /* MyReviewViewController.swift in Sources */,
 				63D7E54327E9942D00E99C75 /* SearchViewController.swift in Sources */,
 				6381D13327E7319A005BDBE2 /* SceneDelegate.swift in Sources */,
+				638CD1ED27F2987B002DCEFC /* CreateNewViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
