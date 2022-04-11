@@ -8,6 +8,10 @@ class LoginVIewController: UIViewController {
     @IBOutlet weak var mailAddressTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.navigationBar.isHidden = true
+                
+    }
     
     
     // ログインボタンをタップしたときに呼ばれるメソッド
@@ -26,8 +30,7 @@ class LoginVIewController: UIViewController {
                     return
                 }
                 print("DEBUG_PRINT: ログインに成功しました。")
-                       
-                  
+                        
                 self.performSegue(withIdentifier: "toSearch", sender: nil)
             
             
