@@ -13,7 +13,7 @@
             <objects>
                 <viewController storyboardIdentifier="Search" id="Xmr-Mk-Rbk" customClass="SearchViewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6Zx-pl-SK6">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="HAB-sn-RGO">
@@ -48,7 +48,7 @@
         <!--My Review View Controller-->
         <scene sceneID="iDj-aH-Ntj">
             <objects>
-                <viewController storyboardIdentifier="MyReview" id="keI-lg-nSB" customClass="MyReviewViewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MyReview" modalPresentationStyle="fullScreen" id="keI-lg-nSB" customClass="MyReviewViewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DmQ-Iq-Uu7">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -76,6 +76,7 @@
                     <connections>
                         <outlet property="tableView" destination="zGh-Q8-GTf" id="G7Z-qG-Cfc"/>
                         <segue destination="8V6-f2-HvG" kind="presentation" identifier="cellSegue" id="YKy-q5-s1g"/>
+                        <segue destination="dzq-87-3hp" kind="show" identifier="settingSegue" id="8Ku-wh-MHT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="S4J-kp-TtZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -87,7 +88,7 @@
             <objects>
                 <viewController storyboardIdentifier="Setting" id="dzq-87-3hp" customClass="SettingViewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VZ1-4V-9wb">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZyL-SU-bic">
@@ -112,7 +113,7 @@
                         <viewLayoutGuide key="safeArea" id="0OQ-Hk-eVe"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="jFw-oV-KAe"/>
+                    <navigationItem key="navigationItem" leftItemsSupplementBackButton="YES" id="jFw-oV-KAe"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3pV-Kg-O0B" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -245,7 +246,6 @@
                     <connections>
                         <outlet property="mailAddressTextField" destination="DIo-5V-uNj" id="Lwp-N1-oOf"/>
                         <outlet property="passwordTextField" destination="F18-rF-d3Y" id="bh5-4b-Nut"/>
-                        <segue destination="Rbn-ca-Rog" kind="show" identifier="toSearch" id="ewM-gi-V8z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZtS-Q9-ORs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -290,11 +290,12 @@
                     <connections>
                         <outlet property="createNewButton" destination="c5L-cZ-S46" id="BbH-NR-iP4"/>
                         <outlet property="loginButton" destination="jGU-AD-LHr" id="g3b-sC-0PY"/>
+                        <segue destination="Xmr-Mk-Rbk" kind="show" identifier="searchSegue" id="lgm-aL-B7b"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FbR-pI-U9L" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="761" y="-777"/>
+            <point key="canvasLocation" x="753" y="-831"/>
         </scene>
         <!--Create New View Controller-->
         <scene sceneID="YPy-fu-Zem">
@@ -365,7 +366,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYy-JD-gTe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1790" y="-777"/>
+            <point key="canvasLocation" x="1788" y="-831"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="zl8-Zd-kik">
@@ -420,7 +421,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ndg-FZ-3aN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-142" y="-795"/>
+            <point key="canvasLocation" x="-143" y="-831"/>
         </scene>
         <!--マイページ-->
         <scene sceneID="5eR-eC-OyW">
@@ -481,12 +482,12 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AGc-Dl-5s6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="760.79999999999995" y="-28.078817733990149"/>
+            <point key="canvasLocation" x="798" y="-28"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="ewM-gi-V8z"/>
         <segue reference="YKy-q5-s1g"/>
+        <segue reference="lgm-aL-B7b"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="labelColor">

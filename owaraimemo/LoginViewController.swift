@@ -4,6 +4,9 @@ import UIKit
 import Firebase
 
 class LoginVIewController: UIViewController {
+    
+    //delegateのインスタンス
+    var searchDelegate: SearchDelegate!
 
     @IBOutlet weak var mailAddressTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -30,13 +33,17 @@ class LoginVIewController: UIViewController {
                     return
                 }
                 print("DEBUG_PRINT: ログインに成功しました。")
-                        
-                self.performSegue(withIdentifier: "toSearch", sender: nil)
-            
+                
+                //delegateする
+                self.searchDelegate?.searchDelegate()
+                
+                //モーダルを閉じる
+                self.dismiss(animated: true, completion: nil)
             
             }
             
         }
+        
         
     }
     

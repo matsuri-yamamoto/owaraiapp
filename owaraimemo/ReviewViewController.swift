@@ -45,6 +45,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
         let comedianId = comedianData.id
         let deleteDateTime :String? = nil
         
+        
         //Firestoreにデータを保存
         let reviewDic = [
             "user_id": userId,

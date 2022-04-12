@@ -38,6 +38,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let nib = UINib(nibName: "ComedianTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "Cell")
         
+        navigationController?.navigationItem.leftBarButtonItem?.customView?.isHidden = true
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {

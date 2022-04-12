@@ -12,21 +12,16 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc func settingButtonPressed() {
         
-        //settingViewControllerを取得
-        let settingViewController = self.storyboard?.instantiateViewController(withIdentifier: "Setting") as! SettingViewController
-        let navigationController = UINavigationController(rootViewController: settingViewController)
-        self.navigationController?.modalPresentationStyle = .overCurrentContext
-        navigationController.setNavigationBarHidden(false, animated: true)
-        self.navigationController?.present(navigationController, animated: true, completion: nil)
+        performSegue(withIdentifier: "settingSegue", sender: nil)
+        
     }
     
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+
+    override func viewWillAppear(_ animated: Bool) {
         
         tableView.delegate = self
         tableView.dataSource = self
-        
+
         title = "マイページ"
         
         //ナビゲーションバーのボタン設置

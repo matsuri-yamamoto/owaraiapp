@@ -38,7 +38,7 @@ class CreateNewViewController: UIViewController {
 
                 //createProfileChangeRequestでユーザー名を登録する
                 let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
-                changeRequest?.userName = userName
+                changeRequest?.displayName = userName
                 changeRequest?.commitChanges { error in
                     if let error = error{
                         // エラーがあったら原因をprintして、returnすることで以降の処理を実行せずに処理を終了する
