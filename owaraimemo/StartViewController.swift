@@ -11,7 +11,6 @@ class StartViewController: UIViewController, SearchDelegate {
     
 
     
-    @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var createNewButton: UIButton!
     
     var loginViewController: LoginVIewController!
@@ -21,6 +20,16 @@ class StartViewController: UIViewController, SearchDelegate {
         self.navigationController?.navigationBar.isHidden = true
         loginViewController?.searchDelegate = self
                 
+    }
+    
+    
+    @IBAction func loginButton(_ sender: Any) {
+        
+        let loginVC:LoginVIewController = LoginVIewController()
+        loginVC.searchDelegate = self
+
+        performSegue(withIdentifier: "loginSegue", sender: nil)
+        
     }
     
     

@@ -27,6 +27,8 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         //ナビゲーションバーのボタン設置
         settingButtonItem = UIBarButtonItem(title: "設定", style: .done, target: self, action: #selector(settingButtonPressed))
         self.navigationItem.rightBarButtonItem = settingButtonItem
+        
+        navigationController?.navigationItem.leftBarButtonItem?.customView?.isHidden = true
 
     }
     
