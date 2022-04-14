@@ -38,7 +38,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let nib = UINib(nibName: "ComedianTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "Cell")
         
-        navigationController?.navigationItem.leftBarButtonItem?.customView?.isHidden = true
         
     }
     
@@ -46,6 +45,9 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             super.viewWillAppear(animated)
             // 毎回データ更新してくれるように、viewWillAppearの中に記述する
             comedianDataArray = getData()
+            //ナビゲーションバーの戻るボタンを非表示
+            navigationController?.navigationItem.leftBarButtonItem?.customView?.isHidden = true
+
     }
     
     func getData() -> [ComedianData] {
@@ -83,7 +85,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         //comedian_idをreviewに渡す
         let selectedComedianCell = comedianDataArray[indexPath.row]
         performSegue(withIdentifier: "cellSegue",sender: selectedComedianCell)
-//        tableView.deselectRow(at: indexPath, animated: true)
         
     }
     

@@ -1,6 +1,0 @@
-
-protocol SearchDelegate {
-    
-    func searchDelegate()
-
-}

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		506972D7748EC2B1D1651563 /* Pods_owaraimemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 013C498947B8F64B7B6FED63 /* Pods_owaraimemo.framework */; };
-		6314DD5A280548B800821D74 /* SearchDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6314DD59280548B700821D74 /* SearchDelegate.swift */; };
 		632F88D127F3054B00350624 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D027F3054B00350624 /* SettingViewController.swift */; };
 		632F88D327FA8A7900350624 /* ComedianData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D227FA8A7900350624 /* ComedianData.swift */; };
 		632F88D627FABF9500350624 /* ComedianTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D427FABF9500350624 /* ComedianTableViewCell.swift */; };
@@ -32,7 +31,6 @@
 
 /* Begin PBXFileReference section */
 		013C498947B8F64B7B6FED63 /* Pods_owaraimemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_owaraimemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6314DD59280548B700821D74 /* SearchDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDelegate.swift; sourceTree = "<group>"; };
 		632F88D027F3054B00350624 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		632F88D227FA8A7900350624 /* ComedianData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianData.swift; sourceTree = "<group>"; };
 		632F88D427FABF9500350624 /* ComedianTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianTableViewCell.swift; sourceTree = "<group>"; };
@@ -102,7 +100,6 @@
 			children = (
 				6381D13027E7319A005BDBE2 /* AppDelegate.swift */,
 				6381D13227E7319A005BDBE2 /* SceneDelegate.swift */,
-				6314DD59280548B700821D74 /* SearchDelegate.swift */,
 				638CD1EA27F29812002DCEFC /* StartViewController.swift */,
 				6381D13427E7319A005BDBE2 /* ViewController.swift */,
 				638CD1EC27F2987B002DCEFC /* CreateNewViewController.swift */,
@@ -254,7 +251,6 @@
 				63D7E54B27E9CE0100E99C75 /* TabBarController.swift in Sources */,
 				6381D13527E7319A005BDBE2 /* ViewController.swift in Sources */,
 				632F88D627FABF9500350624 /* ComedianTableViewCell.swift in Sources */,
-				6314DD5A280548B800821D74 /* SearchDelegate.swift in Sources */,
 				632F88D927FAE64700350624 /* ReviewData.swift in Sources */,
 				6381D13127E7319A005BDBE2 /* AppDelegate.swift in Sources */,
 				63D7E54727E9949200E99C75 /* ReviewViewController.swift in Sources */,

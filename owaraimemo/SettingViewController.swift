@@ -21,7 +21,8 @@ class SettingViewController: UIViewController {
     
     @objc func backButtonPressed() {
         self.navigationController?.popViewController(animated: true)
-        
+//        let myReviewVC: MyReviewViewController = MyReviewViewController()
+//        myReviewVC.tabBarController!.tabBar.isHidden = false
     }
 
     

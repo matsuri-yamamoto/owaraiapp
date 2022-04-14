@@ -23,7 +23,7 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
             // ログインしていないときの処理
             let startViewController = self.storyboard?.instantiateViewController(withIdentifier: "Start")
             self.present(startViewController!, animated: true, completion: nil)
-            
+
         }
     }
     

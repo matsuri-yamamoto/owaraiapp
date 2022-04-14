@@ -5,15 +5,12 @@ import Firebase
 
 class LoginVIewController: UIViewController {
     
-    //delegateのインスタンス
-    var searchDelegate: SearchDelegate!
 
     @IBOutlet weak var mailAddressTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.navigationBar.isHidden = true
-                
+        self.navigationController?.navigationBar.isHidden = false
     }
     
     
@@ -33,30 +30,9 @@ class LoginVIewController: UIViewController {
                     return
                 }
                 print("DEBUG_PRINT: ログインに成功しました。")
-                
-                //delegateする
-                self.searchDelegate?.searchDelegate()
-                
-                //モーダルを閉じる
-                self.dismiss(animated: true, completion: nil)
-            
+                self.performSegue(withIdentifier: "searchSegue", sender: nil)
+                            
             }
-            
         }
-        
-        
     }
-    
-    
-    
-    
-
-        
-    
-    
-    
-    
-    
-    
-    
 }

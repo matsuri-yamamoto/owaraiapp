@@ -7,35 +7,17 @@
 
 import UIKit
 
-class StartViewController: UIViewController, SearchDelegate {
+class StartViewController: UIViewController {
     
 
-    
-    @IBOutlet weak var createNewButton: UIButton!
-    
-    var loginViewController: LoginVIewController!
-    
+//    @IBOutlet weak var createNewButton: UIButton!
+        
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.isHidden = true
-        loginViewController?.searchDelegate = self
-                
     }
     
     
-    @IBAction func loginButton(_ sender: Any) {
-        
-        let loginVC:LoginVIewController = LoginVIewController()
-        loginVC.searchDelegate = self
-
-        performSegue(withIdentifier: "loginSegue", sender: nil)
-        
-    }
     
-    
-    func searchDelegate() {
-        performSegue(withIdentifier: "searchSegue", sender: nil)
-        
-    }
     
 }

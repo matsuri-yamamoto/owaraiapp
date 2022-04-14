@@ -14,6 +14,11 @@ class CreateNewViewController: UIViewController {
     @IBOutlet weak var mailAddressTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.navigationBar.isHidden = false
+    }
+    
+    
     // アカウント作成ボタンをタップしたときに呼ばれるメソッド
     @IBAction func handleCreateAccountButton(_ sender: Any) {
         
@@ -46,14 +51,11 @@ class CreateNewViewController: UIViewController {
                         return
                     }
                     print("DEBUG_PRINT: ユーザー名登録に成功しました。")
-                    self.performSegue(withIdentifier: "toSearch", sender: nil)
+                    self.performSegue(withIdentifier: "searchSegue", sender: nil)
 
                 }
                 }
             }
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
 }

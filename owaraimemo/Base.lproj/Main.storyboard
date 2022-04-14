@@ -13,7 +13,7 @@
             <objects>
                 <viewController storyboardIdentifier="Search" id="Xmr-Mk-Rbk" customClass="SearchViewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6Zx-pl-SK6">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="HAB-sn-RGO">
@@ -50,7 +50,7 @@
             <objects>
                 <viewController storyboardIdentifier="MyReview" modalPresentationStyle="fullScreen" id="keI-lg-nSB" customClass="MyReviewViewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DmQ-Iq-Uu7">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="zGh-Q8-GTf">
@@ -88,7 +88,7 @@
             <objects>
                 <viewController storyboardIdentifier="Setting" id="dzq-87-3hp" customClass="SettingViewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VZ1-4V-9wb">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZyL-SU-bic">
@@ -198,9 +198,9 @@
         <!--LoginV Iew Controller-->
         <scene sceneID="ouE-mu-aG0">
             <objects>
-                <viewController storyboardIdentifier="Login" id="OZg-GD-Jgo" customClass="LoginVIewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Login" modalPresentationStyle="fullScreen" id="OZg-GD-Jgo" customClass="LoginVIewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="FRN-sV-9UC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="メールアドレス" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UNh-ba-hfM">
@@ -246,6 +246,7 @@
                     <connections>
                         <outlet property="mailAddressTextField" destination="DIo-5V-uNj" id="Lwp-N1-oOf"/>
                         <outlet property="passwordTextField" destination="F18-rF-d3Y" id="bh5-4b-Nut"/>
+                        <segue destination="Rbn-ca-Rog" kind="show" identifier="searchSegue" id="jWh-Ye-wqu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZtS-Q9-ORs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -255,7 +256,7 @@
         <!--Start View Controller-->
         <scene sceneID="b7f-b5-pJN">
             <objects>
-                <viewController storyboardIdentifier="Start" id="hz3-6v-pfg" customClass="StartViewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Start" modalPresentationStyle="fullScreen" id="hz3-6v-pfg" customClass="StartViewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MWE-wQ-9pO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -270,7 +271,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="ログインしてはじめる"/>
                                 <connections>
-                                    <action selector="loginButton:" destination="hz3-6v-pfg" eventType="touchUpInside" id="IN6-j4-gGX"/>
+                                    <segue destination="OZg-GD-Jgo" kind="show" identifier="loginSegue" id="li2-5A-gnB"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c5L-cZ-S46">
@@ -279,7 +280,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="アカウント作成してはじめる"/>
                                 <connections>
-                                    <segue destination="OZg-GD-Jgo" kind="presentation" identifier="loginSegue" id="Ofw-IP-Jze"/>
+                                    <segue destination="BZI-Wt-U0r" kind="show" id="JA7-le-s8j"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -287,9 +288,6 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="hXX-yc-AhN"/>
-                    <connections>
-                        <outlet property="createNewButton" destination="c5L-cZ-S46" id="BbH-NR-iP4"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FbR-pI-U9L" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -355,11 +353,12 @@
                         <viewLayoutGuide key="safeArea" id="n9Z-yp-Vv9"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="teq-VP-WRI"/>
                     <connections>
                         <outlet property="mailAddressTextField" destination="rHA-YK-TTa" id="xXT-FY-5qn"/>
                         <outlet property="passwordTextField" destination="Ss9-o9-2hC" id="7uN-ge-jZQ"/>
                         <outlet property="userNameTextField" destination="NxR-Ft-FJq" id="5ni-Dt-y3Q"/>
-                        <segue destination="Rbn-ca-Rog" kind="show" identifier="toSearch" id="SCI-DI-zJ4"/>
+                        <segue destination="Rbn-ca-Rog" kind="show" identifier="searchSegue" id="SCI-DI-zJ4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYy-JD-gTe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -390,6 +389,7 @@
         <!--Navigation Controller-->
         <scene sceneID="7gf-fV-BS3">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ndg-FZ-3aN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController storyboardIdentifier="NavigationVC" automaticallyAdjustsScrollViewInsets="NO" id="CjE-XS-LdG" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="yTO-Op-H7n">
@@ -417,7 +417,6 @@
                         <segue destination="hz3-6v-pfg" kind="relationship" relationship="rootViewController" id="2rh-8g-jCL"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ndg-FZ-3aN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-143" y="-831"/>
         </scene>
@@ -430,7 +429,7 @@
                     </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="zSv-Wx-Jb4">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
+                        <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -452,7 +451,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="さがす" id="HeO-WN-N5W"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ilQ-XC-hB7">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
+                        <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -466,7 +465,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="36D-Zj-CMe"/>
+        <segue reference="SCI-DI-zJ4"/>
+        <segue reference="YKy-q5-s1g"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="labelColor">

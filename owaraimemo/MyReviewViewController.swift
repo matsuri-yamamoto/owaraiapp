@@ -29,6 +29,8 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         self.navigationItem.rightBarButtonItem = settingButtonItem
         
         navigationController?.navigationItem.leftBarButtonItem?.customView?.isHidden = true
+        
+        self.tabBarController?.tabBar.isHidden = false
 
     }
     
