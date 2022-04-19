@@ -21,17 +21,13 @@ class SettingViewController: UIViewController {
     
     @objc func backButtonPressed() {
         self.navigationController?.popViewController(animated: true)
-//        let myReviewVC: MyReviewViewController = MyReviewViewController()
-//        myReviewVC.tabBarController!.tabBar.isHidden = false
+
     }
 
     
     @IBAction func logoutButton(_ sender: Any) {
         // ログアウトする
         try! Auth.auth().signOut()
-        
-        // ログイン画面から戻ってきた時のためにさがすタブ（index = 0）を選択している状態にしておく
-//        tabBarController?.selectedIndex = 0
         
         let startVC = self.storyboard?.instantiateViewController(identifier: "Start") as! StartViewController
         self.navigationController!.navigationBar.isHidden = true
@@ -44,4 +40,6 @@ class SettingViewController: UIViewController {
     @IBAction func termsButton(_ sender: Any) {
         
     }
+    
+    
 }

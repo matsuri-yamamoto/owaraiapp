@@ -15,16 +15,10 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
                 
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        // currentUserがnilならログインしていない
-        if Auth.auth().currentUser == nil {
-            // ログインしていないときの処理
-            let startViewController = self.storyboard?.instantiateViewController(withIdentifier: "Start")
-            self.present(startViewController!, animated: true, completion: nil)
-
-        }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //ナビゲーションバーの戻るボタンを非表示
+        navigationController?.navigationBar.isHidden = true
     }
     
 

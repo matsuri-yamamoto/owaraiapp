@@ -12,7 +12,7 @@ class ReviewData: NSObject {
     var id: String
     var comedianId: String?
     var userId: String?
-    var score: String?
+    var score: Double?
     var privateFlag: Bool?
     var comment: String?
     var createDateTime: Timestamp?
@@ -27,7 +27,7 @@ class ReviewData: NSObject {
         let reviewDic = document.data()
         comedianId = reviewDic["comedian_id"] as? String
         userId = reviewDic["user_id"] as? String
-        score = reviewDic["score"] as? String
+        score = reviewDic["score"] as? Double
         privateFlag = reviewDic["private_flag"] as? Bool
         comment = reviewDic["comment"] as? String
         let timestamp = reviewDic["date"] as? Timestamp

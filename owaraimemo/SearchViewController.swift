@@ -21,7 +21,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.delegate = self
         tableView.dataSource = self
         
-        title = "さがす"
+        self.navigationItem.title = "さがす"
 
         
         // searchBarのスタイル

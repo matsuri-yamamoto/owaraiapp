@@ -1,11 +1,17 @@
 //
 //
 import UIKit
+import Firebase
 
 //ナビゲーションバーのボタンの変数
 var settingButtonItem: UIBarButtonItem!
 
 class MyReviewViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    var comedianDataArray: [ComedianData] = []
+    //Firestoreを使うための下準備
+    let currentUser = Auth.auth().currentUser
+    let db = Firestore.firestore()
 
     
     @IBOutlet weak var tableView: UITableView!
@@ -46,6 +52,23 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
         return cell
+    }
+    
+    
+    func getData() -> [ComedianData] {
+        let ref = db.collection("comedian")
+        ref.getDocuments { (snaps, err) in
+            if let err = err {
+                        print("Error getting documents: \(err)")
+                        return
+        }
+            self.comedianDataArray = snaps!.documents.map { document -> ComedianData in
+            let data = ComedianData(document: document)
+            return data
+            }
+            self.tableView.reloadData()
+        }
+        return comedianDataArray
     }
 
     // 各セルを選択した時に実行されるメソッド

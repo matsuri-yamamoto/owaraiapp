@@ -16,26 +16,40 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderLabel: UILabel!
     
+    
     @IBAction func sliderValue(_ sender: Any) {
-            sliderLabel.text = String(slider.value)
-            
+        let sliderValue:Double = Double(slider.value)
+        sliderLabel.text = String(sliderValue)
     }
         
     var comedianData: ComedianData!
+    var reviewData: ReviewData!
+
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         
         label.text = comedianData.comedianName
         
+        //comedian_id=全画面から渡されたものかつuser_id=currentUser.uidのレビューがあれば参照する
+        Firestore.firestore().collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).whereField("comedian_id", isEqualTo: comedianData.id).getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    self.slider.value = document.get("score") as! Float
+                    self.textView.text = document.get("comment") as! String
+                    
+                }
+                let sliderDoubleValue = Double(self.slider.value)
+                self.sliderLabel.text = String(sliderDoubleValue)
+            }
+        }
     }
     
     
     @IBAction func saveButton(_ sender: Any) {
-                
-        //保存場所の定義
-        let reviewRef = Firestore.firestore().collection("review").document()
-        
         //値の置換
         let score:Double = Double(slider.value)
         let textView:String = String(textView.text)
@@ -44,43 +58,71 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
         let userId = Auth.auth().currentUser?.uid
         let comedianId = comedianData.id
         let deleteDateTime :String? = nil
+        var documentID :String?
         
-        
-        //Firestoreにデータを保存
-        let reviewDic = [
-            "user_id": userId,
-            "comedian_id": comedianId,
-            "score": score,
-            "comment": textView,
-            "private_flag": false,
-            "create_datetime": FieldValue.serverTimestamp(),
-            "update_datetime": FieldValue.serverTimestamp(),
-            "delete_flag": false,
-            "delete_datetime": deleteDateTime,
-        ] as [String : Any]
-        reviewRef.setData(reviewDic)
-        
-        self.textView.endEditing(true)
-        
-        self.dismiss(animated: true)
-        
-        
+        //user_id=currentUserかつcomedian_idが前画面から渡されたidであるreviewドキュメントを探す
+        //該当ドキュメントがあればdocumentidを取得し、なければ"doesNotExist"を入れる
+        Firestore.firestore().collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).whereField("comedian_id", isEqualTo: comedianData.id).getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("doesNotExist")
+                documentID = "doesNotExist"
+            } else {
+                for document in querySnapshot!.documents {
+                    documentID = document.documentID
+                    print("get successfully!")
+                    print(documentID)
+                }
+            }
+        }
+        //該当するreviewドキュメントが存在しない場合、レコードを新規作成する
+        if documentID == "doesNotExist" {
+            let reviewRef = Firestore.firestore().collection("review").document()
+            let reviewDic = [
+                "user_id": userId,
+                "comedian_id": comedianId,
+                "score": score,
+                "comment": textView,
+                "private_flag": false,
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": deleteDateTime,
+            ] as [String : Any]
+            reviewRef.setData(reviewDic)
+            self.dismiss(animated: true)
+            
+            //該当するドキュメントが存在する場合、そのドキュメントのスコアとコメントをアップデートする
+        } else {
+            let existReviewRef = Firestore.firestore().collection("review").document(documentID!)
+            existReviewRef.updateData([
+                "score": score,
+                "comment": textView,
+            ]) { err in
+                if let err = err {
+                    print("Error updating document: \(err)")
+                } else {
+                    print("Document successfully updated")
+                    self.dismiss(animated: true)
+                }
+            }
+        }
     }
+        
+       
+        
     
     //viewをタップしたときにキーボードを閉じる
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
-    
-    //改行ボタン(return、決定ボタン)が押された際に呼ばれる
-//    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-//        textField.resignFirstResponder()
-//        return true
-//    }
-    
-    
 
-    
-    
 
 }
+    
+
+    
+    
+
+    
+    
+
