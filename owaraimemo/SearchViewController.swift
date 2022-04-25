@@ -4,11 +4,13 @@
 import UIKit
 import Firebase
 
-class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UISearchControllerDelegate {
         
-    let searchController = UISearchController(searchResultsController: nil)
+    var searchController = UISearchController(searchResultsController: nil)
     
     var comedianDataArray: [ComedianData] = []
+    //SearchBarで検索されたComedianのオブジェクトを格納
+    var searchResultArray: [ComedianData] = []
     
     //Firestoreを使うための下準備
     let currentUser = Auth.auth().currentUser
@@ -20,6 +22,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        searchController.delegate = self
         
         self.navigationItem.title = "さがす"
 
@@ -34,9 +37,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.tableHeaderView = searchController.searchBar
         
         
+        
         // カスタムセルを登録する
         let nib = UINib(nibName: "ComedianTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "Cell")
+        
+        
         
         
     }
@@ -49,6 +55,21 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             navigationController?.navigationItem.leftBarButtonItem?.customView?.isHidden = true
 
     }
+    
+//    //検索窓押下時に呼ばれる
+//    func searchBarTapped(searchController: UISearchController) {
+//
+//
+//        //検索文字列を含むデータを検索結果配列に格納する
+//        searchResultArray = comedianDataArray.filter { data in return data.containsString(searchController.searchBar.text!) }
+//
+//        //テーブルを再読み込みする
+//        tableView.reloadData()
+//
+//
+//    }
+    
+    
     
     func getData() -> [ComedianData] {
         let ref = db.collection("comedian")
