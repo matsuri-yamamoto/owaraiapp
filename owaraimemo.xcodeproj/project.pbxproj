@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		506972D7748EC2B1D1651563 /* Pods_owaraimemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 013C498947B8F64B7B6FED63 /* Pods_owaraimemo.framework */; };
+		630964B7281EDB32006F211B /* TermViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630964B6281EDB32006F211B /* TermViewController.swift */; };
+		630964B9281EDBA3006F211B /* PrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630964B8281EDBA3006F211B /* PrivacyPolicyViewController.swift */; };
 		632F88D127F3054B00350624 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D027F3054B00350624 /* SettingViewController.swift */; };
 		632F88D327FA8A7900350624 /* ComedianData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D227FA8A7900350624 /* ComedianData.swift */; };
 		632F88D627FABF9500350624 /* ComedianTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D427FABF9500350624 /* ComedianTableViewCell.swift */; };
@@ -31,6 +33,8 @@
 
 /* Begin PBXFileReference section */
 		013C498947B8F64B7B6FED63 /* Pods_owaraimemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_owaraimemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		630964B6281EDB32006F211B /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
+		630964B8281EDBA3006F211B /* PrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyViewController.swift; sourceTree = "<group>"; };
 		632F88D027F3054B00350624 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		632F88D227FA8A7900350624 /* ComedianData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianData.swift; sourceTree = "<group>"; };
 		632F88D427FABF9500350624 /* ComedianTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianTableViewCell.swift; sourceTree = "<group>"; };
@@ -103,6 +107,8 @@
 				638CD1EA27F29812002DCEFC /* StartViewController.swift */,
 				6381D13427E7319A005BDBE2 /* ViewController.swift */,
 				638CD1EC27F2987B002DCEFC /* CreateNewViewController.swift */,
+				630964B6281EDB32006F211B /* TermViewController.swift */,
+				630964B8281EDBA3006F211B /* PrivacyPolicyViewController.swift */,
 				63D7E54827E9C4DB00E99C75 /* LoginViewController.swift */,
 				63D7E54227E9942D00E99C75 /* SearchViewController.swift */,
 				63D7E54427E9947300E99C75 /* MyReviewViewController.swift */,
@@ -252,10 +258,12 @@
 				6381D13527E7319A005BDBE2 /* ViewController.swift in Sources */,
 				632F88D627FABF9500350624 /* ComedianTableViewCell.swift in Sources */,
 				632F88D927FAE64700350624 /* ReviewData.swift in Sources */,
+				630964B7281EDB32006F211B /* TermViewController.swift in Sources */,
 				6381D13127E7319A005BDBE2 /* AppDelegate.swift in Sources */,
 				63D7E54727E9949200E99C75 /* ReviewViewController.swift in Sources */,
 				638CD1EB27F29812002DCEFC /* StartViewController.swift in Sources */,
 				632F88D327FA8A7900350624 /* ComedianData.swift in Sources */,
+				630964B9281EDBA3006F211B /* PrivacyPolicyViewController.swift in Sources */,
 				63D7E54527E9947300E99C75 /* MyReviewViewController.swift in Sources */,
 				63D7E54327E9942D00E99C75 /* SearchViewController.swift in Sources */,
 				6381D13327E7319A005BDBE2 /* SceneDelegate.swift in Sources */,

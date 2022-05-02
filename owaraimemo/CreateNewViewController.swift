@@ -15,6 +15,8 @@ class CreateNewViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var checkBox: UIButton!
+
+
     var checked = false
     
     override func viewWillAppear(_ animated: Bool) {
@@ -25,6 +27,7 @@ class CreateNewViewController: UIViewController {
         errorLabel.text = nil
         
         //チェックボックスの枠の色をグレーにする
+        checkBox.layer.borderWidth = 2
         checkBox.layer.borderColor = UIColor.gray.cgColor
         checkBox.addTarget(self,
                          action: #selector(didChecked),
@@ -39,6 +42,8 @@ class CreateNewViewController: UIViewController {
                 case true:
                     checkBox.setImage(nil, for: .normal)
                     checked = false
+                    print("checked:\(checked)")
+            
                 }
     }
     

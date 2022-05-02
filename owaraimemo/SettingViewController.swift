@@ -41,5 +41,9 @@ class SettingViewController: UIViewController {
         
     }
     
+    @IBAction func ppButton(_ sender: Any) {
+        
+    }
     
 }
+

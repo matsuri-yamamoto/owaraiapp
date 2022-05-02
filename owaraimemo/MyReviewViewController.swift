@@ -8,8 +8,11 @@ var settingButtonItem: UIBarButtonItem!
 
 class MyReviewViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var reviewComedianArray: [ReviewData] = []
+    var comedianArray: [String] = []
+    var comedianNameArray: [String] = []
+    var reviewComedianArray: [Any] = []
     var comedianDataArray: [ComedianData] = []
+    var nonReviewFlag = false
     
     //Firestoreを使うための下準備
     let currentUser = Auth.auth().currentUser
@@ -45,57 +48,76 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.register(nib, forCellReuseIdentifier: "Cell")
         
         
-//        //自分のレビューを取ってくる
-//        let reviewRef = db.collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).order(by: "create_datetime", descending: true)
-//        reviewRef.getDocuments { [self] (snaps, err) in
-//            if let err = err {
-//                        print("Error getting documents: \(err)")
-//                        return
-//        }
-//            //自分のレビューのcomedian_idを配列で持つ
-//            self.reviewComedianArray = snaps!.documents.map { document -> ReviewData in
-//            let reviewData = ReviewData(document: document)
-//            return reviewData
-//
-//            }
-//        }
-//
-//        //各comedian_idをidに持つcomedianのnameをmapで取得する
-//        let comedianRef  = self.reviewComedianArray.map { Firestore.firestore().collection("comedian").whereField("comedian_id", isEqualTo: $0) }
-//
-//        comedianRef.getDocument { (snap, error) in
-//        }
+        //自分のレビューを取ってくる
+        db.collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).getDocuments() { [self] (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+ 
+            } else if querySnapshot == nil {
 
+                return
+
+            } else {
+                
+                //自分のレビューデータのcomedian_idを配列に格納する
+                for document in querySnapshot!.documents {
+                    print("\(document.documentID) => \(document.data())")
+                    comedianArray.append(document.data()["comedian_id"] as! String)
+                    print("comedianArray: \(self.comedianArray)")
+                }
+                
+                self.db.collection("comedian").whereField(FieldPath.documentID(), in: comedianArray).getDocuments() { (querySnapshot, err) in
+
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                        return
+                        
+                    } else {
+                        //自分のレビューデータのcomedian_idを配列に格納する
+                        for document in querySnapshot!.documents {
+                            print("\(document.documentID) => \(document.data())")
+                            comedianNameArray.append(document.data()["comedian_name"] as! String)
+                            print("comedianNameArray: \(comedianNameArray)")
+                            }
+                        }
+                    }
+            }
+        }
     }
-
-
+                                
     
+        // データの数（＝セルの数）を返すメソッド
+        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            if nonReviewFlag == true {
+            return 0
+            } else {
+                return comedianArray.count
+            }
+        }
     
-    
-    // データの数（＝セルの数）を返すメソッド
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return comedianDataArray.count
-    }
+        // 各セルの内容を返すメソッド
+        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            // 再利用可能な cell を得る
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ComedianTableViewCell
 
-    // 各セルの内容を返すメソッド
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // 再利用可能な cell を得る
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ComedianTableViewCell
-        cell.setComedianData(comedianDataArray[indexPath.row])
-
-        return cell
-    }
-    
-    
-
-
-    // 各セルを選択した時に実行されるメソッド
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        performSegue(withIdentifier: "cellSegue",sender: nil)
-        tableView.deselectRow(at: indexPath, animated: true)
-    
-    }
-
-
+            if nonReviewFlag == true {
+                cell.isHidden = true
+                return cell
+            } else {
+                cell.textLabel?.text = comedianNameArray[indexPath.row]
+                return cell
+            }
+        }
 }
+    
+        
+    
+    
+//    // 各セルを選択した時に実行されるメソッド
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//
+//        performSegue(withIdentifier: "cellSegue",sender: nil)
+//        tableView.deselectRow(at: indexPath, animated: true)
+//
+//    }

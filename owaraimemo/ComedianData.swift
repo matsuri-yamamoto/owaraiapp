@@ -10,11 +10,11 @@ import Firebase
 
 class ComedianData: NSObject {
     var id: String?
-    var comedianName: String?
+    var comedianName: String
     
     init(document: QueryDocumentSnapshot) {
         let comedianDic = document.data()
         self.id = document.documentID
-        self.comedianName = comedianDic["comedian_name"] as? String
+        self.comedianName = comedianDic["comedian_name"] as! String
     }
 }
