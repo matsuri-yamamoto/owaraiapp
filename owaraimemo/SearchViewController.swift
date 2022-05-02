@@ -108,12 +108,16 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             let selectedComedianCell = filterComedianArray[indexPath.row]
             performSegue(withIdentifier: "cellSegue",sender: selectedComedianCell)
+            tableView.deselectRow(at: indexPath, animated: true)
+
             
         } else {
             
             //SearchControllerに入力がない場合、comedianDataArrayの結果を渡す
             let selectedComedianCell = comedianDataArray[indexPath.row]
             performSegue(withIdentifier: "cellSegue",sender: selectedComedianCell)
+            tableView.deselectRow(at: indexPath, animated: true)
+
 
         }
     }

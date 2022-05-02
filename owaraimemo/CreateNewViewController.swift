@@ -40,7 +40,8 @@ class CreateNewViewController: UIViewController {
                     checkBox.setImage(UIImage(systemName: "checkmark"), for: .normal)
                     checked = true
                 case true:
-                    checkBox.setImage(nil, for: .normal)
+                    let image = UIImage(contentsOfFile: "")
+            checkBox.setImage(image, for: .normal)
                     checked = false
                     print("checked:\(checked)")
             

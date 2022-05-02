@@ -11,8 +11,8 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
     var comedianArray: [String] = []
     var comedianNameArray: [String] = []
     var reviewComedianArray: [Any] = []
-    var comedianDataArray: [ComedianData] = []
     var nonReviewFlag = false
+    var comedianDataArray: [ComedianData] = []
     
     //Firestoreを使うための下準備
     let currentUser = Auth.auth().currentUser
@@ -54,10 +54,6 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
                 print("Error getting documents: \(err)")
                 return
  
-            } else if querySnapshot == nil {
-
-                return
-
             } else {
                 
                 //自分のレビューデータのcomedian_idを配列に格納する
@@ -65,7 +61,13 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
                     print("\(document.documentID) => \(document.data())")
                     comedianArray.append(document.data()["comedian_id"] as! String)
                     print("comedianArray: \(self.comedianArray)")
+                    
                 }
+                
+                if comedianArray.isEmpty {
+                    comedianNameArray = []
+                    
+                } else {
                 
                 self.db.collection("comedian").whereField(FieldPath.documentID(), in: comedianArray).getDocuments() { (querySnapshot, err) in
 
@@ -79,45 +81,87 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
                             print("\(document.documentID) => \(document.data())")
                             comedianNameArray.append(document.data()["comedian_name"] as! String)
                             print("comedianNameArray: \(comedianNameArray)")
+                            self.tableView.reloadData()
                             }
                         }
                     }
+                }
             }
         }
     }
-                                
     
-        // データの数（＝セルの数）を返すメソッド
-        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            if nonReviewFlag == true {
-            return 0
-            } else {
-                return comedianArray.count
-            }
+    func getData() -> [ComedianData] {
+        db.collection("comedian").whereField(FieldPath.documentID(), in: comedianArray).getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                        print("Error getting documents: \(err)")
+                        return
         }
-    
-        // 各セルの内容を返すメソッド
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            // 再利用可能な cell を得る
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ComedianTableViewCell
-
-            if nonReviewFlag == true {
-                cell.isHidden = true
-                return cell
-            } else {
-                cell.textLabel?.text = comedianNameArray[indexPath.row]
-                return cell
+            self.comedianDataArray = querySnapshot!.documents.map { document -> ComedianData in
+            let data = ComedianData(document: document)
+            return data
             }
+            self.tableView.reloadData()
         }
-}
-    
+        return comedianDataArray
+    }
         
     
+    override func viewDidAppear(_ animated: Bool) {
+        //ReviewVCに渡す用のComedianDataを取得する(対象となる芸人はComedianNameArrayと同じだが、ComedianData型である必要があるため)
+        //毎回データ更新してくれるように、viewWillAppearの中に記述する
+        if comedianNameArray != [] {
+                    
+            comedianDataArray = getData()
+            print("comedianDataArray:\(comedianDataArray)")
+            
+        }
+    }
     
-//    // 各セルを選択した時に実行されるメソッド
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//
-//        performSegue(withIdentifier: "cellSegue",sender: nil)
-//        tableView.deselectRow(at: indexPath, animated: true)
-//
-//    }
+    
+    
+                                
+    
+    // データの数（＝セルの数）を返すメソッド
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+        if comedianNameArray != [] {
+            
+            print("comedianDataArray.count:\(comedianDataArray.count)")
+            return comedianDataArray.count
+            
+        } else {
+            
+            return 0
+            
+        }
+    }
+
+    // 各セルの内容を返すメソッド
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // 再利用可能な cell を得る
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ComedianTableViewCell
+        cell.textLabel?.text = comedianNameArray[indexPath.row]
+        return cell
+    }
+    
+
+
+
+    // 各セルを選択した時に実行されるメソッド
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if comedianNameArray != [] {
+                        
+            let selectedComedianCell = comedianDataArray[indexPath.row]
+            performSegue(withIdentifier: "cellSegue",sender: selectedComedianCell)
+            tableView.deselectRow(at: indexPath, animated: true)
+
+        } else {
+            
+            return
+            
+        }
+
+    }
+    
+}
