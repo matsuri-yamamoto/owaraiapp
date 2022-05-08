@@ -38,7 +38,7 @@
                     <navigationItem key="navigationItem" id="wnc-lI-lXC"/>
                     <connections>
                         <outlet property="tableView" destination="HAB-sn-RGO" id="MA3-Wg-s2z"/>
-                        <segue destination="8V6-f2-HvG" kind="presentation" identifier="cellSegue" id="36D-Zj-CMe"/>
+                        <segue destination="kdc-bj-bUn" kind="presentation" identifier="cellSegue" id="36D-Zj-CMe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="M6c-0I-IMn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -75,7 +75,7 @@
                     <navigationItem key="navigationItem" id="FgZ-4k-yWk"/>
                     <connections>
                         <outlet property="tableView" destination="zGh-Q8-GTf" id="G7Z-qG-Cfc"/>
-                        <segue destination="8V6-f2-HvG" kind="presentation" identifier="cellSegue" id="YKy-q5-s1g"/>
+                        <segue destination="kdc-bj-bUn" kind="presentation" identifier="cellSegue" id="YKy-q5-s1g"/>
                         <segue destination="dzq-87-3hp" kind="show" identifier="settingSegue" id="8Ku-wh-MHT"/>
                     </connections>
                 </viewController>
@@ -132,7 +132,7 @@
         <!--Review View Controller-->
         <scene sceneID="JMa-EN-kmC">
             <objects>
-                <viewController storyboardIdentifier="Review" id="8V6-f2-HvG" customClass="ReviewViewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Review" useStoryboardIdentifierAsRestorationIdentifier="YES" id="8V6-f2-HvG" customClass="ReviewViewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ft6-Tw-d8y">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -154,9 +154,6 @@
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="5" translatesAutoresizingMaskIntoConstraints="NO" id="nSC-Hu-0qU">
                                 <rect key="frame" x="88" y="183" width="261" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <connections>
-                                    <action selector="sliderValue:" destination="8V6-f2-HvG" eventType="valueChanged" id="Z7e-bt-JJL"/>
-                                </connections>
                             </slider>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="M9d-qB-e3A">
                                 <rect key="frame" x="0.0" y="301" width="375" height="260"/>
@@ -203,7 +200,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bCP-RM-kLk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="24.800000000000001" y="1622.6600985221676"/>
+            <point key="canvasLocation" x="967.20000000000005" y="1622.6600985221676"/>
         </scene>
         <!--LoginV Iew Controller-->
         <scene sceneID="ouE-mu-aG0">
@@ -543,10 +540,34 @@
             </objects>
             <point key="canvasLocation" x="-946.39999999999998" y="776.60098522167493"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="pYu-7D-u3m">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="kdc-bj-bUn" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cgZ-E0-efy">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="8V6-f2-HvG" kind="relationship" relationship="rootViewController" id="h57-ic-ICi"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ddk-Vx-RhW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="114" y="1623"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="YKy-q5-s1g"/>
         <segue reference="SCI-DI-zJ4"/>
-        <segue reference="36D-Zj-CMe"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="labelColor">

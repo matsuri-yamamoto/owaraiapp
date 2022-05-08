@@ -9,13 +9,15 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var searchController = UISearchController(searchResultsController: nil)
     
     //表示する芸人名の配列
-    var comedianDataArray: [ComedianData] = []
+    var comedianDataArray: [String] = []
+    var comedianNameArray: [String] = []
     
     //SearchBarで検索されたComedianのオブジェクトを格納する配列
-    var filterComedianArray: [ComedianData] = []
+    var filterComedianArray: [String] = []
 
     //filterComedianArrayのComedianData型配列をString型に変えて格納する配列
-    var searchResultArray: [String] = []
+    var searchResultNameArray: [String] = []
+    var searchResultData: String = ""
     
     
     
@@ -25,15 +27,16 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     @IBOutlet weak var tableView: UITableView!
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidLoad() {
+        
+        super.viewDidLoad()
         
         tableView.delegate = self
         tableView.dataSource = self
         searchController.delegate = self
         
         // 毎回データ更新してくれるように、viewWillAppearの中に記述する
-        comedianDataArray = getData()
+//        comedianDataArray = getData()
         //ナビゲーションバーの戻るボタンを非表示
         navigationController?.navigationItem.leftBarButtonItem?.customView?.isHidden = true
         
@@ -55,31 +58,29 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let nib = UINib(nibName: "ComedianTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "Cell")
         
-
-    }
-    
-    func getData() -> [ComedianData] {
-        let ref = db.collection("comedian")
-        ref.getDocuments { (snaps, err) in
+        
+        db.collection("comedian").getDocuments() {(querySnapshot, err) in
             if let err = err {
-                        print("Error getting documents: \(err)")
-                        return
-        }
-            self.comedianDataArray = snaps!.documents.map { document -> ComedianData in
-            let data = ComedianData(document: document)
-            return data
+                print("Error getting documents: \(err)")
+                return
+                
+            } else {
+                for document in querySnapshot!.documents {
+                    print("\(document.documentID) => \(document.data())")
+                    self.comedianDataArray.append(document.documentID)
+                    self.comedianNameArray.append(document.data()["comedian_name"] as! String)
+                }
+                self.tableView.reloadData()
             }
-            self.tableView.reloadData()
-        }
-        return comedianDataArray
+            }
     }
 
     // データの数（＝セルの数）を返すメソッド
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if( searchController.searchBar.text != "" ) {
-                    return searchResultArray.count
+                    return searchResultNameArray.count
                 } else {
-                    return comedianDataArray.count
+                    return comedianNameArray.count
                 }
     }
 
@@ -90,58 +91,75 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 
         //SearchControllerに入力されている場合、SearchResultArrayの結果を返す
         if searchController.searchBar.text != "" {
-            cell.textLabel?.text = ""
-            cell.textLabel?.text = searchResultArray[indexPath.row]
+            cell.comedianNameLabel.text = searchResultNameArray[indexPath.row]
 
         } else {
-            //SearchControllerに入力がない場合、comedianDataArrayのデータを返す
-            cell.setComedianData(comedianDataArray[indexPath.row])
+            //SearchControllerに入力がない場合、comedianNameArrayのデータを返す
+            cell.comedianNameLabel.text = comedianNameArray[indexPath.row]
         }
         return cell
     }
 
     // 各セルを選択した時に実行されるメソッド
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let reviewVC = storyboard?.instantiateViewController(withIdentifier: "Review") as! ReviewViewController
+
 
         //SearchControllerに入力されている場合、SearchResultArrayの結果を渡す
         if searchController.searchBar.text != ""  {
             
-            let selectedComedianCell = filterComedianArray[indexPath.row]
-            performSegue(withIdentifier: "cellSegue",sender: selectedComedianCell)
-            tableView.deselectRow(at: indexPath, animated: true)
-
+            //芸人名を渡す
+            reviewVC.comedianName = searchResultNameArray[indexPath.row]
             
+            
+            //芸人名からcomedian_idを特定する
+            db.collection("comedian").whereField("comedian_name", isEqualTo: searchResultNameArray[indexPath.row]).getDocuments() {
+                (querySnapshot, err) in
+                    if let err = err {
+                                print("Error getting documents: \(err)")
+                                return
+                
+                    } else {
+                        for document in querySnapshot!.documents {
+                            print("\(document.documentID) => \(document.data())")
+                            self.searchResultData = document.documentID
+                        }
+                        //comedian_idを渡す
+                        reviewVC.comedianID = self.searchResultData
+                        print("searchResultData=>reviewVC.comedianID:\(reviewVC.comedianID)")
+                    }
+                //遷移を実行
+                self.present(reviewVC, animated: true, completion: nil)
+                tableView.deselectRow(at: indexPath, animated: true)
+            }
         } else {
             
             //SearchControllerに入力がない場合、comedianDataArrayの結果を渡す
-            let selectedComedianCell = comedianDataArray[indexPath.row]
-            performSegue(withIdentifier: "cellSegue",sender: selectedComedianCell)
+
+            reviewVC.comedianName = comedianNameArray[indexPath.row]
+            reviewVC.comedianID = comedianDataArray[indexPath.row]
+            print("comedianDataArray=>reviewVC.comedianID:\(reviewVC.comedianID)")
+            
+            //遷移を実行
+            self.present(reviewVC, animated: true, completion: nil)
             tableView.deselectRow(at: indexPath, animated: true)
 
 
+            
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "cellSegue" {
-            let reviewVC = segue.destination as! ReviewViewController
-            reviewVC.comedianData = sender as? ComedianData
-        }
-    }
     
     
     //検索窓押下時に呼ばれる
     func updateSearchResults(for searchController: UISearchController) {
 
-
-        //検索文字列を含むデータを検索結果配列に格納する
-
-        //フィルタした結果のcomedianDataArrayを一旦別の変数でもって、comedinadataの配列をStringの配列に変える
-        filterComedianArray = comedianDataArray.filter { data in return data.comedianName.contains(searchController.searchBar.text!) }
         
-        //filterComedianArrayからcomedianNameの配列を作る(map)
-        //comedian：for文のところで書いてるdataみたいなもの(filterも同じ)
-        searchResultArray = filterComedianArray.map({(comedian)->String in return comedian.comedianName})
+        //検索文字列を含むデータを検索結果配列に格納する。
+        searchResultNameArray = comedianNameArray.filter { data in
+            return data.contains(searchController.searchBar.text!)
+        }
         
         //テーブルを再読み込みする
         tableView.reloadData()

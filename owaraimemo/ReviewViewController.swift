@@ -15,25 +15,39 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderLabel: UILabel!
-
     
-    @IBAction func sliderValue(_ sender: Any) {
-        let sliderValue:Double = Double(slider.value)
-        sliderLabel.text = String(sliderValue)
-    }
-        
-    var comedianData: ComedianData!
+    
     var reviewData: ReviewData!
+    
+    //渡されるデータを入れる変数
+    var comedianName: String = ""
+    var comedianID: String = ""
+    
 
     
     override func viewWillAppear(_ animated: Bool) {
+        
         super.viewWillAppear(animated)
         
+        print("comedianID:\(comedianID)")
         
-        label.text = comedianData.comedianName
+        //ナビゲーションバーにタイトルを表示させる
+        self.navigationItem.title = "\(comedianName)のレビュー"
+        self.navigationController?.navigationBar.titleTextAttributes = [
+        // 文字の色
+            .foregroundColor: UIColor.darkGray
+        ]
+        
+        let initialValue: Float = 0
+        slider.value = initialValue
+        slider.tintColor = .darkGray
+        slider.addTarget(self, action: #selector(sliderDidChangeValue(_:)), for: .valueChanged)
+        view.addSubview(slider)
+        
+        label.text = comedianName
         
         //comedian_id=前画面から渡されたものかつuser_id=currentUser.uidのレビューがあれば参照する
-        Firestore.firestore().collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).whereField("comedian_id", isEqualTo: comedianData.id).getDocuments() { (querySnapshot, err) in
+        Firestore.firestore().collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).whereField("comedian_id", isEqualTo: self.comedianID).getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
                 return
@@ -48,6 +62,15 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
         }
     }
     
+    @objc func sliderDidChangeValue(_ sender: UISlider) {
+        let roundValue = round(sender.value * 2) * 0.5
+        
+        // set round value
+        sender.value = roundValue
+        sliderLabel.text = String(roundValue)
+    }
+    
+    
     
     @IBAction func saveButton(_ sender: Any) {
         //値の置換
@@ -56,24 +79,32 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
         
         //渡されるデータの定義
         let userId = Auth.auth().currentUser?.uid
-        let comedianId = comedianData.id
+//        let comedianId = comedianData.id
+//        let comedianName = comedianData.comedianName
         let deleteDateTime :String? = nil
         var documentID :String?
+        
         
         //user_id=currentUserかつcomedian_idが前画面から渡されたidであるreviewドキュメントを探す
         //該当ドキュメントがあればdocumentidを取得し、なければ"doesNotExist"を入れる
         
-        Firestore.firestore().collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).whereField("comedian_id", isEqualTo: comedianData.id).getDocuments() { (querySnapshot, err) in
+        Firestore.firestore().collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).whereField("comedian_id", isEqualTo: comedianID).getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
                 
             } else {
+                for document in querySnapshot!.documents {
+                    documentID = document.documentID
+                }
+                
+                
                 //ドキュメントidがnilの場合、レビューを書いたことがないということなので新しくレビューを作成する
                 if documentID == nil {
                     let reviewRef = Firestore.firestore().collection("review").document()
                     let reviewDic = [
                         "user_id": userId,
-                        "comedian_id": comedianId,
+                        "comedian_id": self.comedianID,
+                        "comedian_name": self.comedianName,
                         "score": score,
                         "comment": textView,
                         "private_flag": false,
@@ -96,6 +127,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                     existReviewRef.updateData([
                         "score": score,
                         "comment": textView,
+                        "update_datetime": FieldValue.serverTimestamp(),
                     ]) { err in
                         if let err = err {
                             print("Error updating document: \(err)")
@@ -109,8 +141,6 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
             }
         }
     }
-        
-    
     
     //viewをタップしたときにキーボードを閉じる
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

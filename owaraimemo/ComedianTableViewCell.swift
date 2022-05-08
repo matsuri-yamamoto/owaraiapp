@@ -6,10 +6,15 @@
 //
 
 import UIKit
+import Firebase
 
 class ComedianTableViewCell: UITableViewCell {
     
     @IBOutlet weak var comedianNameLabel: UILabel!
+
+    var comedianArray: [ComedianData] = []
+    var comedianUniqueArray: [ComedianData] = []
+    
     
 
     override func awakeFromNib() {
@@ -28,5 +33,4 @@ class ComedianTableViewCell: UITableViewCell {
         
     
     }
-    
 }
