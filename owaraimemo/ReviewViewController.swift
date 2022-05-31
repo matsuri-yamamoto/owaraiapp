@@ -11,7 +11,6 @@ import Firebase
 
 class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDelegate {
     
-    @IBOutlet weak var label: UILabel!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderLabel: UILabel!
@@ -22,6 +21,11 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
     //渡されるデータを入れる変数
     var comedianName: String = ""
     var comedianID: String = ""
+    var tag1: String = ""
+    var tag2: String = ""
+    var tag3: String = ""
+    var tag4: String = ""
+    var tag5: String = ""
     
 
     
@@ -44,7 +48,6 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
         slider.addTarget(self, action: #selector(sliderDidChangeValue(_:)), for: .valueChanged)
         view.addSubview(slider)
         
-        label.text = comedianName
         
         //comedian_id=前画面から渡されたものかつuser_id=currentUser.uidのレビューがあれば参照する
         Firestore.firestore().collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).whereField("comedian_id", isEqualTo: self.comedianID).getDocuments() { (querySnapshot, err) in
@@ -79,8 +82,6 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
         
         //渡されるデータの定義
         let userId = Auth.auth().currentUser?.uid
-//        let comedianId = comedianData.id
-//        let comedianName = comedianData.comedianName
         let deleteDateTime :String? = nil
         var documentID :String?
         
@@ -104,9 +105,14 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                     let reviewDic = [
                         "user_id": userId,
                         "comedian_id": self.comedianID,
-                        "comedian_name": self.comedianName,
+                        "comedian_display_name": self.comedianName,
                         "score": score,
                         "comment": textView,
+                        "tag_1": self.tag1,
+                        "tag_2": self.tag2,
+                        "tag_3": self.tag3,
+                        "tag_4": self.tag4,
+                        "tag_5": self.tag5,
                         "private_flag": false,
                         "create_datetime": FieldValue.serverTimestamp(),
                         "update_datetime": FieldValue.serverTimestamp(),

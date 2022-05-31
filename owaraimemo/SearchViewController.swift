@@ -35,10 +35,10 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.dataSource = self
         searchController.delegate = self
         
-        // 毎回データ更新してくれるように、viewWillAppearの中に記述する
-//        comedianDataArray = getData()
         //ナビゲーションバーの戻るボタンを非表示
         navigationController?.navigationItem.leftBarButtonItem?.customView?.isHidden = true
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+
         
         self.navigationItem.title = "さがす"
 
@@ -54,6 +54,9 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         //結果表示用のビューコントローラーに自分を設定する
         searchController.searchResultsUpdater = self
         
+        //SearchControllerを使用する際に画面遷移時に発生する問題を解消する
+        definesPresentationContext = true
+        
         // カスタムセルを登録する
         let nib = UINib(nibName: "ComedianTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "Cell")
@@ -68,7 +71,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 for document in querySnapshot!.documents {
                     print("\(document.documentID) => \(document.data())")
                     self.comedianDataArray.append(document.documentID)
-                    self.comedianNameArray.append(document.data()["comedian_name"] as! String)
+                    self.comedianNameArray.append(document.data()["for_list_name"] as! String)
                 }
                 self.tableView.reloadData()
             }
@@ -88,7 +91,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // 再利用可能な cell を得る
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ComedianTableViewCell
-                
         //SearchControllerに入力されている場合、SearchResultArrayの結果を返す
         if searchController.searchBar.text != "" {
             cell.comedianNameLabel.text = searchResultNameArray[indexPath.row]
@@ -104,6 +106,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let reviewVC = storyboard?.instantiateViewController(withIdentifier: "Review") as! ReviewViewController
+        let nav = UINavigationController(rootViewController: reviewVC)
 
 
         //SearchControllerに入力されている場合、SearchResultArrayの結果を渡す
@@ -114,7 +117,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             
             //芸人名からcomedian_idを特定する
-            db.collection("comedian").whereField("comedian_name", isEqualTo: searchResultNameArray[indexPath.row]).getDocuments() {
+            db.collection("comedian").whereField("for_list_name", isEqualTo: searchResultNameArray[indexPath.row]).getDocuments() {
                 (querySnapshot, err) in
                     if let err = err {
                                 print("Error getting documents: \(err)")
@@ -130,7 +133,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                         print("searchResultData=>reviewVC.comedianID:\(reviewVC.comedianID)")
                     }
                 //遷移を実行
-                self.present(reviewVC, animated: true, completion: nil)
+                self.present(nav, animated: true, completion: nil)
                 tableView.deselectRow(at: indexPath, animated: true)
             }
         } else {
@@ -142,7 +145,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print("comedianDataArray=>reviewVC.comedianID:\(reviewVC.comedianID)")
             
             //遷移を実行
-            self.present(reviewVC, animated: true, completion: nil)
+            self.present(nav, animated: true, completion: nil)
             tableView.deselectRow(at: indexPath, animated: true)
 
 

@@ -15,11 +15,15 @@ class CreateNewViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var checkBox: UIButton!
-
+    @IBOutlet weak var termButton: UIButton!
+    @IBOutlet weak var ppButton: UIButton!
+    
 
     var checked = false
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        super.viewWillAppear(animated)
 
         self.navigationController?.navigationBar.isHidden = false
         
@@ -32,8 +36,20 @@ class CreateNewViewController: UIViewController {
         checkBox.addTarget(self,
                          action: #selector(didChecked),
                          for: .touchUpInside)
+
+        if #available(iOS 15.0, *) {
+            termButton.configuration = nil
+            ppButton.configuration = nil
+
+         }
+        termButton.titleLabel?.font = UIFont(name: "ArialHebrew-Bold", size: 10)
+        ppButton.titleLabel?.font = UIFont(name: "ArialHebrew-Bold", size: 10)
+
+        
     }
     
+
+
     @objc private func didChecked(){
         switch checked {
                 case false:
@@ -88,4 +104,12 @@ class CreateNewViewController: UIViewController {
                 }
             }
     }
+    
+    //viewをタップしたときにキーボードを閉じる
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
+
+    
 }

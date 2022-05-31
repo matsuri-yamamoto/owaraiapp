@@ -47,33 +47,14 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         
         self.tabBarController?.tabBar.isHidden = false
         
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+
+        
         // カスタムセルを登録す
         let nib = UINib(nibName: "ComedianTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "Cell")
         
         
-//        //自分のレビューを取ってくる
-//        db.collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).getDocuments() { [self] (querySnapshot, err) in
-//            if let err = err {
-//                print("Error getting documents: \(err)")
-//                return
-//
-//            } else {
-//
-//                //自分のレビューデータのcomedian_idを配列に格納する
-//                for document in querySnapshot!.documents {
-//                    print("\(document.documentID) => \(document.data())")
-//                    comedianNameArray.append(document.data()["comedian_name"] as! String)
-//                    print("comedianNameArray: \(self.comedianNameArray)")
-//
-//                    //値をユニークにする
-//                    var set = Set<String>()
-//                    let result = comedianNameArray.filter { set.insert($0).inserted }
-//                    print("result: \(result)")
-//
-//                }
-//            }
-//        }
         
         db.collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).getDocuments() { [self] (querySnapshot, err) in
             if let err = err {
@@ -85,7 +66,7 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
                     print("\(document.documentID) => \(document.data())")
                     
                     //自分のレビューデータのcomedian_nameを配列に格納する
-                    self.comedianNameArray.append(document.data()["comedian_name"] as! String)
+                    self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
                     print("comedianNameArray: \(self.comedianNameArray)")
 
 
@@ -110,22 +91,6 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
                 
-    
-//    func getData() -> [ComedianData] {
-//        let ref = db.collection("comedian")
-//        ref.getDocuments { (snaps, err) in
-//            if let err = err {
-//                        print("Error getting documents: \(err)")
-//                        return
-//        }
-//            self.comedianDataArray = snaps!.documents.map { document -> ComedianData in
-//            let data = ComedianData(document: document)
-//            return data
-//            }
-//            self.tableView.reloadData()
-//        }
-//        return comedianDataArray
-//    }
         
     override func viewDidAppear(_ animated: Bool) {
         //ReviewVCに渡す用のComedianDataを取得する(対象となる芸人はComedianNameArrayと同じだが、ComedianData型である必要があるため)
@@ -163,6 +128,7 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let reviewVC = storyboard?.instantiateViewController(withIdentifier: "Review") as! ReviewViewController
+        let nav = UINavigationController(rootViewController: reviewVC)
         
         if comedianNameUniqueArray != [] {
             
@@ -172,7 +138,7 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
             print("reviewVC.comedianID:\(reviewVC.comedianID)")
             
             //遷移を実行
-            self.present(reviewVC, animated: true, completion: nil)
+            self.present(nav, animated: true, completion: nil)
             tableView.deselectRow(at: indexPath, animated: true)
 
         } else {
