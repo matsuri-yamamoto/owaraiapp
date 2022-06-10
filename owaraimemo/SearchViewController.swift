@@ -3,6 +3,7 @@
 
 import UIKit
 import Firebase
+import FirebaseFirestore
 
 class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
         
@@ -18,6 +19,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //filterComedianArrayのComedianData型配列をString型に変えて格納する配列
     var searchResultNameArray: [String] = []
     var searchResultData: String = ""
+    
+    var comedianId: String = ""
     
     
     
@@ -105,53 +108,50 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // 各セルを選択した時に実行されるメソッド
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let reviewVC = storyboard?.instantiateViewController(withIdentifier: "Review") as! ReviewViewController
-        let nav = UINavigationController(rootViewController: reviewVC)
-
+        
+        let comedianVC = storyboard?.instantiateViewController(withIdentifier: "Comedian") as! ComedianDetailViewController
 
         //SearchControllerに入力されている場合、SearchResultArrayの結果を渡す
         if searchController.searchBar.text != ""  {
-            
-            //芸人名を渡す
-            reviewVC.comedianName = searchResultNameArray[indexPath.row]
-            
-            
+
+
+
             //芸人名からcomedian_idを特定する
             db.collection("comedian").whereField("for_list_name", isEqualTo: searchResultNameArray[indexPath.row]).getDocuments() {
                 (querySnapshot, err) in
                     if let err = err {
                                 print("Error getting documents: \(err)")
                                 return
-                
+
                     } else {
                         for document in querySnapshot!.documents {
                             print("\(document.documentID) => \(document.data())")
                             self.searchResultData = document.documentID
                         }
                         //comedian_idを渡す
-                        reviewVC.comedianID = self.searchResultData
-                        print("searchResultData=>reviewVC.comedianID:\(reviewVC.comedianID)")
+                        comedianVC.comedianId = self.searchResultData
+                        print("searchResultData=>comedianVC.comedianId:\(comedianVC.comedianId)")
                     }
-                //遷移を実行
-                self.present(nav, animated: true, completion: nil)
+//                comedianVC.modalPresentationStyle = .fullScreen
+//                self.present(comedianVC, animated: true, completion: nil)
+                self.performSegue(withIdentifier: "toComedian", sender: nil)
                 tableView.deselectRow(at: indexPath, animated: true)
             }
         } else {
-            
+
             //SearchControllerに入力がない場合、comedianDataArrayの結果を渡す
 
-            reviewVC.comedianName = comedianNameArray[indexPath.row]
-            reviewVC.comedianID = comedianDataArray[indexPath.row]
-            print("comedianDataArray=>reviewVC.comedianID:\(reviewVC.comedianID)")
-            
-            //遷移を実行
-            self.present(nav, animated: true, completion: nil)
+            comedianVC.comedianId = comedianDataArray[indexPath.row]
+            print("comedianDataArray=>reviewVC.comedianID:\(comedianVC.comedianId)")
+
+//            comedianVC.modalPresentationStyle = .fullScreen
+            self.present(comedianVC, animated: true, completion: nil)
+//            performSegue(withIdentifier: "toComedian", sender: nil)
             tableView.deselectRow(at: indexPath, animated: true)
 
-
-            
         }
     }
+    
     
     
     

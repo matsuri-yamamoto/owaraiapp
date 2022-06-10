@@ -2,6 +2,7 @@
 //
 import UIKit
 import Firebase
+import FirebaseFirestore
 
 //ナビゲーションバーのボタンの変数
 var settingButtonItem: UIBarButtonItem!

@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+import FirebaseFirestore
 
 
 class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDelegate {
@@ -15,8 +16,6 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderLabel: UILabel!
     
-    
-    var reviewData: ReviewData!
     
     //渡されるデータを入れる変数
     var comedianName: String = ""

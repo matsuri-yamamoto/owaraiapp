@@ -12,4 +12,6 @@ target 'owaraimemo' do
   pod 'Firebase/Storage'
   pod 'FirebaseUI/Storage'
 
+  pod 'youtube-ios-player-helper', '1.0.4'
+
 end
