@@ -62,7 +62,7 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
                         print("Error getting documents: \(err)")
                         return
             } else {
-                
+        
                 for document in querySnapshot!.documents {
                     print("\(document.documentID) => \(document.data())")
                     

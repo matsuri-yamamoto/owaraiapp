@@ -18,7 +18,6 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     var comedianId: String = ""
     
     @IBOutlet weak var comedianNameLabel: UILabel!
-    @IBOutlet weak var officeLabel: UILabel!
     @IBOutlet weak var startYearLabel: UILabel!
     @IBOutlet weak var comedianTypeLabel: UILabel!
     @IBOutlet weak var comedyTypeLabel1: UILabel!
@@ -51,13 +50,13 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
     
     //URLを持つ各種メディアを格納する配列
-    var mediaImageArray: [UIImage] = []
+    var mediaImageArray: [String] = []
     
     //各種メディアのURLを格納する配列
     var mediaUrlArray: [String] = []
     
     //各種メディア用の画像
-    let twitterImage = UIImage(named: "twitter")
+    let twitterImage = UIImage(named: "twitterImage")
     let youtubeImage = UIImage(named: "youtube")
     let podcastImage = UIImage(named: "podcast")
     let standfmImage = UIImage(named: "standfm")
@@ -68,7 +67,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
     //ネタ動画用のView
     @IBOutlet weak var playerView1: YTPlayerView!
-    @IBOutlet weak var playerView2: YTPlayerView!
+    var playerView2 = YTPlayerView()
     
     
     //reviewのtableViewにセットする配列
@@ -91,6 +90,22 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         
         print("comedian:\(comedianId)")
         
+        
+        //スクロールを可能にする
+        //スクリーンの幅
+        let screenWidth = Int( UIScreen.main.bounds.size.width)
+        //スクリーンの高さ
+        let screenHeight = Int(UIScreen.main.bounds.size.height)
+        //UIScrollViewのインスタンス作成
+        let scrollView = UIScrollView()
+        //scrollViewの大きさを設定
+        scrollView.frame = self.view.frame
+        //スクロール領域の設定
+        scrollView.contentSize = CGSize(width:screenWidth, height:screenHeight)
+        //scrollViewをviewのSubViewとして追加
+        self.view.addSubview(scrollView)
+        
+        
         //comedianドキュメントから各項目を参照
         db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: comedianId).getDocuments() {(querySnapshot, err) in
             
@@ -101,8 +116,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             } else {
                 for document in querySnapshot!.documents {
                     print("\(document.documentID) => \(document.data())")
-                    self.comedianNameLabel.text = document.data()["comedian_name"] as! String
-                    self.officeLabel.text = document.data()["office_name"] as! String
+                    let comedian_name = document.data()["comedian_name"] as! String
+                    let office_name = "（\(document.data()["office_name"] as! String)）"
+                    self.comedianNameLabel.text = comedian_name + office_name
                     self.startYearLabel.text = document.data()["start_year"] as! String + "結成"
                     self.comedianTypeLabel.text = document.data()["comedian_type"] as! String
                     self.comedyTypeLabel1.text = document.data()["comedy_type_1"] as! String
@@ -111,48 +127,51 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     self.view.addSubview(self.comedianImageView)
                     
                     //mediaArrayを作る
+                    //append関数はnilを許容できない
+                    //Stringでメディアの種類(UIImageのname)を入れて198行目からの画像をセットするところでUIImageを設定
+            
                     if document.data()["twitter_1"] != nil {
-                        self.mediaImageArray.append(self.twitterImage!)
+                        self.mediaImageArray.append("twitter")
                     } else {
                       return
                     }
                     if document.data()["twitter_2"] != nil {
-                        self.mediaImageArray.append(self.twitterImage!)
+                        self.mediaImageArray.append("twitter")
                     } else {
                         return
                       }
                     if document.data()["twitter_3"] != nil {
-                        self.mediaImageArray.append(self.twitterImage!)
+                        self.mediaImageArray.append("twitter")
                     } else {
                         return
                       }
                     if document.data()["youtube_1"] != nil {
-                        self.mediaImageArray.append(self.youtubeImage!)
+                        self.mediaImageArray.append("youtube")
                     } else {
                         return
                       }
                     if document.data()["podcast_1"] != nil {
-                        self.mediaImageArray.append(self.podcastImage!)
+                        self.mediaImageArray.append("podcast")
                     } else {
                         return
                       }
                     if document.data()["standfm_1"] != nil {
-                        self.mediaImageArray.append(self.standfmImage!)
+                        self.mediaImageArray.append("standfm")
                     } else {
                         return
                       }
                     if document.data()["gera_1"] != nil {
-                        self.mediaImageArray.append(self.geraImage!)
+                        self.mediaImageArray.append("gera")
                     } else {
                         return
                       }
                     if document.data()["radiotalk_1"] != nil {
-                        self.mediaImageArray.append(self.radiotalkImage!)
+                        self.mediaImageArray.append("radiotalk")
                     } else {
                         return
                       }
                     if document.data()["spotify_1"] != nil {
-                        self.mediaImageArray.append(self.spotifyImage!)
+                        self.mediaImageArray.append("spotify")
                     } else {
                         return
                       }
@@ -190,104 +209,103 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     //配列のn番目のインデックスが存在していたら、画像をセットしボタンを有効化する
                     //そうでなければボタンを非表示
                     if self.mediaImageArray.indices.contains(0) == true {
-                        
+
                         //mediaInamgeArrayの該当indexの画像をセット
-                        self.mediaButton1.setImage(self.mediaImageArray[0], for: .normal)
+                        self.mediaButton1.setImage(UIImage(named: "\(self.mediaImageArray[0])"), for: .normal)
                         //タップでmediaUrlArrayの該当indexのurlに遷移するメソッド
                         self.mediaButton1.addTarget(self, action: #selector(self.mb1Tapped(_ :)), for: .touchUpInside)
-                        
+
                     } else {
                         self.mediaButton1.isHidden = true
                     }
-                    
+
                     if self.mediaImageArray.indices.contains(1) == true {
-                        
+
                         //mediaInamgeArrayの該当indexの画像をセット
-                        self.mediaButton2.setImage(self.mediaImageArray[1], for: .normal)
+                        self.mediaButton2.setImage(UIImage(named: "\(self.mediaImageArray[1])"), for: .normal)
                         //タップでmediaUrlArrayの該当indexのurlに遷移するメソッド
                         self.mediaButton2.addTarget(self, action: #selector(self.mb2Tapped(_ :)), for: .touchUpInside)
-                        
+
                     } else {
                         self.mediaButton2.isHidden = true
                     }
-                    
+
                     if self.mediaImageArray.indices.contains(2) == true {
-                        
+
                         //mediaInamgeArrayの該当indexの画像をセット
-                        self.mediaButton3.setImage(self.mediaImageArray[2], for: .normal)
+                        self.mediaButton3.setImage(UIImage(named: "\(self.mediaImageArray[2])"), for: .normal)
                         //タップでmediaUrlArrayの該当indexのurlに遷移するメソッド
                         self.mediaButton3.addTarget(self, action: #selector(self.mb3Tapped(_ :)), for: .touchUpInside)
-                        
+
                     } else {
                         self.mediaButton3.isHidden = true
                     }
-                    
+
                     if self.mediaImageArray.indices.contains(3) == true {
-                        
+
                         //mediaInamgeArrayの該当indexの画像をセット
-                        self.mediaButton4.setImage(self.mediaImageArray[3], for: .normal)
+                        self.mediaButton4.setImage(UIImage(named: "\(self.mediaImageArray[3])"), for: .normal)
                         //タップでmediaUrlArrayの該当indexのurlに遷移するメソッド
                         self.mediaButton4.addTarget(self, action: #selector(self.mb4Tapped(_ :)), for: .touchUpInside)
-                        
+
                     } else {
                         self.mediaButton4.isHidden = true
                     }
-                    
+
                     if self.mediaImageArray.indices.contains(4) == true {
-                        
+
                         //mediaInamgeArrayの該当indexの画像をセット
-                        self.mediaButton5.setImage(self.mediaImageArray[4], for: .normal)
+                        self.mediaButton5.setImage(UIImage(named: "\(self.mediaImageArray[4])"), for: .normal)
                         //タップでmediaUrlArrayの該当indexのurlに遷移するメソッド
                         self.mediaButton5.addTarget(self, action: #selector(self.mb5Tapped(_ :)), for: .touchUpInside)
-                        
+
                     } else {
                         self.mediaButton5.isHidden = true
                     }
-                    
+
                     if self.mediaImageArray.indices.contains(5) == true {
-                        
+
                         //mediaInamgeArrayの該当indexの画像をセット
-                        self.mediaButton6.setImage(self.mediaImageArray[5], for: .normal)
+                        self.mediaButton6.setImage(UIImage(named: "\(self.mediaImageArray[5])"), for: .normal)
                         //タップでmediaUrlArrayの該当indexのurlに遷移するメソッド
                         self.mediaButton6.addTarget(self, action: #selector(self.mb6Tapped(_ :)), for: .touchUpInside)
-                        
+
                     } else {
                         self.mediaButton6.isHidden = true
                     }
-                    
+
                     if self.mediaImageArray.indices.contains(6) == true {
-                        
+
                         //mediaInamgeArrayの該当indexの画像をセット
-                        self.mediaButton7.setImage(self.mediaImageArray[6], for: .normal)
+                        self.mediaButton7.setImage(UIImage(named: "\(self.mediaImageArray[6])"), for: .normal)
                         //タップでmediaUrlArrayの該当indexのurlに遷移するメソッド
                         self.mediaButton7.addTarget(self, action: #selector(self.mb7Tapped(_ :)), for: .touchUpInside)
-                        
+
                     } else {
                         self.mediaButton7.isHidden = true
                     }
-                    
+
                     if self.mediaImageArray.indices.contains(7) == true {
-                        
+
                         //mediaInamgeArrayの該当indexの画像をセット
-                        self.mediaButton8.setImage(self.mediaImageArray[7], for: .normal)
+                        self.mediaButton8.setImage(UIImage(named: "\(self.mediaImageArray[7])"), for: .normal)
                         //タップでmediaUrlArrayの該当indexのurlに遷移するメソッド
                         self.mediaButton8.addTarget(self, action: #selector(self.mb8Tapped(_ :)), for: .touchUpInside)
-                        
+
                     } else {
                         self.mediaButton8.isHidden = true
                     }
-                    
+
                     if self.mediaImageArray.indices.contains(8) == true {
-                        
+
                         //mediaInamgeArrayの該当indexの画像をセット
-                        self.mediaButton9.setImage(self.mediaImageArray[8], for: .normal)
+                        self.mediaButton9.setImage(UIImage(named: "\(self.mediaImageArray[8])"), for: .normal)
                         //タップでmediaUrlArrayの該当indexのurlに遷移するメソッド
                         self.mediaButton9.addTarget(self, action: #selector(self.mb9Tapped(_ :)), for: .touchUpInside)
-                        
+
                     } else {
                         self.mediaButton9.isHidden = true
                     }
-                    
                 }
             }
         }
@@ -384,16 +402,32 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         //参考：https://dev.classmethod.jp/articles/youtube-player-ios-helper/
         self.playerView1.delegate = self;
         self.playerView1.load(withVideoId: "flxXhcds6tw", playerVars: ["playsinline":1])
+        
+        //2つ目の動画を作成し埋め込む
+        self.view.addSubview(playerView2)
+        playerView2.translatesAutoresizingMaskIntoConstraints = false
+        playerView2.topAnchor.constraint(equalTo: self.playerView1.bottomAnchor, constant: 20).isActive = true
+        playerView2.heightAnchor.constraint(equalTo: self.playerView1.heightAnchor).isActive = true
+        playerView2.leftAnchor.constraint(equalTo: self.playerView1.leftAnchor).isActive = true
+        playerView2.rightAnchor.constraint(equalTo: self.playerView1.rightAnchor).isActive = true
+        playerView2.centerYAnchor.constraint(equalTo: self.playerView1.centerYAnchor).isActive = true
+
+        
+        self.playerView2.delegate = self;
+        self.playerView2.load(withVideoId: "flxXhcds6tw", playerVars: ["playsinline":1])
+        
+
 
         
         //2つ目の動画の下にtableViewを設置
         let tableView = UITableView(frame: .zero, style: .plain)
+        self.view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: self.playerView2.bottomAnchor, constant: 30.0)
-//        tableView.heightAnchor.constraint(equalTo: self.view.heightAnchor).isActive = true
-//        tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-//        tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-//        tableView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 650)
+        tableView.heightAnchor.constraint(equalTo: self.view.heightAnchor).isActive = true
+        tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        tableView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
         
         tableView.delegate = self
         tableView.dataSource = self

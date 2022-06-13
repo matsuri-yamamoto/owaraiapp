@@ -496,6 +496,7 @@ PODS:
   - SDWebImage (5.12.3):
     - SDWebImage/Core (= 5.12.3)
   - SDWebImage/Core (5.12.3)
+  - TabPageViewController (0.2.8)
   - youtube-ios-player-helper (1.0.4)
 
 DEPENDENCIES:
@@ -504,6 +505,7 @@ DEPENDENCIES:
   - Firebase/Firestore
   - Firebase/Storage
   - FirebaseUI/Storage
+  - TabPageViewController
   - youtube-ios-player-helper (= 1.0.4)
 
 SPEC REPOS:
@@ -530,6 +532,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - SDWebImage
+    - TabPageViewController
     - youtube-ios-player-helper
 
 SPEC CHECKSUMS:
@@ -555,8 +558,9 @@ SPEC CHECKSUMS:
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   SDWebImage: 53179a2dba77246efa8a9b85f5c5b21f8f43e38f
+  TabPageViewController: 8bd4104909754416b35a98f3b72a5b674ab20dd5
   youtube-ios-player-helper: e9b97535e816db3152179d84d999bc1807ecd689
 
-PODFILE CHECKSUM: c48b27d1de69af51e3c90c81022785d15659f2e4
+PODFILE CHECKSUM: 71e6951a62b6d4d42aae1d5ac330a4c8fcd6c31a
 
 COCOAPODS: 1.11.2
