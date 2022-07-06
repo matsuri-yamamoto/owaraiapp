@@ -13,6 +13,12 @@ target 'owaraimemo' do
   pod 'FirebaseUI/Storage'
   pod 'youtube-ios-player-helper', '1.0.4'
   pod 'TabPageViewController'
+  pod 'Tabman', '~> 2.12'
+  pod 'MultiAutoCompleteTextSwift'
+  pod 'IQKeyboardManagerSwift'
+  pod 'OAuthSwift', '~> 2.2.0'
+
+
 
 
 end

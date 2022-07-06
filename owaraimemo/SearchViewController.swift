@@ -72,7 +72,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 
             } else {
                 for document in querySnapshot!.documents {
-                    print("\(document.documentID) => \(document.data())")
                     self.comedianDataArray.append(document.documentID)
                     self.comedianNameArray.append(document.data()["for_list_name"] as! String)
                 }
@@ -97,6 +96,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         //SearchControllerに入力されている場合、SearchResultArrayの結果を返す
         if searchController.searchBar.text != "" {
             cell.comedianNameLabel.text = searchResultNameArray[indexPath.row]
+            return cell
 
         } else {
             //SearchControllerに入力がない場合、comedianNameArrayのデータを返す
@@ -107,14 +107,11 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     // 各セルを選択した時に実行されるメソッド
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        
+                
         let comedianVC = storyboard?.instantiateViewController(withIdentifier: "Comedian") as! ComedianDetailViewController
 
         //SearchControllerに入力されている場合、SearchResultArrayの結果を渡す
         if searchController.searchBar.text != ""  {
-
-
 
             //芸人名からcomedian_idを特定する
             db.collection("comedian").whereField("for_list_name", isEqualTo: searchResultNameArray[indexPath.row]).getDocuments() {
@@ -126,35 +123,38 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     } else {
                         for document in querySnapshot!.documents {
                             print("\(document.documentID) => \(document.data())")
+                            
+                            
+                            
                             self.searchResultData = document.documentID
+                            
+                            
+                            print("searchResultData:\(self.searchResultData)")
+                            
                         }
-                        //comedian_idを渡す
-                        comedianVC.comedianId = self.searchResultData
-                        print("searchResultData=>comedianVC.comedianId:\(comedianVC.comedianId)")
+                        //comedian_idをセットする
+                        self.comedianId = self.searchResultData
+                        print("comedianId:\(self.comedianId)")
+                        
+                        
                     }
-//                comedianVC.modalPresentationStyle = .fullScreen
-//                self.present(comedianVC, animated: true, completion: nil)
-                self.performSegue(withIdentifier: "toComedian", sender: nil)
-                tableView.deselectRow(at: indexPath, animated: true)
             }
         } else {
-
             //SearchControllerに入力がない場合、comedianDataArrayの結果を渡す
-
-            comedianVC.comedianId = comedianDataArray[indexPath.row]
-            print("comedianDataArray=>reviewVC.comedianID:\(comedianVC.comedianId)")
-
-//            comedianVC.modalPresentationStyle = .fullScreen
-            self.present(comedianVC, animated: true, completion: nil)
-//            performSegue(withIdentifier: "toComedian", sender: nil)
-            tableView.deselectRow(at: indexPath, animated: true)
-
+            self.comedianId = comedianDataArray[indexPath.row]
+            
         }
+        
+        //comedianIdを渡して画面遷移
+        
+        print("comedianId\(comedianId)")
+        
+        comedianVC.comedianId = self.comedianId
+        self.navigationController?.pushViewController(comedianVC, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
+        
     }
-    
-    
-    
-    
+        
     //検索窓押下時に呼ばれる
     func updateSearchResults(for searchController: UISearchController) {
 

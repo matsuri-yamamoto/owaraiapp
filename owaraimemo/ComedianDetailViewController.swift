@@ -10,12 +10,15 @@ import FirebaseFirestore
 import Firebase
 import WebKit
 import youtube_ios_player_helper
-import SwiftUI
 
 class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITableViewDelegate, UITableViewDataSource {
     
+    
     //comedian_idが渡される用の変数
     var comedianId: String = ""
+    
+    @IBOutlet weak var contentView: UIView!
+    
     
     @IBOutlet weak var comedianNameLabel: UILabel!
     @IBOutlet weak var startYearLabel: UILabel!
@@ -70,6 +73,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     var playerView2 = YTPlayerView()
     
     
+    //reviewのtableView
+    let tableView = UITableView(frame: .zero, style: .plain)
+    
     //reviewのtableViewにセットする配列
     var reviewIdArray: [String] = []
     var reviewUserNameArray: [String] = []
@@ -91,21 +97,6 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         print("comedian:\(comedianId)")
         
         
-        //スクロールを可能にする
-        //スクリーンの幅
-        let screenWidth = Int( UIScreen.main.bounds.size.width)
-        //スクリーンの高さ
-        let screenHeight = Int(UIScreen.main.bounds.size.height)
-        //UIScrollViewのインスタンス作成
-        let scrollView = UIScrollView()
-        //scrollViewの大きさを設定
-        scrollView.frame = self.view.frame
-        //スクロール領域の設定
-        scrollView.contentSize = CGSize(width:screenWidth, height:screenHeight)
-        //scrollViewをviewのSubViewとして追加
-        self.view.addSubview(scrollView)
-        
-        
         //comedianドキュメントから各項目を参照
         db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: comedianId).getDocuments() {(querySnapshot, err) in
             
@@ -120,11 +111,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     let office_name = "（\(document.data()["office_name"] as! String)）"
                     self.comedianNameLabel.text = comedian_name + office_name
                     self.startYearLabel.text = document.data()["start_year"] as! String + "結成"
-                    self.comedianTypeLabel.text = document.data()["comedian_type"] as! String
-                    self.comedyTypeLabel1.text = document.data()["comedy_type_1"] as! String
-                    self.comedyTypeLabel2.text = document.data()["comedy_type_2"] as! String
+                    self.comedianTypeLabel.text = document.data()["comedian_type"] as? String
+                    self.comedyTypeLabel1.text = document.data()["comedy_type_1"] as? String
+                    self.comedyTypeLabel2.text = document.data()["comedy_type_2"] as? String
                     self.comedianImageView.image = UIImage(named: "\(self.comedianId)")
-                    self.view.addSubview(self.comedianImageView)
+                    self.contentView.addSubview(self.comedianImageView)
                     
                     //mediaArrayを作る
                     //append関数はnilを許容できない
@@ -312,14 +303,22 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         
         //reviewドキュメントからscoreを参照
         //reviewのtableViewにセットする配列を作る
+        
+        //reviewのtimestamp型、number型のデータを取得するためのデータ型変換用
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "yyyy", options: 0, locale: Locale.current)
+        
+        
 
-        db.collection("review").whereField("comedian_id", isEqualTo: comedianId).order(by: "create_datetime").getDocuments() {(querySnapshot, err) in
+        db.collection("review").whereField("comedian_id", isEqualTo: comedianId).getDocuments() {(querySnapshot, err) in
             
+            //メモ：呼ばれている
             if let err = err {
                 print("Error getting documents: \(err)")
                 return
                 
             } else {
+                
                 for document in querySnapshot!.documents {
                     
                     //平均スコアを算出し、画像を設定
@@ -334,14 +333,27 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     }
                     
                     //レビューボタンの件数ラベルを設定
-                    self.reviewCountLabel.text = scoreArray.count as! String
+                    self.reviewCountLabel.text = String(scoreArray.count)
                     
                     //以下、reviewのtableViewにセットする配列
                     self.reviewIdArray.append(document.documentID)
+                    print("reviewIdArray:\(self.reviewIdArray)")
+                    
                     self.reviewUserIdArray.append(document.data()["user_id"] as! String)
-                    self.reviewCreatedArray.append(document.data()["create_datetime"] as! String)
-                    self.reviewScoreArray.append(document.data()["score"] as! String)
+                    
+                    //一旦FSのtimestampでデータを呼ぶ
+                    let reviewCreatedDate = document.data()["create_datetime"] as! Timestamp
+                    //Swiftのdateに変換
+                    reviewCreatedDate.dateValue()
+                    self.reviewCreatedArray.append(dateFormatter.string(from: reviewCreatedDate.dateValue()))
+                    
+                    self.reviewScoreArray.append(String(document.data()["score"] as! Float))
                     self.reviewCommentArray.append(document.data()["comment"] as! String)
+                    
+                    self.tableView.reloadData()
+                    
+                
+                    
                     
                 }
             }
@@ -404,14 +416,15 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         self.playerView1.load(withVideoId: "flxXhcds6tw", playerVars: ["playsinline":1])
         
         //2つ目の動画を作成し埋め込む
-        self.view.addSubview(playerView2)
         playerView2.translatesAutoresizingMaskIntoConstraints = false
-        playerView2.topAnchor.constraint(equalTo: self.playerView1.bottomAnchor, constant: 20).isActive = true
+        self.contentView.addSubview(playerView2)
+        
+        playerView2.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 650.0).isActive = true
         playerView2.heightAnchor.constraint(equalTo: self.playerView1.heightAnchor).isActive = true
         playerView2.leftAnchor.constraint(equalTo: self.playerView1.leftAnchor).isActive = true
         playerView2.rightAnchor.constraint(equalTo: self.playerView1.rightAnchor).isActive = true
         playerView2.centerYAnchor.constraint(equalTo: self.playerView1.centerYAnchor).isActive = true
-
+        
         
         self.playerView2.delegate = self;
         self.playerView2.load(withVideoId: "flxXhcds6tw", playerVars: ["playsinline":1])
@@ -420,21 +433,22 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
 
         
         //2つ目の動画の下にtableViewを設置
-        let tableView = UITableView(frame: .zero, style: .plain)
-        self.view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 650)
-        tableView.heightAnchor.constraint(equalTo: self.view.heightAnchor).isActive = true
-        tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-        tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-        tableView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        self.contentView.addSubview(tableView)
         
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 850.0).isActive = true
+        tableView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor).isActive = true
+        tableView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
+        tableView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
+        tableView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
+
         tableView.delegate = self
         tableView.dataSource = self
-        
+
         // カスタムセルを登録する
         let nib = UINib(nibName: "ComedianReviewTableViewCell", bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: "Cell")
+        tableView.register(nib, forCellReuseIdentifier: "cell")
+        
         
         
     }
@@ -545,6 +559,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                 for document in querySnapshot!.documents {
                     documentID = document.documentID
                     validFlag = document.data()["valid_flag"] as! Bool
+                    print("documentID:\(documentID)")
+                
                 }
                 
                 //ドキュメントidがnilの場合、trueでレコードを作り画像を保存済みに更新する
@@ -560,6 +576,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                         "delete_flag": false,
                         "delete_datetime": nil,
                     ] as [String : Any?]
+                    stockRef.setData(stockDic)
                                         
                     self.stockButton.setImage(self.existStockButtonImage, for: .normal)
                     
@@ -592,16 +609,41 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         }
     }
     
+    
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+        print("reviewIdArray.count:\(reviewIdArray.count)")
+        
+        return reviewIdArray.count
+        
+
+    }
+    
+    
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // 再利用可能な cell を得る
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ComedianReviewTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ComedianReviewTableViewCell
+        
+        cell.userImageView.image = nil
+        cell.userNameLabel.text = nil
+        cell.userIdLabel.text = nil
+        cell.createdLabel.text = nil
+        cell.scoreImageView.image = nil
+        cell.commentLabel.text = nil
+        cell.likeCountLabel.text = nil
+        
         
         //レビューしたユーザーのユーザーIDを入れる変数
         var reviewUserId :String = ""
+        //レビューしたユーザーのユーザー名を入れる変数
+        var reviewUserName :String = ""
+
         //レビューについたいいねの件数を入れる配列
         var niceReviewArray :[String] = []
-        
-        //※プロフィール画像とニックネームの仕様が決まったらここに追加する(reviewUserIdArryがあるのでそれを使う)
+
+        //※プロフィール画像の仕様が決まったらここに追加する(reviewUserIdArryがあるのでそれを使う)
         db.collection("user").whereField("uid", isEqualTo: self.reviewUserIdArray[indexPath.row]).getDocuments() {(querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
@@ -611,49 +653,55 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     for document in querySnapshot!.documents {
                         reviewUserId = document.data()["displayName"] as! String
                         cell.userIdLabel.text = reviewUserId
+                    }
+                }
+        }
+        
+        db.collection("user_detail").whereField("user_id", isEqualTo: self.reviewUserIdArray[indexPath.row]).getDocuments() {(querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    return
 
+                } else {
+                    for document in querySnapshot!.documents {
+                        reviewUserName = document.data()["nickname"] as! String
+                        cell.userNameLabel.text = reviewUserName
                     }
                 }
         }
         
         cell.createdLabel.text = self.reviewCreatedArray[indexPath.row]
-        
-        if self.reviewScoreArray[indexPath.row] == nil {
-            cell.scoreImageView.image = UIImage(named: "noScored")
-        } else {
-            cell.scoreImageView.image = UIImage(named: "score_\(self.reviewScoreArray[indexPath.row])")
-        }
-        cell.commentLabel.text = self.reviewCommentArray[indexPath.row]
-        
-        db.collection("niceReview").whereField("review_id", isEqualTo: self.reviewIdArray[indexPath.row]).getDocuments() {(querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-                return
 
-            } else {
-                for document in querySnapshot!.documents {
-                    niceReviewArray.append(document.documentID)
-                    niceReviewArray.count
-                    
-                    if niceReviewArray.count == 0 {
-                        cell.likeCountLabel.text = ""
-                    } else if niceReviewArray.count > 0 {
-                        cell.likeCountLabel.text = "\(niceReviewArray.count)件のいいね！"
-    
-                    }
-                }
-            }
-        }
-        
+//        if self.reviewScoreArray[indexPath.row] == nil {
+//            cell.scoreImageView.image = UIImage(named: "noScored")
+//        } else {
+//            cell.scoreImageView.image = UIImage(named: "score_\(self.reviewScoreArray[indexPath.row])")
+//        }
+//        cell.commentLabel.text = self.reviewCommentArray[indexPath.row]
+//
+//        db.collection("niceReview").whereField("review_id", isEqualTo: self.reviewIdArray[indexPath.row]).getDocuments() {(querySnapshot, err) in
+//            if let err = err {
+//                print("Error getting documents: \(err)")
+//                return
+//
+//            } else {
+//                for document in querySnapshot!.documents {
+//                    niceReviewArray.append(document.documentID)
+//
+//                    if niceReviewArray.count == 0 {
+//                        cell.likeCountLabel.text = ""
+//                    } else if niceReviewArray.count > 0 {
+//                        cell.likeCountLabel.text = "\(niceReviewArray.count)件のいいね！"
+//
+//                    }
+//                }
+//            }
+//        }
+
         return cell
-        
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return self.reviewIdArray.count
 
     }
+
     
     
 }

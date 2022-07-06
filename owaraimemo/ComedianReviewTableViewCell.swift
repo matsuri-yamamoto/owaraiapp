@@ -17,7 +17,7 @@ class ComedianReviewTableViewCell: UITableViewCell {
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var likeCountLabel: UILabel!
-    //制約をつけるときに、セルの高さを動的にする→https://qiita.com/y-okudera/items/f511dbe2b720931ee842
+    //備忘：制約をつけるときに、セルの高さを動的にする→https://qiita.com/y-okudera/items/f511dbe2b720931ee842
     
     
 
@@ -33,6 +33,11 @@ class ComedianReviewTableViewCell: UITableViewCell {
     }
     
     @IBAction func likeButton(_ sender: Any) {
+        
+        
+        
+        
+        
     }
     
     

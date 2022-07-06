@@ -7,9 +7,12 @@
 
 import UIKit
 import Firebase
+import FirebaseFirestore
+
 
 class CreateNewViewController: UIViewController {
-    
+  
+    @IBOutlet weak var nickNameTextField: UITextField!
     @IBOutlet weak var userNameTextField: UITextField!
     @IBOutlet weak var mailAddressTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -71,10 +74,10 @@ class CreateNewViewController: UIViewController {
             errorLabel.text = "利用規約とプライバシーポリシーをご確認ください"
             return
         }
-        else if let address = mailAddressTextField.text, let password = passwordTextField.text, let userName = userNameTextField.text {
+        else if let nickName = nickNameTextField.text, let address = mailAddressTextField.text, let password = passwordTextField.text, let userName = userNameTextField.text {
 
             // アドレスとパスワードと表示名のいずれかでも入力されていない時は何もしない
-            if address.isEmpty || password.isEmpty || userName.isEmpty {
+            if  nickName.isEmpty || address.isEmpty || password.isEmpty || userName.isEmpty {
                 print("DEBUG_PRINT: 何かが空文字です。")
                 errorLabel.text = "入力内容をご確認ください"
                 return
@@ -99,11 +102,36 @@ class CreateNewViewController: UIViewController {
                         return
                     }
                     print("DEBUG_PRINT: ユーザー名登録に成功しました。")
-                    self.performSegue(withIdentifier: "searchSegue", sender: nil)
                 }
-                }
+
+                //ニックネームを保存する
+                
+                print("currentUser\(Auth.auth().currentUser?.uid)")
+                            
+                
+                let deleteDateTime :String? = nil
+
+                let nickNameRef = Firestore.firestore().collection("user_detail").document()
+                let nickNameDic = [
+                    "user_id": Auth.auth().currentUser?.uid,
+                    "nickname": self.nickNameTextField.text,
+                    "create_datetime": FieldValue.serverTimestamp(),
+                    "update_datetime": FieldValue.serverTimestamp(),
+                    "delete_flag": false,
+                    "delete_datetime": deleteDateTime,
+                ] as [String : Any]
+                
+                print("nickNameDic\(nickNameDic)")
+                
+                nickNameRef.setData(nickNameDic)
+                
+
+                self.performSegue(withIdentifier: "searchSegue", sender: nil)
+
             }
+        }
     }
+                            
     
     //viewをタップしたときにキーボードを閉じる
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

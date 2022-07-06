@@ -8,6 +8,8 @@
 import UIKit
 import Firebase
 import FirebaseFirestore
+import MultiAutoCompleteTextSwift
+
 
 
 class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDelegate {
@@ -15,7 +17,11 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderLabel: UILabel!
+    @IBOutlet weak var comedianTextField: MultiAutoCompleteTextField!
     
+    
+    //comedianTextFieldに予測表示させる芸人の配列
+    var comedianNameArray: [String] = []
     
     //渡されるデータを入れる変数
     var comedianName: String = ""
@@ -25,6 +31,8 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
     var tag3: String = ""
     var tag4: String = ""
     var tag5: String = ""
+    
+    
     
 
     
@@ -62,6 +70,21 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                 self.sliderLabel.text = String(sliderDoubleValue)
             }
         }
+        
+        //comedianTextFieldに候補を表示させる
+        Firestore.firestore().collection("comedian").getDocuments() {(querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+                
+            } else {
+                for document in querySnapshot!.documents {
+                    self.comedianNameArray.append(document.data()["for_list_name"] as! String)
+                }
+                self.comedianTextField.autoCompleteStrings = self.comedianNameArray
+            }
+        }
+        
     }
     
     @objc func sliderDidChangeValue(_ sender: UISlider) {
@@ -71,6 +94,25 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
         sender.value = roundValue
         sliderLabel.text = String(roundValue)
     }
+
+    
+    //text の変更後に UITextView を一番下までスクロールする
+    func addText(_ text: String) {
+        textView.isScrollEnabled = false
+        textView.text = textView.text + text
+        scrollToBottom()
+    }
+
+    func scrollToBottom() {
+        textView.selectedRange = NSRange(location: textView.text.count, length: 0)
+        textView.isScrollEnabled = true
+
+        let scrollY = textView.contentSize.height - textView.bounds.height
+        let scrollPoint = CGPoint(x: 0, y: scrollY > 0 ? scrollY : 0)
+        textView.setContentOffset(scrollPoint, animated: true)
+    }
+    
+    
     
     
     
@@ -113,6 +155,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                         "tag_4": self.tag4,
                         "tag_5": self.tag5,
                         "private_flag": false,
+                        "relational_comedian_listname": self.comedianTextField.text,
                         "create_datetime": FieldValue.serverTimestamp(),
                         "update_datetime": FieldValue.serverTimestamp(),
                         "delete_flag": false,
@@ -132,6 +175,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                     existReviewRef.updateData([
                         "score": score,
                         "comment": textView,
+                        "relational_comedian_listname": self.comedianTextField.text,
                         "update_datetime": FieldValue.serverTimestamp(),
                     ]) { err in
                         if let err = err {
