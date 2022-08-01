@@ -52,6 +52,11 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         self.navigationItem.title = "みつかる"
         
         
+
+
+        
+        
+        
         
         
         //fetchDataなどで分割した配列の各データを呼び、配列を結合する→cellItemAtにてindexPathでセットする
@@ -66,7 +71,43 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         
     }
     
-    
+    override func viewDidAppear(_ animated: Bool) {
+        hidesBottomBarWhenPushed = true
+        
+        //後で消す（Twitterのデータ取得方法確認用）
+        let user = Auth.auth().currentUser
+        if let user = user {
+            
+        
+            let uid = user.uid
+
+            let tenantId = user.tenantID
+            let email = user.email
+            let displayName = user.displayName
+            
+            print("uid:\(uid)")
+            print("tenantId:\(tenantId)")
+
+            print("email:\(String(describing: email))")
+            print("displayName:\(String(describing: displayName))")
+            
+            print("twitterUser:\(user)")
+
+        }
+        
+        let userInfo = Auth.auth().currentUser?.providerData
+//        let providerId = userInfo?.providerID
+//        let twitterId = userInfo?.uid
+        
+        print("twitterUserInfo:\(String(describing: userInfo))")
+//        print("providerId:\(String(describing: providerId))")
+//        print("twitterId:\(String(describing: twitterId))")
+        
+        
+        
+        
+    }
+        
         
     
     func cellComedianNameData() {
@@ -285,13 +326,15 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
+        
         let comedianVC = storyboard?.instantiateViewController(withIdentifier: "Comedian") as! ComedianDetailViewController
 
         comedianVC.comedianId = self.comedianNameArrayId[indexPath.row]
         self.navigationController?.pushViewController(comedianVC, animated: true)
+        hidesBottomBarWhenPushed = true
 
     }
+    
     
 }
 

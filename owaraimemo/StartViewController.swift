@@ -7,19 +7,19 @@
 
 import UIKit
 import OAuthSwift
+import Firebase
+import FirebaseAuth
+import KeychainAccess
+import FirebaseFirestore
 
 
-struct Const {
-    static let consumerKey = "jQfkMjkKOr96wuPIsLpHMntXc"
-    static let consumerSecret = "LU3rME3W1CYIQvUngni8KE6tcfVA21NR7NIqFNh882Lq96gHuM"
-}
+
 
 
 class StartViewController: UIViewController {
     
-    var oauthswift: OAuthSwift?
-            
-    
+    private var provider: OAuthProvider?
+                
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.isHidden = true
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
@@ -28,70 +28,105 @@ class StartViewController: UIViewController {
     
     
     @IBAction func clickButton(_ sender: UIButton) {
-        doOAuthTwitter()
-    }
+        
+        provider = OAuthProvider(providerID: "twitter.com")
+              provider?.getCredentialWith(nil) { credential, error in
+                  guard let credential = credential, error == nil else {
+                      return
+                  }
 
-    /// OAuthログイン処理
-    func doOAuthTwitter(){
+                  Auth.auth().signIn(with: credential) { result, error in
+                      guard error == nil else {
+                          return
+                      }
 
-        let oauthswift = OAuth1Swift(
-            consumerKey: Const.consumerKey,
-            consumerSecret: Const.consumerSecret,
-            requestTokenUrl: "https://api.twitter.com/oauth/request_token",
-            authorizeUrl:    "https://api.twitter.com/oauth/authorize",
-            accessTokenUrl:  "https://api.twitter.com/oauth/access_token"
-        )
-        self.oauthswift = oauthswift
-        oauthswift.authorizeURLHandler = getURLHandler()
+                      if let credential = result?.credential as? OAuthCredential,
+                          let accessToken = credential.accessToken,
+                          let secret = credential.secret {
 
-        // コールバック処理
-        oauthswift.authorize(withCallbackURL: URL(string: "TwitterLoginSampleOAuth://")!,
-                             completionHandler:
-            { result in
-                switch result {
-                case .success(let (credential, _, _)):
-                    print(credential.oauthToken)
-                    print(credential.oauthTokenSecret)
-                    self.showAlert(credential: credential)
-                    print("success")
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    print("failure")
-                }
-        }
-        )
-    }
+                          let keychain = Keychain(service: Bundle.main.bundleIdentifier!)
+                          try? keychain.set(accessToken, key: "jQfkMjkKOr96wuPIsLpHMntXc")
+                          try? keychain.set(secret, key: "LU3rME3W1CYIQvUngni8KE6tcfVA21NR7NIqFNh882Lq96gHuM")
+                      }
+                      
+                      //resultで取得できる情報に「credential」と「additional,,」がある
+                      //aditionalをprintして中身を確認する
+                      print("additionalUserInfo:\(result?.additionalUserInfo)")
+                      print("additionalUserInfo:\(result?.additionalUserInfo?.providerID)")
+                      print("additionalUserInfo:\(result?.additionalUserInfo?.username)")
+                      print("additionalUserInfo:\(result?.additionalUserInfo?.profile?["screen_name"] as! String)")
+                      
+                      
+                      //ユーザーネームを保存する
+                      let deleteDateTime :String? = nil
 
-    /// ログイン画面起動に必要な処理
-    ///
-    /// - Returns: OAuthSwiftURLHandlerType
-    func getURLHandler() -> OAuthSwiftURLHandlerType {
-        if #available(iOS 9.0, *) {
-            let handler = SafariURLHandler(viewController: self, oauthSwift: self.oauthswift!)
-            handler.presentCompletion = {
-                print("Safari presented")
-            }
-            handler.dismissCompletion = {
-                print("Safari dismissed")
-            }
-            return handler
-        }
-        return OAuthSwiftOpenURLExternally.sharedInstance
-    }
+                      let userNameRef = Firestore.firestore().collection("user_detail").document()
+                      let userNameDic = [
+                          "user_id": Auth.auth().currentUser?.uid,
+                          "username": Auth.auth().currentUser?.displayName,
+                          "create_datetime": FieldValue.serverTimestamp(),
+                          "update_datetime": FieldValue.serverTimestamp(),
+                          "delete_flag": false,
+                          "delete_datetime": deleteDateTime,
+                      ] as [String : Any]
+                      
+                      print("userNameDic\(userNameDic)")
+                      
+                      userNameRef.setData(userNameDic)
+                      
+                      print("firstDisplayName:\(String(describing: Auth.auth().currentUser?.displayName))")
 
-    /// アラート表示
-    ///
-    /// - Parameter credential: OAuthSwiftCredential
-    func showAlert(credential: OAuthSwiftCredential) {
-        var message = "oauth_token:\(credential.oauthToken)"
-        if !credential.oauthTokenSecret.isEmpty {
-            message += "\n\noauth_token_secret:\(credential.oauthTokenSecret)"
-        }
-        let alert = UIAlertController(title: "ログイン",
-                                      message: message,
-            preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK",
-                                      style: UIAlertAction.Style.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+                      //displayNameを上書きする
+                      Auth.auth().currentUser?.createProfileChangeRequest().displayName = result?.additionalUserInfo?.profile?["screen_name"] as? String
+                      
+                      Auth.auth().currentUser?.createProfileChangeRequest().commitChanges() { error in
+                          if error == nil {
+                              print("Successed：Twitterログイン→displayNameの更新")
+                              
+                          } else {
+                              print("Failed：Twitterログイン→displayNameの更新")
+
+                          }
+                          
+                      }
+                      print("finalDisplayName:\(String(describing: Auth.auth().currentUser?.displayName))")
+
+                      
+                  }
+                  
+              }
+        
+        
+//        let user = Auth.auth().currentUser
+//        if let user = user {
+//
+//            let uid = user.uid
+//            let email = user.email
+//            let displayName = user.displayName
+//
+//            let twitterUserId :String
+//            twitterUserId = Result.additionalUserInfo?.username
+//
+//            print("uid:\(uid)")
+//            print("email:\(String(describing: email))")
+//            print("displayName:\(String(describing: displayName))")
+//
+//            print("twitterUser:\(user)")
+//
+//        }
+        
+
+                
+
+        
+        
+        
+        let tabBarVC = storyboard?.instantiateViewController(withIdentifier: "Tabbar") as! TabBarController
+
+        self.navigationController?.pushViewController(tabBarVC, animated: true)
     }
 }
+        
+        
+
+

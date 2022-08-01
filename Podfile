@@ -17,6 +17,11 @@ target 'owaraimemo' do
   pod 'MultiAutoCompleteTextSwift'
   pod 'IQKeyboardManagerSwift'
   pod 'OAuthSwift', '~> 2.2.0'
+  pod 'FirebaseAuth'
+  pod 'KeychainAccess'
+  pod 'Firebase/DynamicLinks'
+
+
 
 
 

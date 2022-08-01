@@ -56,6 +56,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         //結果表示用のビューコントローラーに自分を設定する
         searchController.searchResultsUpdater = self
+        searchController.searchBar.placeholder = "芸人さんの名前で検索"
         
         //SearchControllerを使用する際に画面遷移時に発生する問題を解消する
         definesPresentationContext = true
@@ -85,7 +86,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if( searchController.searchBar.text != "" ) {
                     return searchResultNameArray.count
                 } else {
-                    return comedianNameArray.count
+//                    return comedianNameArray.count
+                    return 0
                 }
     }
 
@@ -100,7 +102,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
         } else {
             //SearchControllerに入力がない場合、comedianNameArrayのデータを返す
-            cell.comedianNameLabel.text = comedianNameArray[indexPath.row]
+//            cell.comedianNameLabel.text = comedianNameArray[indexPath.row]
+            cell.comedianNameLabel.text = ""
         }
         return cell
     }
@@ -136,23 +139,13 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                         self.comedianId = self.searchResultData
                         print("comedianId:\(self.comedianId)")
                         
-                        
+                        //comedianIdを渡して画面遷移
+                        comedianVC.comedianId = self.comedianId
+                        self.navigationController?.pushViewController(comedianVC, animated: true)
+                        tableView.deselectRow(at: indexPath, animated: true)
                     }
             }
-        } else {
-            //SearchControllerに入力がない場合、comedianDataArrayの結果を渡す
-            self.comedianId = comedianDataArray[indexPath.row]
-            
         }
-        
-        //comedianIdを渡して画面遷移
-        
-        print("comedianId\(comedianId)")
-        
-        comedianVC.comedianId = self.comedianId
-        self.navigationController?.pushViewController(comedianVC, animated: true)
-        tableView.deselectRow(at: indexPath, animated: true)
-        
     }
         
     //検索窓押下時に呼ばれる

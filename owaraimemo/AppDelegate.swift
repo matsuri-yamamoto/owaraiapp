@@ -9,6 +9,7 @@ import UIKit
 import Firebase
 import IQKeyboardManagerSwift
 import OAuthSwift
+import FirebaseDynamicLinks
 
 
 @main

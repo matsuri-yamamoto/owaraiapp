@@ -12,14 +12,13 @@ import FirebaseFirestore
 
 class CreateNewViewController: UIViewController {
   
-    @IBOutlet weak var nickNameTextField: UITextField!
     @IBOutlet weak var userNameTextField: UITextField!
+    @IBOutlet weak var displayIdTextField: UITextField!
     @IBOutlet weak var mailAddressTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var errorLabel: UILabel!
-    @IBOutlet weak var checkBox: UIButton!
-    @IBOutlet weak var termButton: UIButton!
-    @IBOutlet weak var ppButton: UIButton!
+//    @IBOutlet weak var termButton: UIButton!
+//    @IBOutlet weak var ppButton: UIButton!
     
 
     var checked = false
@@ -33,53 +32,49 @@ class CreateNewViewController: UIViewController {
         //エラーメッセージをデフォルトでは表示させない
         errorLabel.text = nil
         
-        //チェックボックスの枠の色をグレーにする
-        checkBox.layer.borderWidth = 2
-        checkBox.layer.borderColor = UIColor.gray.cgColor
-        checkBox.addTarget(self,
-                         action: #selector(didChecked),
-                         for: .touchUpInside)
-
-        if #available(iOS 15.0, *) {
-            termButton.configuration = nil
-            ppButton.configuration = nil
-
-         }
-        termButton.titleLabel?.font = UIFont(name: "ArialHebrew-Bold", size: 10)
-        ppButton.titleLabel?.font = UIFont(name: "ArialHebrew-Bold", size: 10)
-
-        
-    }
-    
-
-
-    @objc private func didChecked(){
-        switch checked {
-                case false:
-                    checkBox.setImage(UIImage(systemName: "checkmark"), for: .normal)
-                    checked = true
-                case true:
-                    let image = UIImage(contentsOfFile: "")
-            checkBox.setImage(image, for: .normal)
-                    checked = false
-                    print("checked:\(checked)")
-            
-                }
+//        //チェックボックスの枠の色をグレーにする
+//        checkBox.layer.borderWidth = 2
+//        checkBox.layer.borderColor = UIColor.gray.cgColor
+//        checkBox.addTarget(self,
+//                         action: #selector(didChecked),
+//                         for: .touchUpInside)
+//
+//        if #available(iOS 15.0, *) {
+//            termButton.configuration = nil
+//            ppButton.configuration = nil
+//
+//         }
+//        termButton.titleLabel?.font = UIFont(name: "ArialHebrew-Bold", size: 10)
+//        ppButton.titleLabel?.font = UIFont(name: "ArialHebrew-Bold", size: 10)
+//
+//
+//    }
+//
+//
+//
+//    @objc private func didChecked(){
+//        switch checked {
+//                case false:
+//                    checkBox.setImage(UIImage(systemName: "checkmark"), for: .normal)
+//                    checked = true
+//                case true:
+//                    let image = UIImage(contentsOfFile: "")
+//            checkBox.setImage(image, for: .normal)
+//                    checked = false
+//                    print("checked:\(checked)")
+//
+//                }
     }
     
     // アカウント作成ボタンをタップしたときに呼ばれるメソッド
     @IBAction func handleCreateAccountButton(_ sender: Any) {
-        
-        if checked == false {
-            errorLabel.text = "利用規約とプライバシーポリシーをご確認ください"
-            return
-        }
-        else if let nickName = nickNameTextField.text, let address = mailAddressTextField.text, let password = passwordTextField.text, let userName = userNameTextField.text {
+ 
+        if let userName = userNameTextField.text, let address = mailAddressTextField.text, let password = passwordTextField.text, let displayId = displayIdTextField.text {
 
-            // アドレスとパスワードと表示名のいずれかでも入力されていない時は何もしない
-            if  nickName.isEmpty || address.isEmpty || password.isEmpty || userName.isEmpty {
+            // いずれかでも入力されていない時は何もしない
+            if  userName.isEmpty || address.isEmpty || password.isEmpty || displayId.isEmpty {
                 print("DEBUG_PRINT: 何かが空文字です。")
-                errorLabel.text = "入力内容をご確認ください"
+                errorLabel.text = "すべての項目が入力されているかご確認ください！"
                 return
             }
             
@@ -94,7 +89,7 @@ class CreateNewViewController: UIViewController {
 
                 //createProfileChangeRequestでユーザー名を登録する
                 let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
-                changeRequest?.displayName = userName
+                changeRequest?.displayName = displayId
                 changeRequest?.commitChanges { error in
                     if let error = error{
                         // エラーがあったら原因をprintして、returnすることで以降の処理を実行せずに処理を終了する
@@ -111,19 +106,19 @@ class CreateNewViewController: UIViewController {
                 
                 let deleteDateTime :String? = nil
 
-                let nickNameRef = Firestore.firestore().collection("user_detail").document()
-                let nickNameDic = [
+                let userNameRef = Firestore.firestore().collection("user_detail").document()
+                let userNameDic = [
                     "user_id": Auth.auth().currentUser?.uid,
-                    "nickname": self.nickNameTextField.text,
+                    "username": self.userNameTextField.text,
                     "create_datetime": FieldValue.serverTimestamp(),
                     "update_datetime": FieldValue.serverTimestamp(),
                     "delete_flag": false,
                     "delete_datetime": deleteDateTime,
                 ] as [String : Any]
                 
-                print("nickNameDic\(nickNameDic)")
+                print("userNameDic\(userNameDic)")
                 
-                nickNameRef.setData(nickNameDic)
+                userNameRef.setData(userNameDic)
                 
 
                 self.performSegue(withIdentifier: "searchSegue", sender: nil)

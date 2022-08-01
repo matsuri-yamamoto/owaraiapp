@@ -49,6 +49,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     //あとでみるボタンのデフォルトと保存時の画像
     let defaltStockButtonImage = UIImage(named: "defaltStockButton")
     let existStockButtonImage = UIImage(named: "existStockButton")
+    //あとでみるに保存するための芸人の表示名を取得する変数
+    var stockComedianName: String = ""
 
     
     
@@ -79,10 +81,14 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     //reviewのtableViewにセットする配列
     var reviewIdArray: [String] = []
     var reviewUserNameArray: [String] = []
+    var reviewDisplayIdArray: [String] = []
     var reviewUserIdArray: [String] = []
     var reviewCreatedArray: [String] = []
     var reviewScoreArray: [String] = []
     var reviewCommentArray: [String] = []
+    
+    
+    var reviewId :String = ""
 
     //Firestoreを使うための下準備
     let currentUser = Auth.auth().currentUser
@@ -302,7 +308,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         }
         
         //reviewドキュメントからscoreを参照
-        //reviewのtableViewにセットする配列を作る
+        //reviewのtableViewにセットする配列を作る(userName,displayId,create_datetime,score,comment)
         
         //reviewのtimestamp型、number型のデータを取得するためのデータ型変換用
         let dateFormatter = DateFormatter()
@@ -332,6 +338,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                         self.scoreImageView.image = UIImage(named: "score_\(averageScore)")
                     }
                     
+                    
+                    print("data:\(document.data())")
+                    
                     //レビューボタンの件数ラベルを設定
                     self.reviewCountLabel.text = String(scoreArray.count)
                     
@@ -339,8 +348,10 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     self.reviewIdArray.append(document.documentID)
                     print("reviewIdArray:\(self.reviewIdArray)")
                     
-                    self.reviewUserIdArray.append(document.data()["user_id"] as! String)
-                    
+//                    self.reviewUserIdArray.append(document.data()["user_id"] as! String)
+                    self.reviewUserNameArray.append(document.data()["user_name"] as! String)
+                    self.reviewDisplayIdArray.append(document.data()["display_id"] as! String)
+
                     //一旦FSのtimestampでデータを呼ぶ
                     let reviewCreatedDate = document.data()["create_datetime"] as! Timestamp
                     //Swiftのdateに変換
@@ -441,6 +452,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         tableView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
         tableView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
         tableView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
+        
+        
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -449,9 +462,22 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         let nib = UINib(nibName: "ComedianReviewTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "cell")
         
+//        //デフォルトのセルの高さを設定する
+//        tableView.estimatedRowHeight = 200
+//        //セルの高さを動的にするためにrowHeightにUITableViewAutomaticDimensionを設定する
+//        tableView.rowHeight = UITableView.automaticDimension
+
+        
         
         
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+
+        return 200
+        
+        }
+    
 
     
     //各メディアボタンタップでmediaUrlArrayの該当indexのurlに遷移するメソッド
@@ -521,93 +547,117 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
     @IBAction func reviewButton(_ sender: Any) {
         
-        //レビュー画面に遷移
-        let reviewVC = storyboard?.instantiateViewController(withIdentifier: "Review") as! ReviewViewController
-        let nav = UINavigationController(rootViewController: reviewVC)
+        
+        if currentUser?.uid == nil {
+            //ログインしていない場合、ログイン推奨ページに遷移
+            let recLoginVC = storyboard?.instantiateViewController(withIdentifier: "RecLogin") as! RecommendLoginViewController
+            
+            self.navigationController?.pushViewController(recLoginVC, animated: true)
+            
+            hidesBottomBarWhenPushed = true
+            
+        } else {
+        
+            //レビュー画面に遷移
+            let reviewVC = storyboard?.instantiateViewController(withIdentifier: "Review") as! ReviewViewController
+            let nav = UINavigationController(rootViewController: reviewVC)
 
-        //comedian_idを渡す
-        reviewVC.comedianID = self.comedianId
-        
-        //comedianNameLabelをStringに変換して芸人名を渡す
-        var comedianName = comedianNameLabel.text! as String
-        reviewVC.comedianName = comedianName
-        
-        self.present(nav, animated: true, completion: nil)
+            //comedian_idを渡す
+            reviewVC.comedianID = self.comedianId
+            
+            //comedianNameLabelをStringに変換して芸人名を渡す
+            var comedianName = comedianNameLabel.text! as String
+            reviewVC.comedianName = comedianName
+            
+            self.present(nav, animated: true, completion: nil)
+        }
 
     }
     
     @IBAction func stockButton(_ sender: Any) {
         
-        //user_id=currentUserかつcomedian_id=comedianIdstockがなければtrueでレコード作り、画像を保存済みに更新する
-        //あれば、flagを確認しtrueだったらfalseに、falseだったらtrueに更新する
-        //flagがtrueだったら画像をデフォルトに、falseだったら保存済みの画像に更新する
         
-        //すでにuser_id=currentUserかつcomedian_id=comedianIdかつtrueのstockがあれば、flagをfalseにする
-        //画像を保存前の画像に戻す
-        
-        
-        var documentID :String?
-        var validFlag :Bool?
-        
-        db.collection("stock").whereField("comedian_id", isEqualTo: comedianId).whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).getDocuments() {(querySnapshot, err) in
+        if currentUser?.uid == nil {
+            //ログインしていない場合、ログイン推奨ページに遷移
+            let recLoginVC = storyboard?.instantiateViewController(withIdentifier: "RecLogin") as! RecommendLoginViewController
             
-            if let err = err {
-                print("Error getting documents: \(err)")
-                return
+            self.navigationController?.pushViewController(recLoginVC, animated: true)
+            
+            hidesBottomBarWhenPushed = true
+            
+        } else {
+            //user_id=currentUserかつcomedian_id=comedianIdstockがなければtrueでレコード作り、画像を保存済みに更新する
+            //あれば、flagを確認しtrueだったらfalseに、falseだったらtrueに更新する
+            //flagがtrueだったら画像をデフォルトに、falseだったら保存済みの画像に更新する
+            
+            //すでにuser_id=currentUserかつcomedian_id=comedianIdかつtrueのstockがあれば、flagをfalseにする
+            //画像を保存前の画像に戻す
+            
+            
+            var documentID :String?
+            var validFlag :Bool?
+            
+            db.collection("stock").whereField("comedian_id", isEqualTo: comedianId).whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).getDocuments() {(querySnapshot, err) in
                 
-            } else {
-                for document in querySnapshot!.documents {
-                    documentID = document.documentID
-                    validFlag = document.data()["valid_flag"] as! Bool
-                    print("documentID:\(documentID)")
-                
-                }
-                
-                //ドキュメントidがnilの場合、trueでレコードを作り画像を保存済みに更新する
-                if documentID == nil {
-                    //レコード保存
-                    let stockRef = Firestore.firestore().collection("stock").document()
-                    let stockDic = [
-                        "user_id": Auth.auth().currentUser?.uid,
-                        "comedian_id": self.comedianId,
-                        "valid_flag": true,
-                        "create_datetime": FieldValue.serverTimestamp(),
-                        "update_datetime": FieldValue.serverTimestamp(),
-                        "delete_flag": false,
-                        "delete_datetime": nil,
-                    ] as [String : Any?]
-                    stockRef.setData(stockDic)
-                                        
-                    self.stockButton.setImage(self.existStockButtonImage, for: .normal)
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    return
                     
                 } else {
+                    for document in querySnapshot!.documents {
+                        documentID = document.documentID
+                        validFlag = document.data()["valid_flag"] as! Bool
+                        print("documentID:\(documentID)")
                     
-                    //nilでない場合、flagを確認
-                    //flag=falseの場合、trueに更新
-                    if validFlag == false {
-                        
-                        let existStockRef = Firestore.firestore().collection("stock").document(documentID!)
-                        existStockRef.updateData([
+                    }
+                    
+                    //ドキュメントidがnilの場合、trueでレコードを作り画像を保存済みに更新する
+                    if documentID == nil {
+                        //レコード保存
+                        let stockRef = Firestore.firestore().collection("stock").document()
+                        let stockDic = [
+                            "user_id": Auth.auth().currentUser?.uid,
+                            "comedian_id": self.comedianId,
+                            "comedian_display_name": self.stockComedianName,
                             "valid_flag": true,
+                            "create_datetime": FieldValue.serverTimestamp(),
                             "update_datetime": FieldValue.serverTimestamp(),
-                        ])
+                            "delete_flag": false,
+                            "delete_datetime": nil,
+                        ] as [String : Any?]
+                        stockRef.setData(stockDic)
+                                            
                         self.stockButton.setImage(self.existStockButtonImage, for: .normal)
                         
                     } else {
                         
-                        let existStockRef = Firestore.firestore().collection("stock").document(documentID!)
-                        existStockRef.updateData([
-                            "valid_flag": false,
-                            "update_datetime": FieldValue.serverTimestamp(),
-                        ])
-                        self.stockButton.setImage(self.defaltStockButtonImage, for: .normal)
-                        
+                        //nilでない場合、flagを確認
+                        //flag=falseの場合、trueに更新
+                        if validFlag == false {
+                            
+                            let existStockRef = Firestore.firestore().collection("stock").document(documentID!)
+                            existStockRef.updateData([
+                                "valid_flag": true,
+                                "update_datetime": FieldValue.serverTimestamp(),
+                            ])
+                            self.stockButton.setImage(self.existStockButtonImage, for: .normal)
+                            
+                        } else {
+                            
+                            let existStockRef = Firestore.firestore().collection("stock").document(documentID!)
+                            existStockRef.updateData([
+                                "valid_flag": false,
+                                "update_datetime": FieldValue.serverTimestamp(),
+                            ])
+                            self.stockButton.setImage(self.defaltStockButtonImage, for: .normal)
+                            
+                        }
                     }
-                    
                 }
             }
         }
     }
+                
     
     
     
@@ -625,85 +675,189 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // 再利用可能な cell を得る
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ComedianReviewTableViewCell
-        
-        cell.userImageView.image = nil
-        cell.userNameLabel.text = nil
-        cell.userIdLabel.text = nil
-        cell.createdLabel.text = nil
-        cell.scoreImageView.image = nil
-        cell.commentLabel.text = nil
-        cell.likeCountLabel.text = nil
-        
+                
         
         //レビューしたユーザーのユーザーIDを入れる変数
         var reviewUserId :String = ""
         //レビューしたユーザーのユーザー名を入れる変数
         var reviewUserName :String = ""
 
-        //レビューについたいいねの件数を入れる配列
-        var niceReviewArray :[String] = []
-
+        //reviewidを入れる変数
+        reviewId = self.reviewIdArray[indexPath.row]
+        
+        print("self.reviewIdArray[indexPath.row]:\(self.reviewIdArray[indexPath.row])")
+        
+        
         //※プロフィール画像の仕様が決まったらここに追加する(reviewUserIdArryがあるのでそれを使う)
-        db.collection("user").whereField("uid", isEqualTo: self.reviewUserIdArray[indexPath.row]).getDocuments() {(querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                    return
+        //ユーザー名
+        reviewUserName = reviewUserNameArray[indexPath.row]
+        cell.userNameLabel.text = reviewUserName
 
-                } else {
-                    for document in querySnapshot!.documents {
-                        reviewUserId = document.data()["displayName"] as! String
-                        cell.userIdLabel.text = reviewUserId
-                    }
-                }
-        }
-        
-        db.collection("user_detail").whereField("user_id", isEqualTo: self.reviewUserIdArray[indexPath.row]).getDocuments() {(querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                    return
+        //ユーザーID
+        reviewUserId = reviewDisplayIdArray[indexPath.row]
+        cell.userIdLabel.text = reviewUserId
 
-                } else {
-                    for document in querySnapshot!.documents {
-                        reviewUserName = document.data()["nickname"] as! String
-                        cell.userNameLabel.text = reviewUserName
-                    }
-                }
-        }
-        
+
+
         cell.createdLabel.text = self.reviewCreatedArray[indexPath.row]
+        
 
-//        if self.reviewScoreArray[indexPath.row] == nil {
-//            cell.scoreImageView.image = UIImage(named: "noScored")
-//        } else {
-//            cell.scoreImageView.image = UIImage(named: "score_\(self.reviewScoreArray[indexPath.row])")
-//        }
-//        cell.commentLabel.text = self.reviewCommentArray[indexPath.row]
-//
-//        db.collection("niceReview").whereField("review_id", isEqualTo: self.reviewIdArray[indexPath.row]).getDocuments() {(querySnapshot, err) in
-//            if let err = err {
-//                print("Error getting documents: \(err)")
-//                return
-//
-//            } else {
-//                for document in querySnapshot!.documents {
-//                    niceReviewArray.append(document.documentID)
-//
-//                    if niceReviewArray.count == 0 {
-//                        cell.likeCountLabel.text = ""
-//                    } else if niceReviewArray.count > 0 {
-//                        cell.likeCountLabel.text = "\(niceReviewArray.count)件のいいね！"
-//
-//                    }
-//                }
-//            }
-//        }
+        //scoreをセット
+        if self.reviewScoreArray[indexPath.row] == nil {
+            cell.scoreImageView.image = UIImage(named: "noScored")
+        } else {
+            cell.scoreImageView.image = UIImage(named: "score_\(self.reviewScoreArray[indexPath.row])")
+        }
+        cell.commentLabel.text = self.reviewCommentArray[indexPath.row]
 
+        //likereviewをセット
+        db.collection("like_review").whereField("review_id", isEqualTo: reviewId).getDocuments() {(querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+
+            } else {
+                //like_reviewドキュメントが0件の場合
+                if querySnapshot!.documents.count == 0 {
+                    cell.likeCountLabel.text = "いいね！はまだありません"
+                } else {
+                    cell.likeCountLabel.text = "\(querySnapshot!.documents.count)件のいいね！"
+
+                }
+            }
+        }
         return cell
 
     }
+    
+    func tappedLikeButton() {
+        
+        
+        if currentUser?.uid == nil {
+            //ログインしていない場合、ログイン推奨ページに遷移
+            let recLoginVC = storyboard?.instantiateViewController(withIdentifier: "RecLogin") as! RecommendLoginViewController
+            
+            self.navigationController?.pushViewController(recLoginVC, animated: true)
+            
+            hidesBottomBarWhenPushed = true
+            
+        } else {
+        
+            var documentId :String?
+            var likeFlag :Bool?
+            var likeUserName :String?
+            var reviewUserId :String?
+            var reviewUserName :String?
+            var reviewUserDisplayId :String?
+            var reviewComment :String?
+            var reviewScore :Float?
+            
+            //likeしていない状態の場合
+            //即ち、review_id=reviewIdArray[indexPath.row]かつuser_id=currentUserのlikeReviewレコードがないもしくは、review_id=reviewIdArray[indexPath.row]かつuser_id=currentUserのlikeReviewレコードのlike_flag==falseである場合,likereviewレコードがtrueで追加され、画像がlike済みのものに切り替わる（cellのクラス側で設定）
+            
+            //likeしている状態の場合
+            //likereviewレコードのflagがfalseになり、画像がlike前のものに切り替わる（cellのクラス側で設定）
+            
+            db.collection("user_dtail").whereField("user_id", isEqualTo: currentUser?.uid).getDocuments() {(querySnapshot, err) in
+                
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    return
+                    
+                } else {
+                    
+                    for document in querySnapshot!.documents{
+                        
+                        likeUserName = document.data()["nickName"] as! String
+                        
+                    }
+                }
+            }
+            
+            print("reviewId:\(self.reviewId)")
+            
+            
+            db.collection("review").whereField(FieldPath.documentID(), isEqualTo: self.reviewId).getDocuments() {(querySnapshot, err) in
+                
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    return
+                    
+                } else {
+                    
+                    for document in querySnapshot!.documents{
+                        
+                        reviewUserId = document.data()["user_id"] as? String
+                        reviewUserName = document.data()["user_name"] as? String
+                        reviewUserDisplayId = document.data()["display_id"] as? String
+                        reviewComment = document.data()["comment"] as? String
+                        reviewScore = document.data()["score"] as? Float
+                    }
+                }
+            }
 
-    
-    
+
+            
+            self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("user_id", isEqualTo: self.currentUser?.uid).getDocuments() {(querySnapshot, err) in
+            
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+                
+            } else {
+                for document in querySnapshot!.documents {
+                    
+                    documentId = document.documentID
+                    likeFlag = document.data()["like_flag"] as? Bool
+                    
+                    //ドキュメントidがnilの場合、trueでレコードを作る
+                    if documentId == nil {
+                        //レコード保存
+                        let likeReviewRef = Firestore.firestore().collection("like_review").document()
+                        let likeReviewDic = [
+                            "review_id": self.reviewId,
+                            "review_user_id": reviewUserId,
+                            "review_user_name": reviewUserName,
+                            "review_user_display_id": reviewUserDisplayId,
+                            "review_comment": reviewComment,
+                            "review_score": reviewScore,
+                            "like_user_id": Auth.auth().currentUser?.uid,
+                            "like_user_name": likeUserName,
+                            "like_user_display_id": Auth.auth().currentUser?.displayName,
+                            "like_flag": true,
+                            "create_datetime": FieldValue.serverTimestamp(),
+                            "update_datetime": FieldValue.serverTimestamp(),
+                            "delete_flag": false,
+                            "delete_datetime": nil,
+                        ] as [String : Any?]
+                        likeReviewRef.setData(likeReviewDic as [String : Any])
+                                                                        
+                    } else {
+                        
+                        //nilでない場合、flagを確認
+                        //flag=falseの場合、trueに更新
+                        if likeFlag == false {
+                            
+                            let existlikeReviewRef = Firestore.firestore().collection("like_review").document(documentId!)
+                            existlikeReviewRef.updateData([
+                                "like_flag": true,
+                                "update_datetime": FieldValue.serverTimestamp(),
+                            ])
+                            
+                        } else {
+                            
+                            let existlikeReviewRef = Firestore.firestore().collection("like_review").document(documentId!)
+                            existlikeReviewRef.updateData([
+                                "like_flag": false,
+                                "update_datetime": FieldValue.serverTimestamp(),
+                            ])
+                        }
+                    }
+                }
+            }
+            }
+        }
+    }
 }
-
-
+                            
+    
