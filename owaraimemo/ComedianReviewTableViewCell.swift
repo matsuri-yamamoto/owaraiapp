@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseFirestore
+import Firebase
 
 class ComedianReviewTableViewCell: UITableViewCell {
     
@@ -19,6 +21,10 @@ class ComedianReviewTableViewCell: UITableViewCell {
     @IBOutlet weak var likeCountLabel: UILabel!
     
     var comedianDetailVC = ComedianDetailViewController()
+    
+    
+    let currentUser = Auth.auth().currentUser
+    let db = Firestore.firestore()
     
     
     //備忘：制約をつけるときに、セルの高さを動的にする→https://qiita.com/y-okudera/items/f511dbe2b720931ee842
@@ -52,10 +58,10 @@ class ComedianReviewTableViewCell: UITableViewCell {
 
             likeButton.setImage(likeImage, for: .normal)
         }
-
-        comedianDetailVC.tappedLikeButton()
-
+        
+        
     }
     
+    
 }
-
+    

@@ -95,6 +95,11 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .reviewVC))
+    }
+    
     @objc func sliderDidChangeValue(_ sender: UISlider) {
         let roundValue = round(sender.value * 2) * 0.5
         

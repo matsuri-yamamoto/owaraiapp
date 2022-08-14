@@ -70,6 +70,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     let spotifyImage = UIImage(named: "spotify")
     
     
+    var indexPath: String!
+    
     //ネタ動画用のView
     @IBOutlet weak var playerView1: YTPlayerView!
     var playerView2 = YTPlayerView()
@@ -462,15 +464,23 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         let nib = UINib(nibName: "ComedianReviewTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "cell")
         
+        
+        
 //        //デフォルトのセルの高さを設定する
 //        tableView.estimatedRowHeight = 200
 //        //セルの高さを動的にするためにrowHeightにUITableViewAutomaticDimensionを設定する
 //        tableView.rowHeight = UITableView.automaticDimension
-
+        
         
         
         
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .comedianDetailVC))
+    }
+    
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
@@ -683,7 +693,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         var reviewUserName :String = ""
 
         //reviewidを入れる変数
-        reviewId = self.reviewIdArray[indexPath.row]
+        self.reviewId = self.reviewIdArray[indexPath.row]
         
         print("self.reviewIdArray[indexPath.row]:\(self.reviewIdArray[indexPath.row])")
         
@@ -709,6 +719,14 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             cell.scoreImageView.image = UIImage(named: "score_\(self.reviewScoreArray[indexPath.row])")
         }
         cell.commentLabel.text = self.reviewCommentArray[indexPath.row]
+        
+        
+        //likeButtonをセット
+        cell.likeButton.tag = indexPath.row
+        cell.likeButton.addTarget(self, action: #selector(tappedLikeButton(sender:)), for: .touchUpInside)
+        
+        
+        
 
         //likereviewをセット
         db.collection("like_review").whereField("review_id", isEqualTo: reviewId).getDocuments() {(querySnapshot, err) in
@@ -730,7 +748,10 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
 
     }
     
-    func tappedLikeButton() {
+    @objc func tappedLikeButton(sender: UIButton) {
+        
+        let buttonTag = sender.tag
+        let tappedReviewId = self.reviewIdArray[buttonTag]
         
         
         if currentUser?.uid == nil {
@@ -752,13 +773,15 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             var reviewComment :String?
             var reviewScore :Float?
             
+            
+            
             //likeしていない状態の場合
             //即ち、review_id=reviewIdArray[indexPath.row]かつuser_id=currentUserのlikeReviewレコードがないもしくは、review_id=reviewIdArray[indexPath.row]かつuser_id=currentUserのlikeReviewレコードのlike_flag==falseである場合,likereviewレコードがtrueで追加され、画像がlike済みのものに切り替わる（cellのクラス側で設定）
             
             //likeしている状態の場合
             //likereviewレコードのflagがfalseになり、画像がlike前のものに切り替わる（cellのクラス側で設定）
             
-            db.collection("user_dtail").whereField("user_id", isEqualTo: currentUser?.uid).getDocuments() {(querySnapshot, err) in
+            db.collection("user_detail").whereField("user_id", isEqualTo: currentUser?.uid as Any).getDocuments() {(querySnapshot, err) in
                 
                 if let err = err {
                     print("Error getting documents: \(err)")
@@ -768,16 +791,23 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     
                     for document in querySnapshot!.documents{
                         
-                        likeUserName = document.data()["nickName"] as! String
+                        print("userDetailDocument:\(document.data())")
+
+                        
+                        likeUserName = document.data()["username"] as? String
+                        
+                        print("likeUserName:\(likeUserName)")
+                        
+                        
                         
                     }
                 }
             }
             
-            print("reviewId:\(self.reviewId)")
+            print("tappedReviewId:\(tappedReviewId)")
             
             
-            db.collection("review").whereField(FieldPath.documentID(), isEqualTo: self.reviewId).getDocuments() {(querySnapshot, err) in
+            db.collection("review").whereField(FieldPath.documentID(), isEqualTo: tappedReviewId).getDocuments() {(querySnapshot, err) in
                 
                 if let err = err {
                     print("Error getting documents: \(err)")
@@ -786,78 +816,102 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                 } else {
                     
                     for document in querySnapshot!.documents{
+                        
+                        print("reviewDocument:\(document.data())")
                         
                         reviewUserId = document.data()["user_id"] as? String
                         reviewUserName = document.data()["user_name"] as? String
                         reviewUserDisplayId = document.data()["display_id"] as? String
                         reviewComment = document.data()["comment"] as? String
                         reviewScore = document.data()["score"] as? Float
-                    }
-                }
-            }
-
-
-            
-            self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("user_id", isEqualTo: self.currentUser?.uid).getDocuments() {(querySnapshot, err) in
-            
-            if let err = err {
-                print("Error getting documents: \(err)")
-                return
-                
-            } else {
-                for document in querySnapshot!.documents {
-                    
-                    documentId = document.documentID
-                    likeFlag = document.data()["like_flag"] as? Bool
-                    
-                    //ドキュメントidがnilの場合、trueでレコードを作る
-                    if documentId == nil {
-                        //レコード保存
-                        let likeReviewRef = Firestore.firestore().collection("like_review").document()
-                        let likeReviewDic = [
-                            "review_id": self.reviewId,
-                            "review_user_id": reviewUserId,
-                            "review_user_name": reviewUserName,
-                            "review_user_display_id": reviewUserDisplayId,
-                            "review_comment": reviewComment,
-                            "review_score": reviewScore,
-                            "like_user_id": Auth.auth().currentUser?.uid,
-                            "like_user_name": likeUserName,
-                            "like_user_display_id": Auth.auth().currentUser?.displayName,
-                            "like_flag": true,
-                            "create_datetime": FieldValue.serverTimestamp(),
-                            "update_datetime": FieldValue.serverTimestamp(),
-                            "delete_flag": false,
-                            "delete_datetime": nil,
-                        ] as [String : Any?]
-                        likeReviewRef.setData(likeReviewDic as [String : Any])
-                                                                        
-                    } else {
                         
-                        //nilでない場合、flagを確認
-                        //flag=falseの場合、trueに更新
-                        if likeFlag == false {
-                            
-                            let existlikeReviewRef = Firestore.firestore().collection("like_review").document(documentId!)
-                            existlikeReviewRef.updateData([
-                                "like_flag": true,
-                                "update_datetime": FieldValue.serverTimestamp(),
-                            ])
+                        
+                        //ここから
+                        self.db.collection("like_review").whereField("review_id", isEqualTo: tappedReviewId).whereField("user_id", isEqualTo: self.currentUser?.uid as Any).getDocuments() {(querySnapshot, err) in
+                        
+                        if let err = err {
+                            print("Error getting documents: \(err)")
+                            return
                             
                         } else {
                             
-                            let existlikeReviewRef = Firestore.firestore().collection("like_review").document(documentId!)
-                            existlikeReviewRef.updateData([
-                                "like_flag": false,
-                                "update_datetime": FieldValue.serverTimestamp(),
-                            ])
+                            //該当のlike_reviewドキュメントが0件の場合、trueでレコードを作る
+                            if querySnapshot!.documents.count == 0 {
+                                
+                                
+                                
+                                //レコード保存
+                                let likeReviewRef = Firestore.firestore().collection("like_review").document()
+                                let likeReviewDic = [
+                                    "review_id": tappedReviewId,
+                                    "review_user_id": reviewUserId,
+                                    "review_user_name": reviewUserName,
+                                    "review_user_display_id": reviewUserDisplayId,
+                                    "review_comment": reviewComment,
+                                    "review_score": reviewScore,
+                                    "like_user_id": Auth.auth().currentUser?.uid,
+                                    "like_user_name": likeUserName,
+                                    "like_user_display_id": Auth.auth().currentUser?.displayName,
+                                    "like_flag": true,
+                                    "create_datetime": FieldValue.serverTimestamp(),
+                                    "update_datetime": FieldValue.serverTimestamp(),
+                                    "delete_flag": false,
+                                    "delete_datetime": nil,
+                                ] as [String : Any?]
+                                
+                                print("likeReviewDic:\(likeReviewDic)")
+                                likeReviewRef.setData(likeReviewDic as [String : Any])
+                                
+                                print("Successed:like_review create")
+                                
+                            } else {
+                                
+                                //ドキュメントが既存の場合、flagを確認
+                                //flag=falseの場合、trueに更新
+                                if likeFlag == false {
+                                    
+                                    let existlikeReviewRef = Firestore.firestore().collection("like_review").document(documentId!)
+                                    existlikeReviewRef.updateData([
+                                        "review_user_name": reviewUserName as Any,
+                                        "review_user_display_id": reviewUserDisplayId as Any,
+                                        "review_comment": reviewComment as Any,
+                                        "review_score": reviewScore as Any,
+                                        "like_user_name": likeUserName as Any,
+                                        "like_user_display_id": Auth.auth().currentUser?.displayName as Any,
+                                        "like_flag": true,
+                                        "update_datetime": FieldValue.serverTimestamp(),
+                                    ])
+                                    
+                                } else {
+                                    
+                                    let existlikeReviewRef = Firestore.firestore().collection("like_review").document(documentId!)
+                                    existlikeReviewRef.updateData([
+                                        "review_user_name": reviewUserName as Any,
+                                        "review_user_display_id": reviewUserDisplayId as Any,
+                                        "review_comment": reviewComment as Any,
+                                        "review_score": reviewScore as Any,
+                                        "like_user_name": likeUserName as Any,
+                                        "like_user_display_id": Auth.auth().currentUser?.displayName as Any,
+                                        "like_flag": false,
+                                        "update_datetime": FieldValue.serverTimestamp(),
+                                    ])
+                                }
+                            }
                         }
+                        }
+                        
+                        //ここまで
+                        
+                        
+                        
+                        
                     }
                 }
             }
-            }
+
+
+            
+
         }
     }
 }
-                            
-    

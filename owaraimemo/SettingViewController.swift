@@ -19,6 +19,11 @@ class SettingViewController: UIViewController {
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .settingVC))
+    }
+    
     @objc func backButtonPressed() {
         self.navigationController?.popViewController(animated: true)
 

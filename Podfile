@@ -20,6 +20,7 @@ target 'owaraimemo' do
   pod 'FirebaseAuth'
   pod 'KeychainAccess'
   pod 'Firebase/DynamicLinks'
+  pod 'Firebase/Core'
 
 
 

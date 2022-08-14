@@ -45,6 +45,8 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
 
     override func viewWillAppear(_ animated: Bool) {
         
+        print("currentUser:\(String(describing: Auth.auth().currentUser?.uid))")
+        
         
         if currentUser?.uid == nil {
             
@@ -125,6 +127,9 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
             
 
         }
+    
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .myReviewVC))
     }
     
     

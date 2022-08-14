@@ -11,6 +11,11 @@ import FirebaseFirestore
 
 class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
+    override func viewDidAppear(_ animated: Bool) {
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .secondTabVC))
+    }
+    
     
     @IBOutlet weak var collectionView: UICollectionView!
     

@@ -38,6 +38,12 @@ class TabViewController: TabmanViewController {
         // Add to view
         addBar(bar, dataSource: self, at: .top)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        self.navigationItem.hidesBackButton = true
+
+    }
 }
 
 

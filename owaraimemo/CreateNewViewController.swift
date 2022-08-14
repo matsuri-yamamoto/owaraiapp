@@ -27,7 +27,7 @@ class CreateNewViewController: UIViewController {
         
         super.viewWillAppear(animated)
 
-        self.navigationController?.navigationBar.isHidden = false
+//        self.navigationController?.navigationBar.isHidden = false
         
         //エラーメッセージをデフォルトでは表示させない
         errorLabel.text = nil
@@ -64,6 +64,10 @@ class CreateNewViewController: UIViewController {
 //                    print("checked:\(checked)")
 //
 //                }
+        
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .createNewVC))
+        
     }
     
     // アカウント作成ボタンをタップしたときに呼ばれるメソッド

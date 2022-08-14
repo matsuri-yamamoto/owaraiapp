@@ -22,11 +22,11 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     var comedianId: String = ""
     
-    
-    
     //Firestoreを使うための下準備
     let currentUser = Auth.auth().currentUser
     let db = Firestore.firestore()
+    
+    
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -79,6 +79,13 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 self.tableView.reloadData()
             }
             }
+    }
+    
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .searchVC))
     }
 
     // データの数（＝セルの数）を返すメソッド

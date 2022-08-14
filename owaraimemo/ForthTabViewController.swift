@@ -12,6 +12,11 @@ import FirebaseFirestore
 class ForthTabViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     
+    override func viewDidAppear(_ animated: Bool) {
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .forthTabVC))
+    }
+    
     @IBOutlet weak var collectionView: UICollectionView!
 
     

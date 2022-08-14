@@ -50,15 +50,7 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "みつかる"
-        
-        
-
-
-        
-        
-        
-        
-        
+                
         //fetchDataなどで分割した配列の各データを呼び、配列を結合する→cellItemAtにてindexPathでセットする
         
         cellComedianNameData()
@@ -72,6 +64,8 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        
+        
         hidesBottomBarWhenPushed = true
         
         //後で消す（Twitterのデータ取得方法確認用）
@@ -102,6 +96,11 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         print("twitterUserInfo:\(String(describing: userInfo))")
 //        print("providerId:\(String(describing: providerId))")
 //        print("twitterId:\(String(describing: twitterId))")
+        
+        
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .firstTabVC))
+
         
         
         
@@ -332,6 +331,10 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         comedianVC.comedianId = self.comedianNameArrayId[indexPath.row]
         self.navigationController?.pushViewController(comedianVC, animated: true)
         hidesBottomBarWhenPushed = true
+        
+        AnalyticsUtil.sendAction(ActionEvent(screenName: .firstTabVC,
+                                                     actionType: .tap,
+                                             actionLabel: .template(ActionLabelTemplate.cellTap)))
 
     }
     

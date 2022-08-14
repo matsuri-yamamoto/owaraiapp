@@ -3,15 +3,22 @@
 import UIKit
 import Firebase
 
-class LoginVIewController: UIViewController {
+class LoginViewController: UIViewController {
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .loginVC))
+
+    }
     
 
     @IBOutlet weak var mailAddressTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.navigationBar.isHidden = false
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        self.navigationController?.navigationBar.isHidden = false
+//    }
     
     
     // ログインボタンをタップしたときに呼ばれるメソッド

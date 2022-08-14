@@ -4,7 +4,6 @@
 //
 //  Created by 山本梨野 on 2022/03/29.
 //
-
 import UIKit
 import OAuthSwift
 import Firebase
@@ -24,6 +23,11 @@ class StartViewController: UIViewController {
         self.navigationController?.navigationBar.isHidden = true
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
 
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .startVC))
     }
     
     
@@ -91,42 +95,10 @@ class StartViewController: UIViewController {
                       }
                       print("finalDisplayName:\(String(describing: Auth.auth().currentUser?.displayName))")
 
+                      let tabBarVC = self.storyboard?.instantiateViewController(withIdentifier: "Tabbar") as! TabBarController
+                      self.navigationController?.pushViewController(tabBarVC, animated: true)
                       
                   }
-                  
               }
-        
-        
-//        let user = Auth.auth().currentUser
-//        if let user = user {
-//
-//            let uid = user.uid
-//            let email = user.email
-//            let displayName = user.displayName
-//
-//            let twitterUserId :String
-//            twitterUserId = Result.additionalUserInfo?.username
-//
-//            print("uid:\(uid)")
-//            print("email:\(String(describing: email))")
-//            print("displayName:\(String(describing: displayName))")
-//
-//            print("twitterUser:\(user)")
-//
-//        }
-        
-
-                
-
-        
-        
-        
-        let tabBarVC = storyboard?.instantiateViewController(withIdentifier: "Tabbar") as! TabBarController
-
-        self.navigationController?.pushViewController(tabBarVC, animated: true)
     }
 }
-        
-        
-
-

@@ -19,6 +19,8 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         super.viewWillAppear(animated)
         //ナビゲーションバーの戻るボタンを非表示
         navigationController?.navigationBar.isHidden = true
+        self.navigationItem.hidesBackButton = true
+
     }
     
 

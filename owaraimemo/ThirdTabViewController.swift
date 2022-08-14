@@ -12,6 +12,11 @@ import FirebaseFirestore
 class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     
+    override func viewDidAppear(_ animated: Bool) {
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .thirdTabVC))
+    }
+    
     @IBOutlet weak var collectionView: UICollectionView!
 
     

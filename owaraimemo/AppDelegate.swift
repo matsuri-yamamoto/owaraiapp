@@ -41,10 +41,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     //OAuthSwiftのために追加(59行目まで)
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        //URLの確認
+        print("url:\(url)")
+        print("url.scheme:\(url.scheme)")
+        print("url.host:\(url.host)")
+        print("url.path:\(url.path)")
+        print("url.query:\(url.query)")
+        
+//        //リクエストされたURLの中からhostの値を取得して変数に代入
+//        let urlHost :String = (url.host as String?)!
+//        let urlQuery :String = (url.query as String?)!
+//
+//        //遷移させたいViewControllerが格納されているStoryBoardファイルを指定
+//        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+//
+//        //urlHostにnextが入っていた場合はmainstoryboard内のnextViewControllerのviewを表示する
+//        if(urlHost == "MyReview"){
+//            let resultVC: MyReviewViewController = mainStoryboard.instantiateViewController(withIdentifier: "MyReview") as! MyReviewViewController
+//            self.window?.rootViewController = resultVC
+//        }
+//        self.window?.makeKeyAndVisible()
+//
+//
         applicationHandle(url: url)
         return true
     }
-
 }
 
 extension AppDelegate {
@@ -58,4 +79,3 @@ extension AppDelegate {
         }
     }
 }
-
