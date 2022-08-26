@@ -48,6 +48,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         //            window.rootViewController = navVC
         //        }
         
+        // ナビゲージョンアイテムの文字色
+        UINavigationBar.appearance().tintColor = #colorLiteral(red: 0.2442787347, green: 0.2442787347, blue: 0.2442787347, alpha: 1)
+
+        UINavigationBar.appearance().titleTextAttributes =
+            // ナビゲーションバーのタイトルの文字色
+            [.foregroundColor: #colorLiteral(red: 0.3338265567, green: 0.3338265567, blue: 0.3338265567, alpha: 1),
+             // フォントの種類
+             .font: UIFont.boldSystemFont(ofSize: 16)]
+
+        // ナビゲーションバーの背景色
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = UIColor.white
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+
+
+        
         
         guard let _ = (scene as? UIWindowScene) else { return }
         
@@ -82,24 +99,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        //URLとして受信
-        guard let url = URLContexts.first?.url else {
-            return
-        }
-        print("url:\(url)")
-        guard let components = URLComponents(string: url.absoluteString) else {
-            return
-        }
-        print("components:\(components)")
-        //hostの取得
-        if let host = components.host{
-            print("host:\(host)")
-        }
-        //queryの取得
-        if let queryItems = components.queryItems {
-            print("queryItems:\(queryItems)")
-        }
+        
+        
     }
+ 
     
     
 }

@@ -18,30 +18,47 @@ class TabViewController: TabmanViewController {
 
         self.dataSource = self
         
-        let firstVC = storyboard?.instantiateViewController(withIdentifier: "FirstTab") as! FirstTabViewController
-        let secondVC = storyboard?.instantiateViewController(withIdentifier: "SecondTab") as! SecondTabViewController
-        let thirdVC = storyboard?.instantiateViewController(withIdentifier: "ThirdTab") as! ThirdTabViewController
-        let forthVC = storyboard?.instantiateViewController(withIdentifier: "ForthTab") as! ForthTabViewController
+        self.navigationItem.hidesBackButton = true
+        self.title = "おすすめ"
+        
+        
+        // Create bar
+        let bar = TMBar.ButtonBar()
+        bar.layout.transitionStyle = .snap // Customize
+        bar.backgroundView.style = .flat(color: .white)
+        
+        bar.layout.contentInset = UIEdgeInsets(top: 0.0, left: 10.0, bottom: 0.0, right: 10.0)
+        
+        bar.layout.contentMode = .fit
 
+        bar.buttons.customize { (button) in
+            button.tintColor = #colorLiteral(red: 0.2851759885, green: 0.2851759885, blue: 0.2851759885, alpha: 1)
+            button.selectedTintColor = #colorLiteral(red: 0.1738873206, green: 0.1738873206, blue: 0.1738873206, alpha: 1)
+            button.font = UIFont.systemFont(ofSize: 13)
+            button.selectedFont = UIFont.boldSystemFont(ofSize: 13)
+        }
+        bar.indicator.backgroundColor = #colorLiteral(red: 0.2851759885, green: 0.2851759885, blue: 0.2851759885, alpha: 1)
+        bar.indicator.weight = .custom(value: 3)
+
+        // Add to view
+        addBar(bar, dataSource: self, at: .top)
+        
+
+        
+    }
+        
+    private func setTabsControllers() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        let firstVC = storyboard.instantiateViewController(withIdentifier: "FirstTab") as! FirstTabViewController
+        let secondVC = storyboard.instantiateViewController(withIdentifier: "SecondTab") as! SecondTabViewController
+        let thirdVC = storyboard.instantiateViewController(withIdentifier: "ThirdTab") as! ThirdTabViewController
+        let forthVC = storyboard.instantiateViewController(withIdentifier: "ForthTab") as! ForthTabViewController
         
         viewControllers[0] = firstVC
         viewControllers[1] = secondVC
         viewControllers[2] = thirdVC
         viewControllers[3] = forthVC
-
-        // Create bar
-        let bar = TMBar.ButtonBar()
-        bar.layout.transitionStyle = .snap // Customize
-        
-        bar.layout.contentInset = UIEdgeInsets(top: 0.0, left: 20.0, bottom: 0.0, right: 20.0)
-
-        // Add to view
-        addBar(bar, dataSource: self, at: .top)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
-        self.navigationItem.hidesBackButton = true
 
     }
 }
@@ -52,6 +69,8 @@ extension TabViewController: PageboyViewControllerDataSource, TMBarDataSource {
 
     //タブの数を決める
     func numberOfViewControllers(in pageboyViewController: PageboyViewController) -> Int {
+        
+        setTabsControllers()
         return viewControllers.count
     }
     
@@ -69,7 +88,10 @@ extension TabViewController: PageboyViewControllerDataSource, TMBarDataSource {
 
     //タブバーの要件を決める
     func barItem(for bar: TMBar, at index: Int) -> TMBarItemable {
-        let title = [" トレンド ", "M-1トップ3", " KOC2回戦 ", "注目の若手"]
+        let title = ["トレンド ", "M-1トップ3", " KOC2回戦 ", "注目の若手"]
         return TMBarItem(title: title[index])
+        
+        
+        
     }
 }

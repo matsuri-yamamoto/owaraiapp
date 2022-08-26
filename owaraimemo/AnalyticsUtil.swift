@@ -9,9 +9,11 @@ import Foundation
 import FirebaseAnalytics
 import FirebaseFirestore
 import Firebase
+import UIKit
 
 final class AnalyticsUtil {
-    
+
+
     //ログイベントを作る
     private class func logEvent(_ event: AnalyticsEvent) {
         //アナリティクスに飛ばしている
@@ -34,6 +36,11 @@ final class AnalyticsUtil {
         logEvent(event)
     }
     
+//    public class func sendActionForFirstTabCellTap(_ event: ActionEventForFirstTabCellTap) {
+//        logEvent(event)
+//    }
+
+    
     
     /// usage example
     /// Analytics.setUserProperty("肌測定利用開始", forName: "skin_diag_start")
@@ -51,7 +58,7 @@ final class AnalyticsUtil {
 
 //イベントを定義
 public enum EventName: String {
-    case screenView2 = "screen_view2"
+    case pageView = "pv"
     case action
 }
 
@@ -62,7 +69,7 @@ public protocol AnalyticsEvent {
 
 //スクリーンイベント(画面発生時)に付随
 public struct ScreenEvent: AnalyticsEvent {
-    public let name = EventName.screenView2
+    public let name = EventName.pageView
     public let parameters: [String: Any]
     init(screenName: ScreenName) {
         self.parameters = ["screen_name": "\(screenName.rawValue)", "uid": Auth.auth().currentUser?.uid ?? ""]
@@ -96,6 +103,18 @@ public struct ActionEvent: AnalyticsEvent {
     }
 }
 
+public struct ActionEventForFirstTabCellTap: AnalyticsEvent {
+    public let name = EventName.action
+    public let parameters: [String: Any]
+    
+    var firstTabVC = FirstTabViewController()
+    
+    init(screenName: ScreenName, actionType: ActionType, actionLabel: ActionLabel) {
+        self.parameters = ["screen_name": "\(screenName.rawValue)", "action_type": "\(actionType.rawValue)", "action_label": "\(actionLabel.value)", "uid": Auth.auth().currentUser?.uid ?? "", "comedian_id": firstTabVC.comedianId]
+    }
+}
+
+
 //アクションタイプを定義(アクションの種類)
 public enum ActionType: String {
     case tap = "タップ"
@@ -110,13 +129,28 @@ public enum ActionLabel {
 
 public enum ActionLabelTemplate: String {
     
-    case cellTap = "セルタップ"
-    case twitterLoginTap = "Twitterログイン導線タップ"
-    case toMailLoginTap = "メアドログイン導線タップ"
-    case toMailNewTap = "メアド新規導線タップ"
+    case twitterLoginPassTap = "Twitterログインタップ"
+    case MailLoginPassTap = "メアドログイン導線タップ"
+    case MailNewPassTap = "メアド新規導線タップ"
     case mailNewTap = "メアド新規作成タップ"
     case mailLoginTap = "メアドログインタップ"
-
+    case cellTap = "セルタップ"
+    case searchBarTap = "検索バータップ"
+    case searchWordInput = "検索文字入力"
+    case searchedCellTap = "検索結果セルタップ"
+    case myPageRecLoginPush = "マイページ経由RecLogin起動"
+    case myPageCellTap = "マイページセルタップ"
+    case myPageStockButtonTap = "マイページストックボタンタップ"
+    case myPageReviewButtonTap = "マイページレビューボタンタップ"
+    case comedianReviewRecLoginPush = "芸人詳細レビューボタン経由RecLogin起動"
+    case comedianStockRecLoginPush = "芸人詳細ストックボタン経由RecLogin起動"
+    case reviewButtonTap = "芸人詳細レビューボタンタップ"
+    case stockButtonTap = "芸人詳細ストックボタンタップ"
+    case comedianLikeReviewReLoginPush = "いいねボタン経由RecLogin起動"
+    case comedianLikeReviewTap = "いいねボタンタップ"
+    case reviewSaveButtonTap_noTwitter = "レビュー保存ボタンタップ(Twitterシェアなし)"
+    case reviewSaveButtonTap_shareTwitter = "レビュー保存ボタンタップ(Twitterシェアあり)"
+    case reviewPrivateSaveButtonTap = "レビュー非公開保存ボタンタップ"
     
 }
 

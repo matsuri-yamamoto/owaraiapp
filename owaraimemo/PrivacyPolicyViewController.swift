@@ -1,7 +1,6 @@
 
 
 import UIKit
-// 1 WebKit の import
 import WebKit
 
 class PrivacyPolicyViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {

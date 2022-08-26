@@ -8,17 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		506972D7748EC2B1D1651563 /* Pods_owaraimemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 013C498947B8F64B7B6FED63 /* Pods_owaraimemo.framework */; };
+		6301AE2A28B494E1001B03E5 /* InquiryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6301AE2928B494E1001B03E5 /* InquiryViewController.swift */; };
 		630964B7281EDB32006F211B /* TermViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630964B6281EDB32006F211B /* TermViewController.swift */; };
 		630964B9281EDBA3006F211B /* PrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630964B8281EDBA3006F211B /* PrivacyPolicyViewController.swift */; };
 		630FAE6D2880F66600A3E0F9 /* ComedianReviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630FAE6B2880F66600A3E0F9 /* ComedianReviewTableViewCell.swift */; };
 		630FAE6E2880F66600A3E0F9 /* ComedianReviewTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 630FAE6C2880F66600A3E0F9 /* ComedianReviewTableViewCell.xib */; };
+		63134BB428B706BD00B0926D /* PlaceTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63134BB328B706BD00B0926D /* PlaceTextView.swift */; };
+		63134BB628B706D800B0926D /* PlaceTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63134BB528B706D800B0926D /* PlaceTextView.xib */; };
 		631590EC289B95E8001FFDA0 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 631590EB289B95E8001FFDA0 /* AdSupport.framework */; };
 		63162843286F3DE8007679DC /* FirstTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63162842286F3DE8007679DC /* FirstTabViewController.swift */; };
 		632F88D127F3054B00350624 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D027F3054B00350624 /* SettingViewController.swift */; };
 		632F88D327FA8A7900350624 /* ComedianData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D227FA8A7900350624 /* ComedianData.swift */; };
 		632F88D627FABF9500350624 /* ComedianTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D427FABF9500350624 /* ComedianTableViewCell.swift */; };
 		632F88D727FABF9500350624 /* ComedianTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 632F88D527FABF9500350624 /* ComedianTableViewCell.xib */; };
-		632F88D927FAE64700350624 /* ReviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D827FAE64700350624 /* ReviewData.swift */; };
 		634F867A28A637B700CAE6BA /* AnalyticsUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634F867928A637B600CAE6BA /* AnalyticsUtil.swift */; };
 		634F867C28A63C8300CAE6BA /* AnalyticsUserProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634F867B28A63C8300CAE6BA /* AnalyticsUserProperty.swift */; };
 		635B9BA4287BEF9300ABF9ED /* RecommendLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635B9BA3287BEF9300ABF9ED /* RecommendLoginViewController.swift */; };
@@ -35,6 +37,7 @@
 		638CD1ED27F2987B002DCEFC /* CreateNewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638CD1EC27F2987B002DCEFC /* CreateNewViewController.swift */; };
 		639ACA3028483E7E005E7BE3 /* ComedianDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639ACA2F28483E7D005E7BE3 /* ComedianDetailViewController.swift */; };
 		639D9A91287558B400291D28 /* SearchCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D9A90287558B400291D28 /* SearchCollectionReusableView.swift */; };
+		63CAA0BD28ACA3D600AA99E4 /* UserNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CAA0BC28ACA3D600AA99E4 /* UserNameViewController.swift */; };
 		63CB62102850A8DE0023638F /* CircleImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CB620F2850A8DE0023638F /* CircleImageView.swift */; };
 		63D7E54327E9942D00E99C75 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7E54227E9942D00E99C75 /* SearchViewController.swift */; };
 		63D7E54527E9947300E99C75 /* MyReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7E54427E9947300E99C75 /* MyReviewViewController.swift */; };
@@ -47,10 +50,13 @@
 
 /* Begin PBXFileReference section */
 		013C498947B8F64B7B6FED63 /* Pods_owaraimemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_owaraimemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6301AE2928B494E1001B03E5 /* InquiryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquiryViewController.swift; sourceTree = "<group>"; };
 		630964B6281EDB32006F211B /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
 		630964B8281EDBA3006F211B /* PrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyViewController.swift; sourceTree = "<group>"; };
 		630FAE6B2880F66600A3E0F9 /* ComedianReviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianReviewTableViewCell.swift; sourceTree = "<group>"; };
 		630FAE6C2880F66600A3E0F9 /* ComedianReviewTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ComedianReviewTableViewCell.xib; sourceTree = "<group>"; };
+		63134BB328B706BD00B0926D /* PlaceTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceTextView.swift; sourceTree = "<group>"; };
+		63134BB528B706D800B0926D /* PlaceTextView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaceTextView.xib; sourceTree = "<group>"; };
 		631590EB289B95E8001FFDA0 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		63162842286F3DE8007679DC /* FirstTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstTabViewController.swift; sourceTree = "<group>"; };
 		632A473C2868400100FB28EA /* Carthage */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Carthage; sourceTree = "<group>"; };
@@ -58,7 +64,6 @@
 		632F88D227FA8A7900350624 /* ComedianData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianData.swift; sourceTree = "<group>"; };
 		632F88D427FABF9500350624 /* ComedianTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianTableViewCell.swift; sourceTree = "<group>"; };
 		632F88D527FABF9500350624 /* ComedianTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ComedianTableViewCell.xib; sourceTree = "<group>"; };
-		632F88D827FAE64700350624 /* ReviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewData.swift; sourceTree = "<group>"; };
 		634F867928A637B600CAE6BA /* AnalyticsUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsUtil.swift; sourceTree = "<group>"; };
 		634F867B28A63C8300CAE6BA /* AnalyticsUserProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsUserProperty.swift; sourceTree = "<group>"; };
 		635B9BA3287BEF9300ABF9ED /* RecommendLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendLoginViewController.swift; sourceTree = "<group>"; };
@@ -78,6 +83,7 @@
 		638CD1EC27F2987B002DCEFC /* CreateNewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewViewController.swift; sourceTree = "<group>"; };
 		639ACA2F28483E7D005E7BE3 /* ComedianDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianDetailViewController.swift; sourceTree = "<group>"; };
 		639D9A90287558B400291D28 /* SearchCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectionReusableView.swift; sourceTree = "<group>"; };
+		63CAA0BC28ACA3D600AA99E4 /* UserNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNameViewController.swift; sourceTree = "<group>"; };
 		63CB620F2850A8DE0023638F /* CircleImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImageView.swift; sourceTree = "<group>"; };
 		63D7E54227E9942D00E99C75 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		63D7E54427E9947300E99C75 /* MyReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReviewViewController.swift; sourceTree = "<group>"; };
@@ -140,11 +146,12 @@
 				6381D13227E7319A005BDBE2 /* SceneDelegate.swift */,
 				6381D13427E7319A005BDBE2 /* ViewController.swift */,
 				638CD1EA27F29812002DCEFC /* StartViewController.swift */,
+				63CAA0BC28ACA3D600AA99E4 /* UserNameViewController.swift */,
 				635B9BA3287BEF9300ABF9ED /* RecommendLoginViewController.swift */,
 				638CD1EC27F2987B002DCEFC /* CreateNewViewController.swift */,
+				63D7E54827E9C4DB00E99C75 /* LoginViewController.swift */,
 				630964B6281EDB32006F211B /* TermViewController.swift */,
 				630964B8281EDBA3006F211B /* PrivacyPolicyViewController.swift */,
-				63D7E54827E9C4DB00E99C75 /* LoginViewController.swift */,
 				63FB59952849EA8D00497210 /* TabViewController.swift */,
 				63162842286F3DE8007679DC /* FirstTabViewController.swift */,
 				635FC56028618336000835C4 /* SecondTabViewController.swift */,
@@ -155,16 +162,18 @@
 				639ACA2F28483E7D005E7BE3 /* ComedianDetailViewController.swift */,
 				63D7E54627E9949200E99C75 /* ReviewViewController.swift */,
 				632F88D027F3054B00350624 /* SettingViewController.swift */,
+				6301AE2928B494E1001B03E5 /* InquiryViewController.swift */,
 				63D7E54A27E9CE0100E99C75 /* TabBarController.swift */,
-				632F88D227FA8A7900350624 /* ComedianData.swift */,
-				632F88D827FAE64700350624 /* ReviewData.swift */,
 				632F88D427FABF9500350624 /* ComedianTableViewCell.swift */,
 				63CB620F2850A8DE0023638F /* CircleImageView.swift */,
+				632F88D227FA8A7900350624 /* ComedianData.swift */,
 				632F88D527FABF9500350624 /* ComedianTableViewCell.xib */,
 				6381D13627E7319A005BDBE2 /* Main.storyboard */,
 				630FAE6B2880F66600A3E0F9 /* ComedianReviewTableViewCell.swift */,
 				630FAE6C2880F66600A3E0F9 /* ComedianReviewTableViewCell.xib */,
 				639D9A90287558B400291D28 /* SearchCollectionReusableView.swift */,
+				63134BB328B706BD00B0926D /* PlaceTextView.swift */,
+				63134BB528B706D800B0926D /* PlaceTextView.xib */,
 				6381D13927E7319D005BDBE2 /* Assets.xcassets */,
 				6381D13B27E7319D005BDBE2 /* LaunchScreen.storyboard */,
 				6381D13E27E7319D005BDBE2 /* Info.plist */,
@@ -248,6 +257,7 @@
 				6381D13827E7319A005BDBE2 /* Main.storyboard in Resources */,
 				63D7E54D27EB1CBA00E99C75 /* GoogleService-Info.plist in Resources */,
 				630FAE6E2880F66600A3E0F9 /* ComedianReviewTableViewCell.xib in Resources */,
+				63134BB628B706D800B0926D /* PlaceTextView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,9 +316,10 @@
 				63D7E54B27E9CE0100E99C75 /* TabBarController.swift in Sources */,
 				635B9BA4287BEF9300ABF9ED /* RecommendLoginViewController.swift in Sources */,
 				6381D13527E7319A005BDBE2 /* ViewController.swift in Sources */,
+				63CAA0BD28ACA3D600AA99E4 /* UserNameViewController.swift in Sources */,
 				632F88D627FABF9500350624 /* ComedianTableViewCell.swift in Sources */,
 				63FB59962849EA8D00497210 /* TabViewController.swift in Sources */,
-				632F88D927FAE64700350624 /* ReviewData.swift in Sources */,
+				63134BB428B706BD00B0926D /* PlaceTextView.swift in Sources */,
 				63CB62102850A8DE0023638F /* CircleImageView.swift in Sources */,
 				634F867C28A63C8300CAE6BA /* AnalyticsUserProperty.swift in Sources */,
 				639ACA3028483E7E005E7BE3 /* ComedianDetailViewController.swift in Sources */,
@@ -321,6 +332,7 @@
 				63D7E54727E9949200E99C75 /* ReviewViewController.swift in Sources */,
 				635FC56528618364000835C4 /* ForthTabViewController.swift in Sources */,
 				638CD1EB27F29812002DCEFC /* StartViewController.swift in Sources */,
+				6301AE2A28B494E1001B03E5 /* InquiryViewController.swift in Sources */,
 				632F88D327FA8A7900350624 /* ComedianData.swift in Sources */,
 				630964B9281EDBA3006F211B /* PrivacyPolicyViewController.swift in Sources */,
 				63D7E54527E9947300E99C75 /* MyReviewViewController.swift in Sources */,

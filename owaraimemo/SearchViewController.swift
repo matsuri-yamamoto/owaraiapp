@@ -66,7 +66,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.register(nib, forCellReuseIdentifier: "Cell")
         
         
-        db.collection("comedian").getDocuments() {(querySnapshot, err) in
+        db.collection("comedian").whereField("delete_flag", isEqualTo: "false").getDocuments() {(querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
                 return
@@ -105,6 +105,13 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         //SearchControllerに入力されている場合、SearchResultArrayの結果を返す
         if searchController.searchBar.text != "" {
             cell.comedianNameLabel.text = searchResultNameArray[indexPath.row]
+            
+            //ログ
+            AnalyticsUtil.sendAction(ActionEvent(screenName: .searchVC,
+                                                         actionType: .tap,
+                                                 actionLabel: .template(ActionLabelTemplate.searchWordInput)))
+
+            
             return cell
 
         } else {
@@ -153,11 +160,22 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     }
             }
         }
+        
+        //ログ
+        AnalyticsUtil.sendAction(ActionEvent(screenName: .searchVC,
+                                                     actionType: .tap,
+                                             actionLabel: .template(ActionLabelTemplate.searchedCellTap)))
+
+        
     }
         
     //検索窓押下時に呼ばれる
     func updateSearchResults(for searchController: UISearchController) {
-
+        
+        //ログ
+        AnalyticsUtil.sendAction(ActionEvent(screenName: .searchVC,
+                                                     actionType: .tap,
+                                             actionLabel: .template(ActionLabelTemplate.searchBarTap)))
         
         //検索文字列を含むデータを検索結果配列に格納する。
         searchResultNameArray = comedianNameArray.filter { data in
@@ -166,6 +184,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         //テーブルを再読み込みする
         tableView.reloadData()
+        
+        
 
 
     }

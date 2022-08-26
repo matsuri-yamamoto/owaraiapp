@@ -12,24 +12,23 @@ import FirebaseFirestore
 class ForthTabViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     
-    override func viewDidAppear(_ animated: Bool) {
-        //pvログ
-        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .forthTabVC))
-    }
-    
     @IBOutlet weak var collectionView: UICollectionView!
 
     
-    var comedianIdArray1: [String] = ["真空ジェシカ_1","ストレッチーズ_1","ひつじねいり_1","ラタタッタ_1","さすらいラビー_1","Aマッソ_1"]
-    var comedianIdArray2: [String] = ["シシガシラ_1","ダンビラムーチョ_1","ジュースマンズ_1","新作のハーモニカ_1","マリオネットブラザーズ_1","オジンオズボーン_1"]
-    var comedianIdArray3: [String] = ["令和ロマン_1","マタンゴ_1","モグライダー_1","ジャンク_1","赤もみじ_1","パンプキンポテトフライ_1"]
-    
+    var comedianIdArray1: [String] = ["真空ジェシカ_1","ストレッチーズ_1","ひつじねいり_1","シンクロニシティ_1","さすらいラビー_1","Aマッソ_1"]
+    var comedianIdArray2: [String] = ["シシガシラ_1","ダンビラムーチョ_1","ジュースマンズ_1","にぼしいわし_1","マリオネットブラザーズ_1","トルクレンチガールズ_1"]
+    var comedianIdArray3: [String] = ["令和ロマン_1","マタンゴ_1","ヤング_1","ジャンク_1","赤もみじ_1","パンプキンポテトフライ_1"]
+
     var comedianNameArrayId1: [String] = []
     var comedianNameArrayId2: [String] = []
     var comedianNameArrayId3: [String] = []
     var comedianNameArrayId: [String] = []
 
-    
+    var comedianCopyRightArray1: [String] = []
+    var comedianCopyRightArray2: [String] = []
+    var comedianCopyRightArray3: [String] = []
+    var comedianCopyRightArray: [String] = []
+
     var comedianNameArray1: [String] = []
     var comedianNameArray2: [String] = []
     var comedianNameArray3: [String] = []
@@ -72,14 +71,17 @@ class ForthTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         
     }
     
-    
-        
+    override func viewDidAppear(_ animated: Bool) {
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .forthTabVC))
+    }
+
     
     func cellComedianNameData() {
         
         //comedianIdArray1~3に紐づく芸人名を一つずつ呼び出して、順にcomedianNameArrayにappendする
         //1つ目のArrayの芸人名をセットする
-        self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray1).getDocuments() { (querySnapshot, err) in
+        self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray1).whereField("delete_flag", isEqualTo: "false").getDocuments() { (querySnapshot, err) in
 
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -95,6 +97,9 @@ class ForthTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                     let comedianId = document.documentID
                     self.comedianNameArrayId1.append(comedianId)
                     
+                    let comedianCopyRight = document.get("copyright_flag") as! String
+                    self.comedianCopyRightArray1.append(comedianCopyRight)
+                    
                     
                 }
                 //※forinの外で処理しないと、データの数分の回数処理が行われてしまう
@@ -102,12 +107,14 @@ class ForthTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                 self.comedianNameArray.append(contentsOf: self.comedianNameArray1)
                 print("comedianNameArray(初回):\(self.comedianNameArray)")
                 self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId1)
+                
+                self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray1)
 
                 
                 
                 
                 //2つ目のArrayの芸人名をセットする
-                self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray2).getDocuments() { (querySnapshot, err) in
+                self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray2).whereField("delete_flag", isEqualTo: "false").getDocuments() { (querySnapshot, err) in
 
                     if let err = err {
                         print("Error getting documents: \(err)")
@@ -121,6 +128,10 @@ class ForthTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                             
                             let comedianId = document.documentID
                             self.comedianNameArrayId2.append(comedianId)
+                            
+                            let comedianCopyRight = document.get("copyright_flag") as! String
+                            self.comedianCopyRightArray2.append(comedianCopyRight)
+
 
 
                         }
@@ -128,10 +139,13 @@ class ForthTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                         self.comedianNameArray.append(contentsOf: self.comedianNameArray2)
                         print("comedianNameArray2(初回):\(self.comedianNameArray2)")
                         self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId2)
+                        
+                        self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray2)
+
 
                         
                         //3つ目のArrayの芸人名をセットする
-                        self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray3).getDocuments() {(querySnapshot, err) in
+                        self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray3).whereField("delete_flag", isEqualTo: "false").getDocuments() {(querySnapshot, err) in
                             
                             if let err = err {
                                 print("Error getting documents: \(err)")
@@ -146,6 +160,10 @@ class ForthTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                                     
                                     let comedianId = document.documentID
                                     self.comedianNameArrayId3.append(comedianId)
+                                    
+                                    let comedianCopyRight = document.get("copyright_flag") as! String
+                                    self.comedianCopyRightArray3.append(comedianCopyRight)
+
 
 
                                 }
@@ -154,6 +172,9 @@ class ForthTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                                 self.comedianNameArray.append(contentsOf: self.comedianNameArray3)
                                 print("comedianNameArray(2回目):\(self.comedianNameArray)")
                                 self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId3)
+                                
+                                self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray3)
+
                                 
                                 self.collectionView.reloadData()
 
@@ -238,7 +259,6 @@ class ForthTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     //セルの中身を返す
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
                 
 
         //storyboard上のセルを生成　storyboardのIdentifierで付けたものをここで設定する
@@ -246,7 +266,21 @@ class ForthTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                 
         //芸人画像を指定する
         comedianImageView = cell.contentView.viewWithTag(1) as! UIImageView
-        comedianImageView.image = UIImage(named: "\(comedianNameArrayId[indexPath.row])")
+        let comedianCopyrightFlag = comedianCopyRightArray[indexPath.row]
+        
+        if comedianCopyrightFlag == "true" {
+            
+            comedianImageView.image = UIImage(named: "\(comedianNameArrayId[indexPath.row])")
+            
+        }
+        
+        if comedianCopyrightFlag == "false" {
+            
+            comedianImageView.image = UIImage(named: "noImage")
+            
+        }
+        
+        
                 
 
         //芸人名を設定する
@@ -291,13 +325,19 @@ class ForthTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
+        
         let comedianVC = storyboard?.instantiateViewController(withIdentifier: "Comedian") as! ComedianDetailViewController
 
         comedianVC.comedianId = self.comedianNameArrayId[indexPath.row]
         self.navigationController?.pushViewController(comedianVC, animated: true)
+        hidesBottomBarWhenPushed = true
+        
+        AnalyticsUtil.sendAction(ActionEvent(screenName: .forthTabVC,
+                                                     actionType: .tap,
+                                             actionLabel: .template(ActionLabelTemplate.cellTap)))
 
     }
+    
     
 }
 

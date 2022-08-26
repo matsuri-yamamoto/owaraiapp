@@ -44,11 +44,26 @@ class SettingViewController: UIViewController {
     
     @IBAction func termsButton(_ sender: Any) {
         
+        let termVC = storyboard?.instantiateViewController(withIdentifier: "Term") as! TermViewController
+        self.navigationController?.pushViewController(termVC, animated: true)
+        
     }
     
     @IBAction func ppButton(_ sender: Any) {
         
+        let ppVC = storyboard?.instantiateViewController(withIdentifier: "PrivacyPolicy") as! TermViewController
+        self.navigationController?.pushViewController(ppVC, animated: true)
+        
     }
     
+    @IBAction func inquiryButton(_ sender: Any) {
+        
+        let inquiryVC = storyboard?.instantiateViewController(withIdentifier: "Inquiry") as! InquiryViewController
+        self.navigationController?.pushViewController(inquiryVC, animated: true)
+
+    }
+    
+    
 }
+
 

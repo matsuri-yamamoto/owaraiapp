@@ -12,6 +12,9 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     @IBOutlet weak var reviewButton: UIButton!
     @IBOutlet weak var stockButton: UIButton!
+//    @IBOutlet weak var userNameLabel: UILabel!
+//    @IBOutlet weak var userIdLabel: UILabel!
+    
     
     
         
@@ -47,6 +50,12 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         print("currentUser:\(String(describing: Auth.auth().currentUser?.uid))")
         
+        self.reviewButton.backgroundColor = #colorLiteral(red: 1, green: 0.8525225841, blue: 0.1762744927, alpha: 1)
+        self.reviewButton.tintColor = #colorLiteral(red: 0.2442787347, green: 0.2442787347, blue: 0.2442787347, alpha: 1)
+        
+        self.stockButton.backgroundColor = #colorLiteral(red: 1, green: 0.9310497734, blue: 0.695790851, alpha: 1)
+        self.stockButton.tintColor = #colorLiteral(red: 0.5989583532, green: 0.5618196744, blue: 0.5732305017, alpha: 1)
+
         
         if currentUser?.uid == nil {
             
@@ -62,17 +71,28 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
             reviewButton.isHidden = true
             stockButton.isHidden = true
             
-            
+            //ログ
+            AnalyticsUtil.sendAction(ActionEvent(screenName: .myReviewVC,
+                                                         actionType: .tap,
+                                                 actionLabel: .template(ActionLabelTemplate.myPageRecLoginPush)))
+
         } else {
             
         
             collectionView.delegate = self
             collectionView.dataSource = self
+            
+            
+            //あとでみるに切り替えた状態から別タブに移動して戻ってきたときに、レビューを再度セットする処理
+            self.comedianNameArray = []
+            self.comedianDataArray = []
+            self.collectionView.reloadData()
 
+            
             title = "マイページ"
             
             //ナビゲーションバーのボタン設置
-            settingButtonItem = UIBarButtonItem(title: "設定", style: .done, target: self, action: #selector(settingButtonPressed))
+            settingButtonItem = UIBarButtonItem(image: UIImage(systemName: "text.justify"), style: .done, target: self, action: #selector(settingButtonPressed))
             self.navigationItem.rightBarButtonItem = settingButtonItem
             
             navigationController?.navigationItem.leftBarButtonItem?.customView?.isHidden = true
@@ -116,6 +136,25 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
                     collectionView.reloadData()
                 }
             }
+            
+//            //ユーザー名をセット
+//            self.userNameLabel.text = currentUser?.displayName as? String
+//
+//            //ユーザーIDをセット
+//            db.collection("user_detail").whereField("user_id", isEqualTo: currentUser?.uid).getDocuments() {  (querySnapshot, err) in
+//                if let err = err {
+//                            print("Error getting documents: \(err)")
+//                            return
+//                } else {
+//
+//                    for document in querySnapshot!.documents {
+//
+//                        self.userIdLabel.text = "@" + "\(document.data()["display_id"]! as? String?)"
+//
+//                    }
+//                }
+//            }
+            
         }
     }
                 
@@ -134,6 +173,13 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     
     @IBAction func reviewButton(_ sender: Any) {
+        
+        //ボタンの色を切り替え
+        self.reviewButton.backgroundColor = #colorLiteral(red: 1, green: 0.8525225841, blue: 0.1762744927, alpha: 1)
+        self.reviewButton.tintColor = #colorLiteral(red: 0.2442787347, green: 0.2442787347, blue: 0.2442787347, alpha: 1)
+        
+        self.stockButton.backgroundColor = #colorLiteral(red: 1, green: 0.9310497734, blue: 0.695790851, alpha: 1)
+        self.stockButton.tintColor = #colorLiteral(red: 0.5989583532, green: 0.5618196744, blue: 0.5732305017, alpha: 1)
         
         //comedianNameArrayとcomedianDataArrayの配列から一旦stockのデータを消す
         comedianNameArray = []
@@ -173,20 +219,31 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
                 collectionView.reloadData()
             }
         }
-        
-        
-        
+        //ログ
+        AnalyticsUtil.sendAction(ActionEvent(screenName: .myReviewVC,
+                                                     actionType: .tap,
+                                             actionLabel: .template(ActionLabelTemplate.myPageReviewButtonTap)))
     }
     
     
     @IBAction func stockButton(_ sender: Any) {
         
+        //ボタンの色を切り替え
+        self.stockButton.backgroundColor = #colorLiteral(red: 1, green: 0.8525225841, blue: 0.1762744927, alpha: 1)
+        self.stockButton.tintColor = #colorLiteral(red: 0.2442787347, green: 0.2442787347, blue: 0.2442787347, alpha: 1)
+        
+        self.reviewButton.backgroundColor = #colorLiteral(red: 1, green: 0.9310497734, blue: 0.695790851, alpha: 1)
+        self.reviewButton.tintColor = #colorLiteral(red: 0.5989583532, green: 0.5618196744, blue: 0.5732305017, alpha: 1)
+        
+
         //comedianNameArrayとcomedianDataArrayの配列から一旦reviewのデータを消す
         comedianNameArray = []
         comedianDataArray = []
-                
+        self.collectionView.reloadData()
+        
+        
         //ストックデータを配列にセットする
-        db.collection("stock").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).getDocuments() { [self] (querySnapshot, err) in
+        db.collection("stock").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).whereField("valid_flag", isEqualTo: true).getDocuments() { (querySnapshot, err) in
             if let err = err {
                         print("Error getting documents: \(err)")
                         return
@@ -200,26 +257,32 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
                     
                     //自分のレビューデータのcomedian_nameを配列に格納する
                     self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
-                    print("comedianNameArray: \(self.comedianNameArray)")
+                    print("stockcomedianNameArray: \(self.comedianNameArray)")
 
                     //自分のレビューデータのcomedian_idを配列に格納する
                     self.comedianDataArray.append(document.data()["comedian_id"] as! String)
-                    print("comedianDataArray: \(self.comedianDataArray)")
+                    print("stockcomedianDataArray: \(self.comedianDataArray)")
                     
                     //comedian_nameの値をユニークにする
                     var setName = Set<String>()
                     self.comedianNameUniqueArray = self.comedianNameArray.filter { setName.insert($0).inserted }
-                    print("comedianUniqueArray: \(self.comedianNameUniqueArray)")
+                    print("stockcomedianUniqueArray: \(self.comedianNameUniqueArray)")
                     
                     //comedian_idの値をユニークにする
                     var setData = Set<String>()
                     self.comedianDataUniqueArray = self.comedianDataArray.filter { setData.insert($0).inserted }
-                    print("comedianUniqueArray: \(self.comedianDataUniqueArray)")
+                    print("stockcomedianUniqueArray: \(self.comedianDataUniqueArray)")
                                         
                 }
-                collectionView.reloadData()
+                self.collectionView.reloadData()
             }
         }
+        //ログ
+        AnalyticsUtil.sendAction(ActionEvent(screenName: .myReviewVC,
+                                                     actionType: .tap,
+                                             actionLabel: .template(ActionLabelTemplate.myPageStockButtonTap)))
+
+        
     }
     
     
@@ -274,18 +337,17 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
     // 各セルを選択した時に実行されるメソッド
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let reviewVC = storyboard?.instantiateViewController(withIdentifier: "Review") as! ReviewViewController
-        let nav = UINavigationController(rootViewController: reviewVC)
+        let comedianVC = storyboard?.instantiateViewController(withIdentifier: "Comedian") as! ComedianDetailViewController
         
         if comedianNameUniqueArray != [] {
             
-            reviewVC.comedianName = comedianNameUniqueArray[indexPath.row]
-            reviewVC.comedianID = comedianDataUniqueArray[indexPath.row]
+            comedianVC.comedianId = comedianDataUniqueArray[indexPath.row]
             
-            print("reviewVC.comedianID:\(reviewVC.comedianID)")
+            print("comedianVC.comedianID:\(comedianVC.comedianId)")
             
             //遷移を実行
-            self.present(nav, animated: true, completion: nil)
+            
+            self.navigationController?.pushViewController(comedianVC, animated: true)
             collectionView.deselectItem(at: indexPath, animated: true)
 
         } else {
@@ -293,6 +355,12 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
             return
             
         }
+        
+        //ログ
+        AnalyticsUtil.sendAction(ActionEvent(screenName: .myReviewVC,
+                                                     actionType: .tap,
+                                             actionLabel: .template(ActionLabelTemplate.myPageCellTap)))
+
     }
     
 }

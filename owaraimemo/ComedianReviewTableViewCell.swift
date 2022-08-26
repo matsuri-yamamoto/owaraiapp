@@ -11,7 +11,7 @@ import Firebase
 
 class ComedianReviewTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var userImageView: CircleImageView!
+//    @IBOutlet weak var userImageView: CircleImageView!
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var userIdLabel: UILabel!
     @IBOutlet weak var createdLabel: UILabel!
@@ -19,6 +19,8 @@ class ComedianReviewTableViewCell: UITableViewCell {
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var likeCountLabel: UILabel!
+    @IBOutlet weak var scoreLabel: UILabel!
+    
     
     var comedianDetailVC = ComedianDetailViewController()
     
@@ -41,27 +43,7 @@ class ComedianReviewTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
-    @IBAction func likeButton(_ sender: Any) {
-
-        let likeImage = UIImage(systemName: "heart")
-        let unLikeImage = UIImage(systemName: "heart.fill")
-
-
-        if likeButton.imageView?.image == likeImage {
-
-            likeButton.setImage(unLikeImage, for: .normal)
-
-        }
-
-        if likeButton.imageView?.image == unLikeImage {
-
-            likeButton.setImage(likeImage, for: .normal)
-        }
         
-        
-    }
-    
     
 }
     

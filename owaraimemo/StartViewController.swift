@@ -20,14 +20,41 @@ class StartViewController: UIViewController {
     private var provider: OAuthProvider?
                 
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.navigationBar.isHidden = true
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        
+        //このVCではナビゲーションバーを非表示にするが、遷移後は表示させる
+//        navigationController?.navigationBar.isHidden = true
+//        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
 
     }
     
     override func viewDidAppear(_ animated: Bool) {
         //pvログ
         AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .startVC))
+    }
+    
+    @IBAction func tappedLoginButton(_ sender: Any) {
+        
+        let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "Login") as! LoginViewController
+        self.navigationController?.pushViewController(loginVC, animated: true)
+        
+        //ログ
+        AnalyticsUtil.sendAction(ActionEvent(screenName: .startVC,
+                                                     actionType: .tap,
+                                             actionLabel: .template(ActionLabelTemplate.MailLoginPassTap)))
+        
+    }
+    
+    @IBAction func tappedCreateNewButton(_ sender: Any) {
+        
+        let createNewVC = self.storyboard?.instantiateViewController(withIdentifier: "CreateNew") as! CreateNewViewController
+        self.navigationController?.pushViewController(createNewVC, animated: true)
+        
+        //ログ
+        AnalyticsUtil.sendAction(ActionEvent(screenName: .startVC,
+                                                     actionType: .tap,
+                                             actionLabel: .template(ActionLabelTemplate.MailNewPassTap)))
+
+        
     }
     
     
@@ -60,45 +87,65 @@ class StartViewController: UIViewController {
                       print("additionalUserInfo:\(result?.additionalUserInfo?.username)")
                       print("additionalUserInfo:\(result?.additionalUserInfo?.profile?["screen_name"] as! String)")
                       
-                      
-                      //ユーザーネームを保存する
-                      let deleteDateTime :String? = nil
+                      print("twiterLoginDisplayName:\(Auth.auth().currentUser?.displayName)")
 
-                      let userNameRef = Firestore.firestore().collection("user_detail").document()
-                      let userNameDic = [
-                          "user_id": Auth.auth().currentUser?.uid,
-                          "username": Auth.auth().currentUser?.displayName,
-                          "create_datetime": FieldValue.serverTimestamp(),
-                          "update_datetime": FieldValue.serverTimestamp(),
-                          "delete_flag": false,
-                          "delete_datetime": deleteDateTime,
-                      ] as [String : Any]
                       
-                      print("userNameDic\(userNameDic)")
                       
-                      userNameRef.setData(userNameDic)
-                      
-                      print("firstDisplayName:\(String(describing: Auth.auth().currentUser?.displayName))")
-
-                      //displayNameを上書きする
-                      Auth.auth().currentUser?.createProfileChangeRequest().displayName = result?.additionalUserInfo?.profile?["screen_name"] as? String
-                      
-                      Auth.auth().currentUser?.createProfileChangeRequest().commitChanges() { error in
-                          if error == nil {
-                              print("Successed：Twitterログイン→displayNameの更新")
+                      //過去にログインしたことがなかったら、user_detailを作成する
+                      Firestore.firestore().collection("user_detail").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).getDocuments() { (querySnapshot, err) in
+                          if let err = err {
+                              print("Error getting documents: \(err)")
                               
                           } else {
-                              print("Failed：Twitterログイン→displayNameの更新")
+                              
+                              print("querySnapshot!.documents.count:\(querySnapshot!.documents.count)")
+                              
+                              if querySnapshot!.documents.count == 0 {
+                                  
+                                  let deleteDateTime :String? = nil
 
+                                  let userNameRef = Firestore.firestore().collection("user_detail").document()
+                                  let userNameDic = [
+                                      "user_id": Auth.auth().currentUser?.uid,
+                                      "display_id": result?.additionalUserInfo?.profile?["screen_name"] as! String,
+                                      "create_datetime": FieldValue.serverTimestamp(),
+                                      "update_datetime": FieldValue.serverTimestamp(),
+                                      "delete_flag": false,
+                                      "delete_datetime": deleteDateTime,
+                                  ] as [String : Any]
+                                  
+                                  print("userNameDic\(userNameDic)")
+                                  
+                                  userNameRef.setData(userNameDic)
+                                  
+
+                                  print("finalDisplayName:\(String(describing: Auth.auth().currentUser?.displayName))")
+
+                                  let tabBarVC = self.storyboard?.instantiateViewController(withIdentifier: "Tabbar") as! TabBarController
+                                  self.navigationController?.pushViewController(tabBarVC, animated: true)
+                                  
+                                  //ログ
+                                  AnalyticsUtil.sendAction(ActionEvent(screenName: .startVC,
+                                                                               actionType: .tap,
+                                                                       actionLabel: .template(ActionLabelTemplate.twitterLoginPassTap)))
+
+                              } else {
+                                  
+                                  let tabBarVC = self.storyboard?.instantiateViewController(withIdentifier: "Tabbar") as! TabBarController
+                                  self.navigationController?.pushViewController(tabBarVC, animated: true)
+                                  
+                                  //ログ
+                                  AnalyticsUtil.sendAction(ActionEvent(screenName: .startVC,
+                                                                               actionType: .tap,
+                                                                       actionLabel: .template(ActionLabelTemplate.twitterLoginPassTap)))
+
+                                  
+                              }
                           }
-                          
                       }
-                      print("finalDisplayName:\(String(describing: Auth.auth().currentUser?.displayName))")
-
-                      let tabBarVC = self.storyboard?.instantiateViewController(withIdentifier: "Tabbar") as! TabBarController
-                      self.navigationController?.pushViewController(tabBarVC, animated: true)
-                      
                   }
               }
     }
+    
 }
+
