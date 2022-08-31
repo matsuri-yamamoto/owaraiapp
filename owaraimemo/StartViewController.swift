@@ -63,11 +63,21 @@ class StartViewController: UIViewController {
         provider = OAuthProvider(providerID: "twitter.com")
               provider?.getCredentialWith(nil) { credential, error in
                   guard let credential = credential, error == nil else {
+                      
+                      //エラーログ
+                      AnalyticsUtil.sendAction(ActionEvent(screenName: .startVC,
+                                                                   actionType: .error,
+                                                           actionLabel: .template(ActionLabelTemplate.twitterLoginError)))
                       return
                   }
 
                   Auth.auth().signIn(with: credential) { result, error in
                       guard error == nil else {
+                          //エラーログ
+                          AnalyticsUtil.sendAction(ActionEvent(screenName: .startVC,
+                                                                       actionType: .error,
+                                                               actionLabel: .template(ActionLabelTemplate.twitterLoginError)))
+
                           return
                       }
 
@@ -95,6 +105,10 @@ class StartViewController: UIViewController {
                       Firestore.firestore().collection("user_detail").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).getDocuments() { (querySnapshot, err) in
                           if let err = err {
                               print("Error getting documents: \(err)")
+                              //エラーログ
+                              AnalyticsUtil.sendAction(ActionEvent(screenName: .startVC,
+                                                                           actionType: .error,
+                                                                   actionLabel: .template(ActionLabelTemplate.mailLoginError)))
                               
                           } else {
                               

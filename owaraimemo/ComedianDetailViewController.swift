@@ -128,6 +128,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
     override func viewDidAppear(_ animated: Bool) {
         
+//        self.scrollVIewHight.constant = CGFloat(2000)
+        
         print("comedian:\(comedianId)")
         
         //レビューボタンのテキストをセット
@@ -1130,6 +1132,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         if self.reviewScoreArray[indexPath.row] == nil {
             cell.scoreImageView.image = UIImage(named: "noScored")
         } else {
+            cell.scoreLabel.text = self.reviewScoreArray[indexPath.row]
             cell.scoreImageView.image = UIImage(named: "score_\(self.reviewScoreArray[indexPath.row])")
         }
         cell.commentLabel.text = self.reviewCommentArray[indexPath.row]

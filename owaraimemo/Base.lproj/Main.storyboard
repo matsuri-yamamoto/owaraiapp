@@ -369,12 +369,12 @@
         <scene sceneID="7mr-kL-GCz">
             <objects>
                 <viewController storyboardIdentifier="Comedian" id="PB4-oi-TZc" customClass="ComedianDetailViewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" ambiguous="YES" id="pfU-hG-tlP">
+                    <view key="view" contentMode="scaleToFill" id="pfU-hG-tlP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p7r-sM-0ug">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="2000"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Naf-oc-RJC" userLabel="contentView">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="2000"/>
@@ -564,7 +564,6 @@
                                     <constraint firstItem="Naf-oc-RJC" firstAttribute="top" secondItem="v0T-vO-84d" secondAttribute="top" id="ieP-vi-WmP"/>
                                     <constraint firstAttribute="bottom" secondItem="Naf-oc-RJC" secondAttribute="bottom" id="jUf-TG-u7Q"/>
                                     <constraint firstItem="Naf-oc-RJC" firstAttribute="top" secondItem="p7r-sM-0ug" secondAttribute="top" id="rwJ-8o-0HI"/>
-                                    <constraint firstAttribute="height" constant="2000" id="vHf-2n-pJx"/>
                                 </constraints>
                                 <viewLayoutGuide key="contentLayoutGuide" id="XV8-3c-bMW"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="v0T-vO-84d"/>
@@ -573,10 +572,10 @@
                         <viewLayoutGuide key="safeArea" id="sj0-my-8nX"/>
                         <color key="backgroundColor" red="0.88136094714242419" green="0.88136094714242419" blue="0.88136094714242419" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="p7r-sM-0ug" secondAttribute="bottom" id="FGi-P9-Nd8"/>
-                            <constraint firstItem="p7r-sM-0ug" firstAttribute="leading" secondItem="sj0-my-8nX" secondAttribute="leading" id="GqF-6C-4qX"/>
-                            <constraint firstItem="p7r-sM-0ug" firstAttribute="top" secondItem="pfU-hG-tlP" secondAttribute="top" id="hkE-T0-ZsS"/>
-                            <constraint firstItem="p7r-sM-0ug" firstAttribute="trailing" secondItem="sj0-my-8nX" secondAttribute="trailing" id="xeG-s5-j6w"/>
+                            <constraint firstItem="p7r-sM-0ug" firstAttribute="leading" secondItem="sj0-my-8nX" secondAttribute="leading" id="8qb-Um-53t"/>
+                            <constraint firstItem="p7r-sM-0ug" firstAttribute="top" secondItem="pfU-hG-tlP" secondAttribute="top" id="IXc-pb-Dal"/>
+                            <constraint firstItem="p7r-sM-0ug" firstAttribute="trailing" secondItem="sj0-my-8nX" secondAttribute="trailing" id="XDF-xv-vLH"/>
+                            <constraint firstAttribute="bottom" secondItem="p7r-sM-0ug" secondAttribute="bottom" id="rIQ-B3-J7f"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ALD-uR-B85">
@@ -604,7 +603,7 @@
                         <outlet property="reviewCountLabel" destination="JP2-jH-epv" id="8wy-dO-OLC"/>
                         <outlet property="reviewImageView" destination="1Rl-8A-XdZ" id="SOv-yq-Cqx"/>
                         <outlet property="scoreImageView" destination="vBl-qn-OGD" id="kqp-MU-E6O"/>
-                        <outlet property="scrollVIewHight" destination="vHf-2n-pJx" id="6xl-wV-N9g"/>
+                        <outlet property="scrollVIewHight" destination="EGo-eD-5SO" id="vf3-rL-Wo1"/>
                         <outlet property="scrollView" destination="p7r-sM-0ug" id="Hcq-Fc-Hc3"/>
                         <outlet property="startYearLabel" destination="zFn-XS-1PI" id="Oc8-hx-rwl"/>
                         <outlet property="stockButton" destination="AXq-qO-96h" id="Oj3-bE-52a"/>
@@ -1154,7 +1153,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ddk-Vx-RhW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="114" y="1623"/>
+            <point key="canvasLocation" x="254" y="1623"/>
         </scene>
         <!--Tab View Controller-->
         <scene sceneID="wy7-Us-bSM">

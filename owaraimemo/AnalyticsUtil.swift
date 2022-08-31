@@ -103,22 +103,12 @@ public struct ActionEvent: AnalyticsEvent {
     }
 }
 
-public struct ActionEventForFirstTabCellTap: AnalyticsEvent {
-    public let name = EventName.action
-    public let parameters: [String: Any]
-    
-    var firstTabVC = FirstTabViewController()
-    
-    init(screenName: ScreenName, actionType: ActionType, actionLabel: ActionLabel) {
-        self.parameters = ["screen_name": "\(screenName.rawValue)", "action_type": "\(actionType.rawValue)", "action_label": "\(actionLabel.value)", "uid": Auth.auth().currentUser?.uid ?? "", "comedian_id": firstTabVC.comedianId]
-    }
-}
-
 
 //アクションタイプを定義(アクションの種類)
 public enum ActionType: String {
     case tap = "タップ"
     case pushNotification = "push通知起動"
+    case error = "エラー"
 }
 
 public enum ActionLabel {
@@ -151,6 +141,15 @@ public enum ActionLabelTemplate: String {
     case reviewSaveButtonTap_noTwitter = "レビュー保存ボタンタップ(Twitterシェアなし)"
     case reviewSaveButtonTap_shareTwitter = "レビュー保存ボタンタップ(Twitterシェアあり)"
     case reviewPrivateSaveButtonTap = "レビュー非公開保存ボタンタップ"
+    case mailNewError = "メアド新規登録エラー"
+    case mailNewNameError = "メアド新規ユーザー名登録エラー"
+    case mailNewIdError = "メアド新規ID登録エラー"
+    case twitterLoginError = "Twitter新規登録エラー"
+    case twitterLoginNameError = "Twitter新規ユーザー名登録エラー"
+    case twitterLoginIdError = "Twitter新規ID登録エラー"
+    case mailLoginError = "メアドログインエラー"
+
+    
     
 }
 
