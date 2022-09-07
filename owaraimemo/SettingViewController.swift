@@ -28,6 +28,13 @@ class SettingViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
 
     }
+    
+    @IBAction func aboutTsubologButton(_ sender: Any) {
+        let aboutTsuboVC = storyboard?.instantiateViewController(withIdentifier: "AboutTsubolog") as! AboutTsubologViewController
+        self.navigationController?.pushViewController(aboutTsuboVC, animated: true)
+
+    }
+    
 
     
     @IBAction func logoutButton(_ sender: Any) {

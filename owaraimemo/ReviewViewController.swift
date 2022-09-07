@@ -24,6 +24,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
     
     @IBOutlet weak var saveButton: UIButton!
     
+    var displayId: String!
     
     
     //comedianTextFieldに予測表示させる芸人の配列
@@ -43,9 +44,12 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
     let currentUser = Auth.auth().currentUser
     
     
+    
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
+        
+        print("comedianName:\(comedianName)")
         
         print("comedianID:\(comedianID)")
         
@@ -74,12 +78,21 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                 print("Error getting documents: \(err)")
                 return
             } else {
-                for document in querySnapshot!.documents {
-                    self.slider.value = document.get("score") as! Float
-                    self.textView.text = document.get("comment") as? String
+                
+                //レビューがなければプレースホルダーを設定する
+                if querySnapshot?.documents.count == 0 {
+                    self.textView.placeHolder = "ネタバレ、過度な批判・誹謗中傷の" + "\n" + "公開保存は禁止です！" + "\n" + "芸人さんやファンの方に" + "\n" + "直接言える言葉で書きましょう"
+                    
+                } else {
+                    for document in querySnapshot!.documents {
+                        self.slider.value = document.get("score") as! Float
+                        self.textView.text = document.get("comment") as? String
+                        
+                        let sliderDoubleValue = Double(self.slider.value)
+                        self.sliderLabel.text = String(format: "%.1f", sliderDoubleValue)
+
+                    }
                 }
-                let sliderDoubleValue = Double(self.slider.value)
-                self.sliderLabel.text = String(sliderDoubleValue)
             }
         }
         
@@ -97,7 +110,6 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
             }
         }
         
-        self.textView.placeHolder = "ネタバレ、過度な批判・誹謗中傷の" + "\n" + "公開保存は禁止です！" + "\n" + "芸人さんやファンの方に" + "\n" + "直接言える言葉で書きましょう"
         
         
         self.twitterImageView.image = UIImage(named: "twitterShare_false")
@@ -158,9 +170,12 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                 print("Error getting documents: \(err)")
                 
             } else {
+                print("件数:\(querySnapshot?.documents.count)")
+                
                 for document in querySnapshot!.documents {
-                    displayId = document.data()["display_id"] as? String
-                    
+                    displayId = document.get("display_id") as? String
+                    print("displayId:\(displayId)")
+
                     //user_id=currentUserかつcomedian_idが前画面から渡されたidであるreviewドキュメントを探す
                     //該当ドキュメントがあればdocumentidを取得し、なければ"doesNotExist"を入れる
                     
@@ -277,6 +292,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
             } else {
                 for document in querySnapshot!.documents {
                     displayId = document.data()["display_id"] as? String
+                    print("displayId:\(displayId)")
                     
                     //user_id=currentUserかつcomedian_idが前画面から渡されたidであるreviewドキュメントを探す
                     //該当ドキュメントがあればdocumentidを取得し、なければ"doesNotExist"を入れる
@@ -289,13 +305,13 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                             for document in querySnapshot!.documents {
                                 documentID = document.documentID
                             }
-                            
+                                                        
                             //ドキュメントidがnilの場合、レビューを書いたことがないということなので新しくレビューを作成する
                             if documentID == nil {
                                 let reviewRef = Firestore.firestore().collection("review").document()
                                 let reviewDic = [
                                     "user_id": userId!,
-                                    "display_id": displayId!,
+                                    "display_id": displayId! as String,
                                     "user_name": userName!,
                                     "comedian_id": self.comedianID,
                                     "comedian_display_name": self.comedianName,
@@ -395,13 +411,16 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
         var comedianName :String!
         
         
-        Firestore.firestore().collection("comedian").whereField("for_list_name", isEqualTo: self.comedianName).getDocuments() { (querySnapshot, err) in
+        Firestore.firestore().collection("comedian").whereField(FieldPath.documentID(), in: [self.comedianID]).getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
                 
             } else {
+                print("querySnapshot?.documents.count:\(querySnapshot?.documents.count)")
                 for document in querySnapshot!.documents {
                     comedianName = document.data()["comedian_name"] as? String
+                    print("comedianName:\(comedianName as String)")
+                    
                     
                     let url = "https://urlzs.com/1MmQo"
                     
@@ -415,7 +434,10 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                     
                     //レビュー内容、URL、ハッシュタグを結合
                     let reviewContents = self.textView.text!
+                    print("reviewContents:\(reviewContents)")
                     let reviewHashTag = reviewContents + "\n" + comedianNameHashTag + "\n" + tsubologHashTag + "\n" + url
+                    
+                    print("reviewHashTag:\(reviewHashTag)")
                     
                     
                     //作成したテキストをエンコード

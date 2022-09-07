@@ -103,7 +103,7 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
 
             
             
-            db.collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).getDocuments() { [self] (querySnapshot, err) in
+            db.collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).order(by: "create_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
                 if let err = err {
                             print("Error getting documents: \(err)")
                             return
@@ -131,6 +131,7 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
                         var setData = Set<String>()
                         self.comedianDataUniqueArray = self.comedianDataArray.filter { setData.insert($0).inserted }
                         print("comedianUniqueArray: \(self.comedianDataUniqueArray)")
+            
                                             
                     }
                     collectionView.reloadData()
@@ -186,7 +187,7 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
         comedianDataArray = []
         
         //レビューデータを配列にセットする
-        db.collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).getDocuments() { [self] (querySnapshot, err) in
+        db.collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).order(by: "create_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
             if let err = err {
                         print("Error getting documents: \(err)")
                         return
@@ -243,7 +244,7 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         
         //ストックデータを配列にセットする
-        db.collection("stock").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).whereField("valid_flag", isEqualTo: true).getDocuments() { (querySnapshot, err) in
+        db.collection("stock").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).whereField("valid_flag", isEqualTo: true).order(by: "create_datetime", descending: true).getDocuments() { (querySnapshot, err) in
             if let err = err {
                         print("Error getting documents: \(err)")
                         return
@@ -311,6 +312,17 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         //芸人画像を指定する
         comedianImageView = cell.contentView.viewWithTag(1) as! UIImageView
+        let image :UIImage? = UIImage(named: "\(comedianDataUniqueArray[indexPath.row])")
+        let noImage :UIImage! = UIImage(named: "noImage")
+        
+        
+        if let validImage = image {
+            comedianImageView.image = validImage
+        } else {
+            comedianImageView.image = noImage
+        }
+        
+        
         comedianImageView.image = UIImage(named: "\(comedianDataUniqueArray[indexPath.row])")
         
         //芸人名を設定する

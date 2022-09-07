@@ -27,7 +27,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
     @IBOutlet weak var comedianNameLabel: UILabel!
     @IBOutlet weak var startYearLabel: UILabel!
-    @IBOutlet weak var comedianTypeLabel: UILabel!
+//    @IBOutlet weak var comedianTypeLabel: UILabel!
     @IBOutlet weak var comedyTypeLabel1: UILabel!
     @IBOutlet weak var comedyTypeLabel2: UILabel!
     @IBOutlet weak var comedianImageView: UIImageView!
@@ -54,9 +54,6 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     //レビュー・あとでみるボタンの件数ラベルを設定するための接続
     @IBOutlet weak var reviewCountLabel: UILabel!
     @IBOutlet weak var stockCountLabel: UILabel!
-    //レビュー・あとでみるボタンのラベルを設定するための接続
-    @IBOutlet weak var reviewLabel: UILabel!
-    @IBOutlet weak var stockLabel: UILabel!
     
     @IBOutlet weak var reviewImageView: UIImageView!
     @IBOutlet weak var stockImageView: UIImageView!
@@ -102,6 +99,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     //reviewのtableView
     let tableView = UITableView(frame: .zero, style: .plain)
     
+    //reviewをセットする配列(別画面から戻る場合などにレビュー×2が読み込まれてしまうので、一旦この配列に入れてあとでユニークにする)
+    var reviewBeforeUniqueArray: [String] = []
+
     //reviewのtableViewにセットする配列
     var reviewIdArray: [String] = []
     var reviewUserNameArray: [String] = []
@@ -112,8 +112,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     var reviewCommentArray: [String] = []
     
     //いいねボタン用の画像
-    let likeImage = UIImage(systemName: "heart")
-    let unLikeImage = UIImage(systemName: "heart.fill")
+    let likeImage = UIImage(systemName: "heart.fill")
+    let unLikeImage = UIImage(systemName: "heart")
     //review件数のラベル(cellのクラスに渡す用)
     var likeCountLabelText :String = ""
     
@@ -178,7 +178,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         
         
         
-        db.collection("review").whereField("comedian_id", isEqualTo: comedianId).whereField("private_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
+        db.collection("review").whereField("comedian_id", isEqualTo: comedianId).whereField("private_flag", isEqualTo: false).order(by: "create_datetime", descending: true).getDocuments() {(querySnapshot, err) in
             
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -207,10 +207,17 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                         self.scoreImageView.image = UIImage(named: "score_\(String(format: "%.1f", averageScore))")
                     }
                     
-                                        
+                    
+                    //レビューを配列で取得(別画面から戻る場合などにレビュー×2が読み込まれてしまうので、一旦仮の配列に入れてあとでユニークにする)
+                    self.reviewBeforeUniqueArray.append(document.documentID)
+                    
                     //以下、reviewのtableViewにセットする配列
-                    self.reviewIdArray.append(document.documentID)
-                    print("reviewIdArray:\(self.reviewIdArray)")
+                    //レビューをユニークにする
+                    var reviewId = Set<String>()
+                    self.reviewIdArray = self.reviewBeforeUniqueArray.filter { reviewId.insert($0).inserted }
+
+                    
+                    
                     
                     
                     self.reviewUserNameArray.append(document.data()["user_name"] as! String)
@@ -329,8 +336,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     let office_name = "（\(document.data()["office_name"] as! String)）"
                     self.comedianNameLabel.text = comedian_name + office_name
                     self.comedianDisplayName = document.data()["for_list_name"] as! String
-                    self.startYearLabel.text = document.data()["start_year"] as! String + "結成"
-                    self.comedianTypeLabel.text = document.data()["comedian_type"] as? String
+                    
+                    if document.data()["start_year"] as! String != "" {
+                        self.startYearLabel.text = document.data()["start_year"] as! String + "結成"
+                    }
+//                    self.comedianTypeLabel.text = document.data()["comedian_type"] as? String
                     self.comedyTypeLabel1.text = document.data()["comedy_type_1"] as? String
                     self.comedyTypeLabel2.text = document.data()["comedy_type_2"] as? String
                     self.memberLabel1.text = document.data()["member_1"] as? String
@@ -344,20 +354,20 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     print("movieId2:\(self.movieId2!)")
                     
                     
-                    if document.data()["member_1"] as? String == "" {
+                    if document.data()["member_1"] as? String == "　" {
                         self.memberTitleLabel.isHidden = true
                         self.memberLabel1.isHidden = true
                         self.memberLabel2.isHidden = true
                         self.memberLabel3.isHidden = true
                         
-                    } else if document.data()["member_2"] as? String == "" {
+                    } else if document.data()["member_2"] as? String == "　" {
                         self.memberTitleLabel.text = "メンバー"
                         self.memberLabel2.isHidden = true
                         self.memberLabel3.isHidden = true
                         
                         self.memberLabel1.text = document.data()["member_1"] as? String
                         
-                    } else if document.data()["member_3"] as? String == "" {
+                    } else if document.data()["member_3"] as? String == "　" {
                         self.memberTitleLabel.text = "メンバー"
                         self.memberLabel3.isHidden = true
                         
@@ -365,7 +375,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                         self.memberLabel2.text = document.data()["member_2"] as? String
                         
                         
-                    } else if document.data()["member_4"] as? String == ""  {
+                    } else if document.data()["member_4"] as? String == "　"  {
                         self.memberTitleLabel.text = "メンバー"
                         self.memberLabel1.text = document.data()["member_1"] as? String
                         self.memberLabel2.text = document.data()["member_2"] as? String
@@ -412,7 +422,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     //レビューの件数に応じたcontentViewのheightになるように設定(レビュー1件あたりheight=200)
                                     print("self.reviewIdArray.count:\(reviewCount!)")
                                     
-                                    self.contentViewHight.constant = CGFloat(200*reviewCount! + 840)
+                                    self.contentViewHight.constant = CGFloat(200*reviewCount! + 870)
                                     
                                     print("contentViewHight.constant:\(self.contentViewHight.constant)")
                                     
@@ -435,7 +445,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     //1つ目の動画をセットする
                                     let youtubeView1 = YTPlayerView(frame: CGRect(x: self.contentView.frame.width/2 - (self.contentView.frame.width*0.9)/2, y: 370, width: self.contentView.frame.width*0.9, height: 200))
                                     
-                                    youtubeView1.load(withVideoId: "svrr3GG9heI", playerVars: ["playsinline":1])
+                                    youtubeView1.load(withVideoId: "\(self.movieId1!)", playerVars: ["playsinline":1])
                                     youtubeView1.delegate = self;
                                     self.contentView.addSubview(youtubeView1)
                                     
@@ -483,7 +493,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     //レビューの件数に応じたcontentViewのheightになるように設定(レビュー1件あたりheight=200)
                                     print("self.reviewIdArray.count:\(reviewCount!)")
                                     
-                                    self.contentViewHight.constant = CGFloat(200*reviewCount! + 625)
+                                    self.contentViewHight.constant = CGFloat(200*reviewCount! + 670)
                                     
                                     print("contentViewHight.constant:\(self.contentViewHight.constant)")
                                     
@@ -504,7 +514,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     //1つ目の動画をセットする
                                     let youtubeView1 = YTPlayerView(frame: CGRect(x: self.contentView.frame.width/2 - (self.contentView.frame.width*0.9)/2, y: 370, width: self.contentView.frame.width*0.9, height: 200))
                                     
-                                    youtubeView1.load(withVideoId: "svrr3GG9heI", playerVars: ["playsinline":1])
+                                    youtubeView1.load(withVideoId: "\(self.movieId1!)", playerVars: ["playsinline":1])
                                     youtubeView1.delegate = self;
                                     self.contentView.addSubview(youtubeView1)
                                     
@@ -819,16 +829,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .comedianDetailVC))
         
     }
-    
-    //    func configureSV() {
-    //
-    //        // scrollViewにcontentsViewを配置させる
-    //        scrollView.addSubview(self.contentView)
-    //
-    //        // scrollViewにcontentsViewのサイズを教える
-    //        scrollView.contentSize = self.contentView.frame.size
-    //    }
-    
+
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
@@ -1110,9 +1111,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         
         //reviewidを入れる変数
         self.reviewId = self.reviewIdArray[indexPath.row]
-        
-        print("self.reviewIdArray[indexPath.row]:\(self.reviewIdArray[indexPath.row])")
-        
+                
         
         //※プロフィール画像の仕様が決まったらここに追加する(reviewUserIdArryがあるのでそれを使う)
         //ユーザー名

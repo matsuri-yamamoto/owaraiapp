@@ -43,7 +43,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
 
         
-        self.navigationItem.title = "さがす"
+        self.navigationItem.title = "検索"
 
         // searchBarのスタイル
         searchController.searchBar.searchBarStyle = UISearchBar.Style.prominent
@@ -64,26 +64,21 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // カスタムセルを登録する
         let nib = UINib(nibName: "ComedianTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "Cell")
-        
-        
-        db.collection("comedian").whereField("delete_flag", isEqualTo: "false").getDocuments() {(querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-                return
-                
-            } else {
-                for document in querySnapshot!.documents {
-                    self.comedianDataArray.append(document.documentID)
-                    self.comedianNameArray.append(document.data()["for_list_name"] as! String)
-                }
-                self.tableView.reloadData()
-            }
-            }
     }
     
     
     
     override func viewDidAppear(_ animated: Bool) {
+        
+        //再度ページが開かれるときに検索前の状態に戻す
+        self.searchController.searchBar.text = ""
+        self.comedianDataArray = []
+        self.comedianNameArray = []
+        self.filterComedianArray = []
+        self.searchResultNameArray = []
+        self.searchResultData = ""
+
+        
         //pvログ
         AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .searchVC))
     }
@@ -177,17 +172,41 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                                                      actionType: .tap,
                                              actionLabel: .template(ActionLabelTemplate.searchBarTap)))
         
-        //検索文字列を含むデータを検索結果配列に格納する。
-        searchResultNameArray = comedianNameArray.filter { data in
-            return data.contains(searchController.searchBar.text!)
+        if searchController.searchBar.text != "" {
+            
+            db.collection("comedian").whereField("delete_flag", isEqualTo: "false").order(by: "comedian_name").start(at: [searchController.searchBar.text!]).end(at: [searchController.searchBar.text! + "\u{f8ff}"]).getDocuments() {(querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    return
+
+                } else {
+                    for document in querySnapshot!.documents {
+                        self.comedianDataArray.append(document.documentID)
+                        self.comedianNameArray.append(document.data()["for_list_name"] as! String)
+                    }
+                    print("検索後の配列:\(self.comedianNameArray)")
+                    
+                    //検索文字列を含むデータを検索結果配列に格納する。
+                    self.searchResultNameArray = self.comedianNameArray.filter { data in
+                        return data.contains(searchController.searchBar.text!)
+                    }
+                    
+                    print("検索結果の配列:\(self.searchResultNameArray)")
+                    //テーブルを再読み込みする
+                    self.tableView.reloadData()
+
+                }
+            }
         }
         
-        //テーブルを再読み込みする
-        tableView.reloadData()
+        if searchController.searchBar.text == "" {
+            
+            self.comedianDataArray = []
+            self.searchResultNameArray = []
+            self.tableView.reloadData()
+            
+        }
         
-        
-
-
     }
     
 }

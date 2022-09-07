@@ -11,22 +11,11 @@ import FirebaseAuth
 import KeychainAccess
 import FirebaseFirestore
 
-
-
-
-
 class StartViewController: UIViewController {
     
     private var provider: OAuthProvider?
                 
-    override func viewWillAppear(_ animated: Bool) {
-        
-        //このVCではナビゲーションバーを非表示にするが、遷移後は表示させる
-//        navigationController?.navigationBar.isHidden = true
-//        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-
-    }
-    
+ 
     override func viewDidAppear(_ animated: Bool) {
         //pvログ
         AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .startVC))
@@ -53,8 +42,6 @@ class StartViewController: UIViewController {
         AnalyticsUtil.sendAction(ActionEvent(screenName: .startVC,
                                                      actionType: .tap,
                                              actionLabel: .template(ActionLabelTemplate.MailNewPassTap)))
-
-        
     }
     
     

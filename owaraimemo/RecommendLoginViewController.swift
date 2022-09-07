@@ -205,7 +205,7 @@ class RecommendLoginViewController: UIViewController {
     
     @IBAction func ppButton(_ sender: Any) {
         
-        let ppVC = storyboard?.instantiateViewController(withIdentifier: "PrivacyPolicy") as! TermViewController
+        let ppVC = storyboard?.instantiateViewController(withIdentifier: "PrivacyPolicy") as! PrivacyPolicyViewController
         self.navigationController?.pushViewController(ppVC, animated: true)
         
     }

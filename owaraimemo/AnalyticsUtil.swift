@@ -148,8 +148,6 @@ public enum ActionLabelTemplate: String {
     case twitterLoginNameError = "Twitter新規ユーザー名登録エラー"
     case twitterLoginIdError = "Twitter新規ID登録エラー"
     case mailLoginError = "メアドログインエラー"
-
-    
     
 }
 

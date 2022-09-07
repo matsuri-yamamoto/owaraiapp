@@ -144,40 +144,46 @@ class ForthTabViewController: UIViewController, UICollectionViewDelegate, UIColl
 
 
                         
-                        //3つ目のArrayの芸人名をセットする
-                        self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray3).whereField("delete_flag", isEqualTo: "false").getDocuments() {(querySnapshot, err) in
+                        if self.comedianIdArray3 == [] {
                             
-                            if let err = err {
-                                print("Error getting documents: \(err)")
-                                return
-
-                            } else {
-
-                                for document in querySnapshot!.documents {
+                            self.collectionView.reloadData()
+                            
+                            
+                        } else {
+                            
+                            //3つ目のArrayの芸人名をセットする
+                            self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray3).whereField("delete_flag", isEqualTo: "false").getDocuments() {(querySnapshot, err) in
+                                
+                                if let err = err {
+                                    print("Error getting documents: \(err)")
+                                    return
                                     
-                                    let comedianName = document.get("for_list_name") as! String
-                                    self.comedianNameArray3.append(comedianName)
+                                } else {
                                     
-                                    let comedianId = document.documentID
-                                    self.comedianNameArrayId3.append(comedianId)
+                                    for document in querySnapshot!.documents {
+                                        
+                                        let comedianName = document.get("for_list_name") as! String
+                                        self.comedianNameArray3.append(comedianName)
+                                        
+                                        let comedianId = document.documentID
+                                        self.comedianNameArrayId3.append(comedianId)
+                                        
+                                        let comedianCopyRight = document.get("copyright_flag") as! String
+                                        self.comedianCopyRightArray3.append(comedianCopyRight)
+                                        
+                                                                                
+                                    }
                                     
-                                    let comedianCopyRight = document.get("copyright_flag") as! String
-                                    self.comedianCopyRightArray3.append(comedianCopyRight)
-
-
-
+                                    print("comedianNameArray3(初回):\(self.comedianNameArray3)")
+                                    self.comedianNameArray.append(contentsOf: self.comedianNameArray3)
+                                    print("comedianNameArray(2回目):\(self.comedianNameArray)")
+                                    self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId3)
+                                    
+                                    self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray3)
+                                    
+                                    self.collectionView.reloadData()
+                                    
                                 }
-
-                                print("comedianNameArray3(初回):\(self.comedianNameArray3)")
-                                self.comedianNameArray.append(contentsOf: self.comedianNameArray3)
-                                print("comedianNameArray(2回目):\(self.comedianNameArray)")
-                                self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId3)
-                                
-                                self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray3)
-
-                                
-                                self.collectionView.reloadData()
-
                             }
                         }
                     }
