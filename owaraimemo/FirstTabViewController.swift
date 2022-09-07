@@ -14,6 +14,7 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     @IBOutlet weak var collectionView: UICollectionView!
     
+    
     var comedianIdArray1: [String] = ["にぼしいわし_1","トルクレンチガールズ_1","シマウマフック_1","ガーベラガーデン_1","牛女_1","ボニーボニー_1"]
     var comedianIdArray2: [String] = ["ビッグボンバーズ_1","アオイサカナ_1","ヤング_1","まんたナイスミドル_1","鳥山明・暗_1","魚雷2倍速_1"]
     var comedianIdArray3: [String] = []
@@ -66,6 +67,19 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         collectionView.delegate = self
         collectionView.dataSource = self
+        
+        collectionView.register(UINib(nibName: "TabViewCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "TabViewCollectionViewCell")
+        
+        
+        let layout = UICollectionViewFlowLayout()
+        // 横方向のスペース調整
+        let horizontalSpace:CGFloat = 50
+        //デバイスの横幅を2分割した横幅　- セル間のスペース*1（セル間のスペースが1列あるため）
+        cellSize = (self.view.bounds.width - horizontalSpace*1)/2
+
+        
+        layout.itemSize = CGSize(width: cellSize, height: cellSize*1.35)
+        collectionView.collectionViewLayout = layout
         
         
         
@@ -252,18 +266,18 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         
     }
     
-    //セルのサイズを指定する処理
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        // 横方向のスペース調整
-        let horizontalSpace:CGFloat = 50
-        
-        //デバイスの横幅を2分割した横幅　- セル間のスペース*1（セル間のスペースが1列あるため）
-        cellSize = (self.view.bounds.width - horizontalSpace*1)/2
-        
-        return CGSize(width: cellSize, height: cellSize*1.35)
-        
-    }
+//    //セルのサイズを指定する処理
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//
+//        // 横方向のスペース調整
+//        let horizontalSpace:CGFloat = 50
+//
+//        //デバイスの横幅を2分割した横幅　- セル間のスペース*1（セル間のスペースが1列あるため）
+//        cellSize = (self.view.bounds.width - horizontalSpace*1)/2
+//
+//        return CGSize(width: cellSize, height: cellSize*1.35)
+//
+//    }
     
     
     
@@ -272,21 +286,27 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         
         //storyboard上のセルを生成　storyboardのIdentifierで付けたものをここで設定する
-        let cell:UICollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TabViewCollectionViewCell", for: indexPath) as! TabViewCollectionViewCell
         
         //芸人画像を指定する
-        comedianImageView = cell.contentView.viewWithTag(1) as! UIImageView
+//        comedianImageView = cell.comedianImageView
         let comedianCopyrightFlag = comedianCopyRightArray[indexPath.row]
         
         if comedianCopyrightFlag == "true" {
             
-            comedianImageView.image = UIImage(named: "\(comedianNameArrayId[indexPath.row])")
+            cell.comedianImageView.image = UIImage(named: "\(comedianNameArrayId[indexPath.row])")
+            cell.comedianImageView.contentMode = .scaleAspectFill
+            cell.comedianImageView.clipsToBounds = true
+            
             
         }
         
         if comedianCopyrightFlag == "false" {
             
             comedianImageView.image = UIImage(named: "noImage")
+            cell.comedianImageView.contentMode = .scaleAspectFill
+            cell.comedianImageView.clipsToBounds = true
+
             
         }
         
@@ -294,11 +314,11 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         
         //芸人名を設定する
-        comedianNameLabel = cell.contentView.viewWithTag(2) as! UILabel
+//        comedianNameLabel = cell.contentView.viewWithTag(2) as! UILabel
         
         print("cellcomedianNameArray:\(comedianNameArray)")
         
-        comedianNameLabel.text = comedianNameArray[indexPath.row]
+        cell.comedianNameLabel.text = comedianNameArray[indexPath.row]
         
         //レビュー数とレビューのツボった度の平均を設定する
         //        comedianReviewLabel = cell.contentView.viewWithTag(3) as! UILabel

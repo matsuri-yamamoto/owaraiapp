@@ -38,6 +38,8 @@
 		639ACA3028483E7E005E7BE3 /* ComedianDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639ACA2F28483E7D005E7BE3 /* ComedianDetailViewController.swift */; };
 		639D9A91287558B400291D28 /* SearchCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D9A90287558B400291D28 /* SearchCollectionReusableView.swift */; };
 		639DECFB28C77B0E00C79BD3 /* AboutTsubologViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639DECFA28C77B0E00C79BD3 /* AboutTsubologViewController.swift */; };
+		639DED0228C89C3D00C79BD3 /* TabViewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639DED0028C89C3D00C79BD3 /* TabViewCollectionViewCell.swift */; };
+		639DED0328C89C3D00C79BD3 /* TabViewCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 639DED0128C89C3D00C79BD3 /* TabViewCollectionViewCell.xib */; };
 		63CAA0BD28ACA3D600AA99E4 /* UserNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CAA0BC28ACA3D600AA99E4 /* UserNameViewController.swift */; };
 		63CB62102850A8DE0023638F /* CircleImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CB620F2850A8DE0023638F /* CircleImageView.swift */; };
 		63D7E54327E9942D00E99C75 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7E54227E9942D00E99C75 /* SearchViewController.swift */; };
@@ -85,6 +87,8 @@
 		639ACA2F28483E7D005E7BE3 /* ComedianDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianDetailViewController.swift; sourceTree = "<group>"; };
 		639D9A90287558B400291D28 /* SearchCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectionReusableView.swift; sourceTree = "<group>"; };
 		639DECFA28C77B0E00C79BD3 /* AboutTsubologViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTsubologViewController.swift; sourceTree = "<group>"; };
+		639DED0028C89C3D00C79BD3 /* TabViewCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewCollectionViewCell.swift; sourceTree = "<group>"; };
+		639DED0128C89C3D00C79BD3 /* TabViewCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabViewCollectionViewCell.xib; sourceTree = "<group>"; };
 		63CAA0BC28ACA3D600AA99E4 /* UserNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNameViewController.swift; sourceTree = "<group>"; };
 		63CB620F2850A8DE0023638F /* CircleImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImageView.swift; sourceTree = "<group>"; };
 		63D7E54227E9942D00E99C75 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -155,6 +159,8 @@
 				630964B6281EDB32006F211B /* TermViewController.swift */,
 				630964B8281EDBA3006F211B /* PrivacyPolicyViewController.swift */,
 				63FB59952849EA8D00497210 /* TabViewController.swift */,
+				639DED0028C89C3D00C79BD3 /* TabViewCollectionViewCell.swift */,
+				639DED0128C89C3D00C79BD3 /* TabViewCollectionViewCell.xib */,
 				63162842286F3DE8007679DC /* FirstTabViewController.swift */,
 				635FC56028618336000835C4 /* SecondTabViewController.swift */,
 				635FC5622861834F000835C4 /* ThirdTabViewController.swift */,
@@ -261,6 +267,7 @@
 				63D7E54D27EB1CBA00E99C75 /* GoogleService-Info.plist in Resources */,
 				630FAE6E2880F66600A3E0F9 /* ComedianReviewTableViewCell.xib in Resources */,
 				63134BB628B706D800B0926D /* PlaceTextView.xib in Resources */,
+				639DED0328C89C3D00C79BD3 /* TabViewCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,6 +339,7 @@
 				635FC56128618336000835C4 /* SecondTabViewController.swift in Sources */,
 				630FAE6D2880F66600A3E0F9 /* ComedianReviewTableViewCell.swift in Sources */,
 				630964B7281EDB32006F211B /* TermViewController.swift in Sources */,
+				639DED0228C89C3D00C79BD3 /* TabViewCollectionViewCell.swift in Sources */,
 				6381D13127E7319A005BDBE2 /* AppDelegate.swift in Sources */,
 				63D7E54727E9949200E99C75 /* ReviewViewController.swift in Sources */,
 				635FC56528618364000835C4 /* ForthTabViewController.swift in Sources */,
