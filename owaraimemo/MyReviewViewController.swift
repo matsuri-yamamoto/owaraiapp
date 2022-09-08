@@ -15,6 +15,7 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
 //    @IBOutlet weak var userNameLabel: UILabel!
 //    @IBOutlet weak var userIdLabel: UILabel!
     
+    @IBOutlet weak var reviewButtonWidth: NSLayoutConstraint!
     
     
         
@@ -49,17 +50,8 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
     override func viewWillAppear(_ animated: Bool) {
         
         print("currentUser:\(String(describing: Auth.auth().currentUser?.uid))")
-        
-        self.reviewButton.backgroundColor = #colorLiteral(red: 1, green: 0.8525225841, blue: 0.1762744927, alpha: 1)
-        self.reviewButton.tintColor = #colorLiteral(red: 0.2442787347, green: 0.2442787347, blue: 0.2442787347, alpha: 1)
-        
-        self.stockButton.backgroundColor = #colorLiteral(red: 1, green: 0.9310497734, blue: 0.695790851, alpha: 1)
-        self.stockButton.tintColor = #colorLiteral(red: 0.5989583532, green: 0.5618196744, blue: 0.5732305017, alpha: 1)
-
-        
+                
         if currentUser?.uid == nil {
-            
-            
                         
             //ログインしていない場合、ログイン推奨ページに遷移
             let recLoginVC = storyboard?.instantiateViewController(withIdentifier: "RecLogin") as! RecommendLoginViewController
@@ -87,7 +79,32 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
             self.comedianNameArray = []
             self.comedianDataArray = []
             self.collectionView.reloadData()
+            
+            
+            self.reviewButtonWidth.constant = CGFloat(self.view.bounds.width/2)
+            
+            self.reviewButton.backgroundColor = #colorLiteral(red: 1, green: 0.8525225841, blue: 0.1762744927, alpha: 1)
+            self.reviewButton.tintColor = #colorLiteral(red: 0.2442787347, green: 0.2442787347, blue: 0.2442787347, alpha: 1)
+            
+            self.stockButton.backgroundColor = #colorLiteral(red: 1, green: 0.9310497734, blue: 0.695790851, alpha: 1)
+            self.stockButton.tintColor = #colorLiteral(red: 0.5989583532, green: 0.5618196744, blue: 0.5732305017, alpha: 1)
 
+            //セルを指定
+            collectionView.register(UINib(nibName: "TabViewCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "TabViewCollectionViewCell")
+            
+            //セルのサイズを指定
+            let layout = UICollectionViewFlowLayout()
+            // 横方向のスペース調整
+            let horizontalSpace:CGFloat = 50
+            //デバイスの横幅を2分割した横幅　- セル間のスペース*1（セル間のスペースが1列あるため）
+            cellSize = (self.view.bounds.width - horizontalSpace*1)/2
+            
+            print("firstTabcellSize:\(cellSize)")
+
+            
+            layout.itemSize = CGSize(width: cellSize, height: cellSize*1.35)
+            collectionView.collectionViewLayout = layout
+            
             
             title = "マイページ"
             
@@ -307,43 +324,51 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
 
     // 各セルの内容を返すメソッド
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        //storyboard上のセルを生成　storyboardのIdentifierで付けたものをここで設定する
-        let cell:UICollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
         
+        
+        //storyboard上のセルを生成　storyboardのIdentifierで付けたものをここで設定する
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TabViewCollectionViewCell", for: indexPath) as! TabViewCollectionViewCell
+
         //芸人画像を指定する
-        comedianImageView = cell.contentView.viewWithTag(1) as! UIImageView
+        
+
+        
+        
         let image :UIImage? = UIImage(named: "\(comedianDataUniqueArray[indexPath.row])")
         let noImage :UIImage! = UIImage(named: "noImage")
-        
-        
+
+        //copyrightflagを加味できておらず、画像がAssetsにアップロードされ次第表示されてしまうので注意
         if let validImage = image {
-            comedianImageView.image = validImage
+            cell.comedianImageView.image = validImage
+            cell.comedianImageView.contentMode = .scaleAspectFill
+            cell.comedianImageView.clipsToBounds = true
+            
         } else {
-            comedianImageView.image = noImage
+            cell.comedianImageView.image = noImage
+            cell.comedianImageView.contentMode = .scaleAspectFill
+            cell.comedianImageView.clipsToBounds = true
+
         }
         
-        
-        comedianImageView.image = UIImage(named: "\(comedianDataUniqueArray[indexPath.row])")
-        
         //芸人名を設定する
-        comedianNameLabel = cell.contentView.viewWithTag(2) as! UILabel
-        comedianNameLabel.text = comedianNameUniqueArray[indexPath.row]
+        cell.comedianNameLabel.text = comedianNameUniqueArray[indexPath.row]
+
         
         return cell
     }
     
-    //セルのサイズを指定する処理
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        // 横方向のスペース調整
-        let horizontalSpace:CGFloat = 50
-
-        //デバイスの横幅を2分割した横幅　- セル間のスペース*1（セル間のスペースが1列あるため）
-        cellSize = (self.view.bounds.width - horizontalSpace*1)/2
-
-        return CGSize(width: cellSize, height: cellSize*1.35)
-
-    }
+//    //セルのサイズを指定する処理
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//
+//        // 横方向のスペース調整
+//        let horizontalSpace:CGFloat = 50
+//
+//        //デバイスの横幅を2分割した横幅　- セル間のスペース*1（セル間のスペースが1列あるため）
+//        cellSize = (self.view.bounds.width - horizontalSpace*1)/2
+//
+//        return CGSize(width: cellSize, height: cellSize*1.35)
+//
+//    }
     
 
     // 各セルを選択した時に実行されるメソッド

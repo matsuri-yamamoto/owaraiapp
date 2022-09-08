@@ -62,25 +62,27 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         //fetchDataなどで分割した配列の各データを呼び、配列を結合する→cellItemAtにてindexPathでセットする
         
         cellComedianNameData()
-        cellScoreData()
+//        cellScoreData()
         
         
         collectionView.delegate = self
         collectionView.dataSource = self
         
+        //セルを指定
         collectionView.register(UINib(nibName: "TabViewCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "TabViewCollectionViewCell")
         
-        
+        //セルのサイズを指定
         let layout = UICollectionViewFlowLayout()
         // 横方向のスペース調整
         let horizontalSpace:CGFloat = 50
         //デバイスの横幅を2分割した横幅　- セル間のスペース*1（セル間のスペースが1列あるため）
         cellSize = (self.view.bounds.width - horizontalSpace*1)/2
+        
+        print("firstTabcellSize:\(cellSize)")
 
         
         layout.itemSize = CGSize(width: cellSize, height: cellSize*1.35)
         collectionView.collectionViewLayout = layout
-        
         
         
     }
@@ -212,48 +214,48 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     
     
-    func cellScoreData () {
-        
-        //comedianIdArray1~3に紐づくreviewのscoreを呼び出して、comedianごとのレビュー数とスコア平均を順にcomedianScoreArrayにappendする
-        
-        for comedianId in comedianIdArray1 {
-            
-            db.collection("review").whereField("comedian_id", isEqualTo: comedianId).getDocuments() {(querySnapshot, err) in
-                
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                    return
-                    
-                } else {
-                    
-                    //特定のcomedianIdのスコアの配列を作る
-                    var scoreArray:[Float] = []
-                    
-                    for document in querySnapshot!.documents {
-                        
-                        let documentId :String? = document.documentID
-                        
-                        if documentId != nil {
-                            
-                            let score = document.get("score") as! Float
-                            scoreArray.append(score)
-                            print("scoreArray:\(scoreArray)")
-                            
-                            //スコアの配列の平均値を追加する
-                            self.comedianScoreArray.append(String(scoreArray.reduce(0, +) / Float(scoreArray.count)))
-                            
-                        } else {
-                            
-                            //ドキュメントが存在していなかったら、-をcomedianScoreArrayにセットする
-                            self.comedianScoreArray.append("-")
-                            
-                        }
-                        print("comedianScoreArray:\(self.comedianScoreArray)")
-                    }
-                }
-            }
-        }
-    }
+//    func cellScoreData () {
+//
+//        //comedianIdArray1~3に紐づくreviewのscoreを呼び出して、comedianごとのレビュー数とスコア平均を順にcomedianScoreArrayにappendする
+//
+//        for comedianId in comedianIdArray1 {
+//
+//            db.collection("review").whereField("comedian_id", isEqualTo: comedianId).getDocuments() {(querySnapshot, err) in
+//
+//                if let err = err {
+//                    print("Error getting documents: \(err)")
+//                    return
+//
+//                } else {
+//
+//                    //特定のcomedianIdのスコアの配列を作る
+//                    var scoreArray:[Float] = []
+//
+//                    for document in querySnapshot!.documents {
+//
+//                        let documentId :String? = document.documentID
+//
+//                        if documentId != nil {
+//
+//                            let score = document.get("score") as! Float
+//                            scoreArray.append(score)
+//                            print("scoreArray:\(scoreArray)")
+//
+//                            //スコアの配列の平均値を追加する
+//                            self.comedianScoreArray.append(String(scoreArray.reduce(0, +) / Float(scoreArray.count)))
+//
+//                        } else {
+//
+//                            //ドキュメントが存在していなかったら、-をcomedianScoreArrayにセットする
+//                            self.comedianScoreArray.append("-")
+//
+//                        }
+//                        print("comedianScoreArray:\(self.comedianScoreArray)")
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     
     
@@ -289,7 +291,6 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TabViewCollectionViewCell", for: indexPath) as! TabViewCollectionViewCell
         
         //芸人画像を指定する
-//        comedianImageView = cell.comedianImageView
         let comedianCopyrightFlag = comedianCopyRightArray[indexPath.row]
         
         if comedianCopyrightFlag == "true" {
@@ -312,10 +313,7 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         
         
-        
-        //芸人名を設定する
-//        comedianNameLabel = cell.contentView.viewWithTag(2) as! UILabel
-        
+                
         print("cellcomedianNameArray:\(comedianNameArray)")
         
         cell.comedianNameLabel.text = comedianNameArray[indexPath.row]
@@ -367,7 +365,6 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                                              actionType: .tap,
                                              actionLabel: .template(ActionLabelTemplate.cellTap)))
         
-        //        AnalyticsUtil.sendActionForFirstTabCellTap(ActionEventForFirstTabCellTap(screenName: .firstTabVC, actionType: .tap, actionLabel: .template(ActionLabelTemplate.cellTap)))
         
     }
     
