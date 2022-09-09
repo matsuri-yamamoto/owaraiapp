@@ -67,7 +67,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
         
         let initialValue: Float = 0
         slider.value = initialValue
-        slider.tintColor = #colorLiteral(red: 1, green: 0.8525225841, blue: 0.1762744927, alpha: 1)
+        slider.tintColor = UIColor.systemYellow
         slider.addTarget(self, action: #selector(sliderDidChangeValue(_:)), for: .valueChanged)
         view.addSubview(slider)
         

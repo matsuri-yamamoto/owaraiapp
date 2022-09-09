@@ -146,7 +146,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     //レビュー前ユーザーのレビューボタンの状態
 //                    self.reviewLabel.text = ""
 //                    self.reviewLabel.font = UIFont.systemFont(ofSize: 14)
-                    self.reviewButton.backgroundColor = #colorLiteral(red: 1, green: 0.8445462812, blue: 0.21348651, alpha: 1)
+                    self.reviewButton.backgroundColor = UIColor.systemYellow
                     self.reviewImageView.tintColor = #colorLiteral(red: 0.424124063, green: 0.424124063, blue: 0.424124063, alpha: 1)
                     self.reviewCountLabel.tintColor = #colorLiteral(red: 0.424124063, green: 0.424124063, blue: 0.424124063, alpha: 1)
                     
@@ -253,7 +253,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     //あとでみる前ユーザーのあとでみるボタンの状態
 //                    self.stockLabel.text = "あとでみる"
 //                    self.stockLabel.font = UIFont.systemFont(ofSize: 14)
-                    self.stockButton.backgroundColor = #colorLiteral(red: 1, green: 0.8445462812, blue: 0.21348651, alpha: 1)
+                    self.stockButton.backgroundColor = UIColor.systemYellow
                     self.stockImageView.tintColor = #colorLiteral(red: 0.424124063, green: 0.424124063, blue: 0.424124063, alpha: 1)
                     self.stockCountLabel.tintColor = #colorLiteral(red: 0.424124063, green: 0.424124063, blue: 0.424124063, alpha: 1)
 

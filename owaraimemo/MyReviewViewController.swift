@@ -83,7 +83,7 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
             
             self.reviewButtonWidth.constant = CGFloat(self.view.bounds.width/2)
             
-            self.reviewButton.backgroundColor = #colorLiteral(red: 1, green: 0.8525225841, blue: 0.1762744927, alpha: 1)
+            self.reviewButton.backgroundColor = UIColor.systemYellow
             self.reviewButton.tintColor = #colorLiteral(red: 0.2442787347, green: 0.2442787347, blue: 0.2442787347, alpha: 1)
             
             self.stockButton.backgroundColor = #colorLiteral(red: 1, green: 0.9310497734, blue: 0.695790851, alpha: 1)
@@ -193,7 +193,7 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
     @IBAction func reviewButton(_ sender: Any) {
         
         //ボタンの色を切り替え
-        self.reviewButton.backgroundColor = #colorLiteral(red: 1, green: 0.8525225841, blue: 0.1762744927, alpha: 1)
+        self.reviewButton.backgroundColor = UIColor.systemYellow
         self.reviewButton.tintColor = #colorLiteral(red: 0.2442787347, green: 0.2442787347, blue: 0.2442787347, alpha: 1)
         
         self.stockButton.backgroundColor = #colorLiteral(red: 1, green: 0.9310497734, blue: 0.695790851, alpha: 1)
@@ -247,7 +247,7 @@ class MyReviewViewController: UIViewController, UICollectionViewDelegate, UIColl
     @IBAction func stockButton(_ sender: Any) {
         
         //ボタンの色を切り替え
-        self.stockButton.backgroundColor = #colorLiteral(red: 1, green: 0.8525225841, blue: 0.1762744927, alpha: 1)
+        self.stockButton.backgroundColor = UIColor.systemYellow
         self.stockButton.tintColor = #colorLiteral(red: 0.2442787347, green: 0.2442787347, blue: 0.2442787347, alpha: 1)
         
         self.reviewButton.backgroundColor = #colorLiteral(red: 1, green: 0.9310497734, blue: 0.695790851, alpha: 1)

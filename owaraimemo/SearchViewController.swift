@@ -43,7 +43,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
 
         
-        self.navigationItem.title = "検索"
+        self.navigationItem.title = "さがす"
 
         // searchBarのスタイル
         searchController.searchBar.searchBarStyle = UISearchBar.Style.prominent
@@ -174,6 +174,11 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         if searchController.searchBar.text != "" {
             
+            self.comedianDataArray = []
+            self.searchResultNameArray = []
+            self.tableView.reloadData()
+
+            
             db.collection("comedian").whereField("delete_flag", isEqualTo: "false").order(by: "comedian_name").start(at: [searchController.searchBar.text!]).end(at: [searchController.searchBar.text! + "\u{f8ff}"]).getDocuments() {(querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
@@ -182,14 +187,16 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 } else {
                     for document in querySnapshot!.documents {
                         self.comedianDataArray.append(document.documentID)
-                        self.comedianNameArray.append(document.data()["for_list_name"] as! String)
+//                        self.comedianNameArray.append(document.data()["for_list_name"] as! String)
+                        self.searchResultNameArray.append(document.data()["for_list_name"] as! String)
+
                     }
-                    print("検索後の配列:\(self.comedianNameArray)")
-                    
-                    //検索文字列を含むデータを検索結果配列に格納する。
-                    self.searchResultNameArray = self.comedianNameArray.filter { data in
-                        return data.contains(searchController.searchBar.text!)
-                    }
+//                    print("検索後の配列:\(self.comedianNameArray)")
+//
+//                    //検索文字列を含むデータを検索結果配列に格納する。
+//                    self.searchResultNameArray = self.comedianNameArray.filter { data in
+//                        return data.contains(searchController.searchBar.text!)
+//                    }
                     
                     print("検索結果の配列:\(self.searchResultNameArray)")
                     //テーブルを再読み込みする
