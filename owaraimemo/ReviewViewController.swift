@@ -116,7 +116,10 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
         self.view.addSubview(self.twitterImageView)
         self.tweetButton.backgroundColor = #colorLiteral(red: 0.9333333373, green: 0.9333333373, blue: 0.9333333373, alpha: 1)
         self.tweetButton.setTitleColor(#colorLiteral(red: 0.424124063, green: 0.424124063, blue: 0.424124063, alpha: 1), for: .normal)
-
+        self.tweetButton.setTitle("      TwitterシェアOFF", for: .normal)
+        //左右・上下中央寄せ
+        self.tweetButton.titleLabel?.textAlignment = NSTextAlignment.center
+        self.tweetButton.titleLabel?.baselineAdjustment = .alignCenters
         
     }
     
@@ -386,9 +389,11 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
             self.view.addSubview(self.twitterImageView)
             self.tweetButton.backgroundColor = #colorLiteral(red: 0.1884371638, green: 0.6279121637, blue: 0.9447771311, alpha: 1)
             self.tweetButton.setTitleColor(.white, for: .normal)
-
+            self.tweetButton.setTitle("      TwitterシェアON", for: .normal)
+            //左右・上下中央寄せ
+            self.tweetButton.titleLabel?.textAlignment = NSTextAlignment.center
+            self.tweetButton.titleLabel?.baselineAdjustment = .alignCenters
             
-//            tweetButton.setImage(UIImage(named: "tweet_true"), for: .normal)
             
         case true:
             twitterShareFlag = false
@@ -396,9 +401,10 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
             self.view.addSubview(self.twitterImageView)
             self.tweetButton.backgroundColor = #colorLiteral(red: 0.9333333373, green: 0.9333333373, blue: 0.9333333373, alpha: 1)
             self.tweetButton.setTitleColor(#colorLiteral(red: 0.424124063, green: 0.424124063, blue: 0.424124063, alpha: 1), for: .normal)
-
-            
-//            tweetButton.setImage(UIImage(named: "tweet_false"), for: .normal)
+            self.tweetButton.setTitle("      TwitterシェアOFF", for: .normal)
+            //左右・上下中央寄せ
+            self.tweetButton.titleLabel?.textAlignment = NSTextAlignment.center
+            self.tweetButton.titleLabel?.baselineAdjustment = .alignCenters
             
         }
                 
