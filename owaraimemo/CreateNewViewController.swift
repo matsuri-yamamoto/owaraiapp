@@ -1,82 +1,92 @@
-//
-//  CreateNewViewController.swift
-//  owaraimemo
-//
-//  Created by 山本梨野 on 2022/03/29.
-//
 
 import UIKit
 import Firebase
+import FirebaseFirestore
+
 
 class CreateNewViewController: UIViewController {
-    
+  
     @IBOutlet weak var userNameTextField: UITextField!
+    @IBOutlet weak var displayIdTextField: UITextField!
     @IBOutlet weak var mailAddressTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var errorLabel: UILabel!
-    @IBOutlet weak var checkBox: UIButton!
-    @IBOutlet weak var termButton: UIButton!
-    @IBOutlet weak var ppButton: UIButton!
+//    @IBOutlet weak var passwordMaskingChangeButton: UIButton!
     
-
-    var checked = false
+    
+    @IBOutlet weak var saveButton: UIButton!
+    
     
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
 
         self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.navigationBar.backgroundColor = UIColor.white
+        self.title = "ユーザー登録"
         
         //エラーメッセージをデフォルトでは表示させない
         errorLabel.text = nil
         
-        //チェックボックスの枠の色をグレーにする
-        checkBox.layer.borderWidth = 2
-        checkBox.layer.borderColor = UIColor.gray.cgColor
-        checkBox.addTarget(self,
-                         action: #selector(didChecked),
-                         for: .touchUpInside)
-
-        if #available(iOS 15.0, *) {
-            termButton.configuration = nil
-            ppButton.configuration = nil
-
-         }
-        termButton.titleLabel?.font = UIFont(name: "ArialHebrew-Bold", size: 10)
-        ppButton.titleLabel?.font = UIFont(name: "ArialHebrew-Bold", size: 10)
+        userNameTextField.layer.borderColor = UIColor.systemOrange.cgColor
+        userNameTextField.layer.borderWidth = 0.5
+        
+        displayIdTextField.layer.borderColor = UIColor.systemOrange.cgColor
+        displayIdTextField.layer.borderWidth = 0.5
+        
+        mailAddressTextField.layer.borderColor = UIColor.systemOrange.cgColor
+        mailAddressTextField.layer.borderWidth = 0.5
+        
+        passwordTextField.layer.borderColor = UIColor.systemOrange.cgColor
+        passwordTextField.layer.borderWidth = 0.5
+        
+        //ボタンの角を丸くする
+        self.saveButton.layer.cornerRadius = 9
+        self.saveButton.clipsToBounds = true
 
         
+
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .createNewVC))
 
-
-    @objc private func didChecked(){
-        switch checked {
-                case false:
-                    checkBox.setImage(UIImage(systemName: "checkmark"), for: .normal)
-                    checked = true
-                case true:
-                    let image = UIImage(contentsOfFile: "")
-            checkBox.setImage(image, for: .normal)
-                    checked = false
-                    print("checked:\(checked)")
-            
-                }
     }
+    
+    
+//    @IBAction func passwordMaskingChangeTapped(_ sender: Any) {
+//
+//
+//        if self.passwordTextField.isSecureTextEntry == true {
+//
+//            self.passwordTextField.isSecureTextEntry = false
+//            self.passwordMaskingChangeButton.imageView?.image = UIImage(systemName: "eye.slash")
+//            self.view.addSubview(passwordMaskingChangeButton)
+//
+//        }
+//
+//        if self.passwordTextField.isSecureTextEntry == false {
+//
+//            self.passwordTextField.isSecureTextEntry = true
+//            self.passwordMaskingChangeButton.imageView?.image = UIImage(systemName: "eye")
+//            self.view.addSubview(passwordMaskingChangeButton)
+//
+//
+//        }
+//
+//    }
     
     // アカウント作成ボタンをタップしたときに呼ばれるメソッド
     @IBAction func handleCreateAccountButton(_ sender: Any) {
-        
-        if checked == false {
-            errorLabel.text = "利用規約とプライバシーポリシーをご確認ください"
-            return
-        }
-        else if let address = mailAddressTextField.text, let password = passwordTextField.text, let userName = userNameTextField.text {
+ 
+        if let userName = userNameTextField.text, let address = mailAddressTextField.text, let password = passwordTextField.text, let displayId = displayIdTextField.text {
 
-            // アドレスとパスワードと表示名のいずれかでも入力されていない時は何もしない
-            if address.isEmpty || password.isEmpty || userName.isEmpty {
+            // いずれかでも入力されていない時は何もしない
+            if  userName.isEmpty || address.isEmpty || password.isEmpty || displayId.isEmpty {
                 print("DEBUG_PRINT: 何かが空文字です。")
-                errorLabel.text = "入力内容をご確認ください"
+                errorLabel.text = "すべての項目が入力されているかご確認ください！"
                 return
             }
             
@@ -85,6 +95,10 @@ class CreateNewViewController: UIViewController {
                 if let error = error {
                     // エラーがあったら原因をprintして、returnすることで以降の処理を実行せずに処理を終了する
                     print("DEBUG_PRINT: " + error.localizedDescription)
+                    //エラーログ
+                    AnalyticsUtil.sendAction(ActionEvent(screenName: .createNewVC,
+                                                                 actionType: .error,
+                                                         actionLabel: .template(ActionLabelTemplate.mailNewError)))
                     return
                 }
                 print("DEBUG_PRINT: ユーザー作成に成功しました。")
@@ -95,15 +109,76 @@ class CreateNewViewController: UIViewController {
                 changeRequest?.commitChanges { error in
                     if let error = error{
                         // エラーがあったら原因をprintして、returnすることで以降の処理を実行せずに処理を終了する
-                        print("DEBUG_PRINT: " + error.localizedDescription)
+                        print("faild:ユーザーネーム登録 " + error.localizedDescription)
+                        //エラーログ
+                        AnalyticsUtil.sendAction(ActionEvent(screenName: .createNewVC,
+                                                                     actionType: .error,
+                                                             actionLabel: .template(ActionLabelTemplate.mailNewNameError)))
+                        
                         return
                     }
-                    print("DEBUG_PRINT: ユーザー名登録に成功しました。")
-                    self.performSegue(withIdentifier: "searchSegue", sender: nil)
+                    print("successed:ユーザーネーム登録")
                 }
+
+                
+                //user_detailを作成する
+                Firestore.firestore().collection("user_detail").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                        //エラーログ
+                        AnalyticsUtil.sendAction(ActionEvent(screenName: .createNewVC,
+                                                                     actionType: .error,
+                                                             actionLabel: .template(ActionLabelTemplate.mailNewIdError)))
+                        
+                    } else {
+                        
+                        print("querySnapshot!.documents.count:\(querySnapshot!.documents.count)")
+                        
+                        if querySnapshot!.documents.count == 0 {
+                            
+                            let deleteDateTime :String? = nil
+
+                            let userNameRef = Firestore.firestore().collection("user_detail").document()
+                            let userNameDic = [
+                                "user_id": Auth.auth().currentUser?.uid,
+                                "display_id": self.displayIdTextField.text,
+                                "create_datetime": FieldValue.serverTimestamp(),
+                                "update_datetime": FieldValue.serverTimestamp(),
+                                "delete_flag": false,
+                                "delete_datetime": deleteDateTime,
+                            ] as [String : Any]
+                            
+                            print("userNameDic\(userNameDic)")
+                            
+                            userNameRef.setData(userNameDic)
+                            self.performSegue(withIdentifier: "searchSegue", sender: nil)
+                            
+                            //ログ
+                            AnalyticsUtil.sendAction(ActionEvent(screenName: .createNewVC,
+                                                                         actionType: .tap,
+                                                                 actionLabel: .template(ActionLabelTemplate.mailNewTap)))
+
+                            
+                        } else {
+                            
+                            self.performSegue(withIdentifier: "searchSegue", sender: nil)
+                            
+                            //ログ
+                            AnalyticsUtil.sendAction(ActionEvent(screenName: .createNewVC,
+                                                                         actionType: .tap,
+                                                                 actionLabel: .template(ActionLabelTemplate.mailNewTap)))
+
+
+
+                        }
+                        
+                    }
                 }
+                
             }
+        }
     }
+                            
     
     //viewをタップしたときにキーボードを閉じる
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

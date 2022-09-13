@@ -1,0 +1,180 @@
+
+/* Class = "UILabel"; text = "ネタの感想を記録できる"; ObjectID = "0Au-Yk-6xA"; */
+"0Au-Yk-6xA.text" = "ネタの感想を記録できる";
+
+/* Class = "UILabel"; text = "0"; ObjectID = "1PM-1G-xAd"; */
+"1PM-1G-xAd.text" = "0";
+
+/* Class = "UITabBarItem"; title = "みつかる"; ObjectID = "2zP-gJ-WfQ"; */
+"2zP-gJ-WfQ.title" = "みつかる";
+
+/* Class = "UITextField"; placeholder = "ツボたろう"; ObjectID = "4f8-Cu-TFE"; */
+"4f8-Cu-TFE.placeholder" = "ツボたろう";
+
+/* Class = "UILabel"; text = "に"; ObjectID = "5Ju-J1-RGT"; */
+"5Ju-J1-RGT.text" = "に";
+
+/* Class = "UIButton"; normalTitle = "お問い合わせ"; ObjectID = "76Y-M6-9f6"; */
+"76Y-M6-9f6.normalTitle" = "お問い合わせ";
+
+/* Class = "UILabel"; text = "に"; ObjectID = "8Vg-DG-H39"; */
+"8Vg-DG-H39.text" = "に";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "AXq-qO-96h"; */
+"AXq-qO-96h.normalTitle" = "Button";
+
+/* Class = "UILabel"; text = "同意の上ご登録ください"; ObjectID = "Aqo-rF-SKN"; */
+"Aqo-rF-SKN.text" = "同意の上ご登録ください";
+
+/* Class = "UILabel"; text = "同意の上ご利用ください"; ObjectID = "AuO-pK-ZEL"; */
+"AuO-pK-ZEL.text" = "同意の上ご利用ください";
+
+/* Class = "UIButton"; normalTitle = "レビュー"; ObjectID = "BZG-vG-AJx"; */
+"BZG-vG-AJx.normalTitle" = "レビュー";
+
+/* Class = "UITextField"; placeholder = "芸人さんの名前を入力"; ObjectID = "Cr9-Da-wof"; */
+"Cr9-Da-wof.placeholder" = "芸人さんの名前を入力";
+
+/* Class = "UILabel"; text = "が好きな人にハマりそう！"; ObjectID = "D2d-dW-eOa"; */
+"D2d-dW-eOa.text" = "が好きな人にハマりそう！";
+
+/* Class = "UITextField"; placeholder = "メールアドレス"; ObjectID = "DIo-5V-uNj"; */
+"DIo-5V-uNj.placeholder" = "メールアドレス";
+
+/* Class = "UITextField"; placeholder = "6文字以上の半角英数字"; ObjectID = "F18-rF-d3Y"; */
+"F18-rF-d3Y.placeholder" = "6文字以上の半角英数字";
+
+/* Class = "UILabel"; text = "「あとでみる」リストに保存できる"; ObjectID = "Gt8-vF-9Ax"; */
+"Gt8-vF-9Ax.text" = "「あとでみる」リストに保存できる";
+
+/* Class = "UINavigationItem"; title = "さがす"; ObjectID = "HeO-WN-N5W"; */
+"HeO-WN-N5W.title" = "さがす";
+
+/* Class = "UILabel"; text = "パスワード"; ObjectID = "JbZ-Zz-zUd"; */
+"JbZ-Zz-zUd.text" = "パスワード";
+
+/* Class = "UIButton"; normalTitle = "ツボログについて"; ObjectID = "JdH-YC-ZTI"; */
+"JdH-YC-ZTI.normalTitle" = "ツボログについて";
+
+/* Class = "UIButton"; normalTitle = "利用規約"; ObjectID = "Jed-he-Ims"; */
+"Jed-he-Ims.normalTitle" = "利用規約";
+
+/* Class = "UIButton"; normalTitle = "プライバシーポリシー"; ObjectID = "Kvl-oR-SuQ"; */
+"Kvl-oR-SuQ.normalTitle" = "プライバシーポリシー";
+
+/* Class = "UITextField"; placeholder = "ツボたろう"; ObjectID = "Njx-7q-X4g"; */
+"Njx-7q-X4g.placeholder" = "ツボたろう";
+
+/* Class = "UITextField"; placeholder = "tsubo123(半角英数字)"; ObjectID = "NxR-Ft-FJq"; */
+"NxR-Ft-FJq.placeholder" = "tsubo123(半角英数字)";
+
+/* Class = "UILabel"; text = "メンバー"; ObjectID = "PbF-pz-gC3"; */
+"PbF-pz-gC3.text" = "メンバー";
+
+/* Class = "UITabBarItem"; title = "マイページ"; ObjectID = "Qyr-nL-h9I"; */
+"Qyr-nL-h9I.title" = "マイページ";
+
+/* Class = "UITextField"; placeholder = "6文字以上の半角英数字"; ObjectID = "Ss9-o9-2hC"; */
+"Ss9-o9-2hC.placeholder" = "6文字以上の半角英数字";
+
+/* Class = "UITabBarItem"; title = "さがす"; ObjectID = "ViQ-4W-T99"; */
+"ViQ-4W-T99.title" = "さがす";
+
+/* Class = "UIButton"; normalTitle = "　　Twitterで登録/ログイン"; ObjectID = "XU5-w4-2c3"; */
+"XU5-w4-2c3.normalTitle" = "　　Twitterで登録/ログイン";
+
+/* Class = "UILabel"; text = "新規登録は約1分で完了！"; ObjectID = "Y15-VK-Inu"; */
+"Y15-VK-Inu.text" = "新規登録は約1分で完了！";
+
+/* Class = "UIButton"; normalTitle = "ログアウト"; ObjectID = "ZyL-SU-bic"; */
+"ZyL-SU-bic.normalTitle" = "ログアウト";
+
+/* Class = "UILabel"; text = "ユーザーネーム"; ObjectID = "ajp-6p-VZb"; */
+"ajp-6p-VZb.text" = "ユーザーネーム";
+
+/* Class = "UIButton"; normalTitle = "　メールアドレスで登録"; ObjectID = "c5L-cZ-S46"; */
+"c5L-cZ-S46.normalTitle" = "　メールアドレスで登録";
+
+/* Class = "UILabel"; text = "ユーザーID"; ObjectID = "cAV-wK-iCg"; */
+"cAV-wK-iCg.text" = "ユーザーID";
+
+/* Class = "UILabel"; text = "パスワード"; ObjectID = "dRt-pT-dS3"; */
+"dRt-pT-dS3.text" = "パスワード";
+
+/* Class = "UILabel"; text = "ユーザーネーム"; ObjectID = "dge-Ds-z3U"; */
+"dge-Ds-z3U.text" = "ユーザーネーム";
+
+/* Class = "UIButton"; configuration.title = "Button"; ObjectID = "dpr-Ug-mjQ"; */
+"dpr-Ug-mjQ.configuration.title" = "Button";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "dpr-Ug-mjQ"; */
+"dpr-Ug-mjQ.normalTitle" = "Button";
+
+/* Class = "UIButton"; normalTitle = "あとでみる"; ObjectID = "f15-3h-1jc"; */
+"f15-3h-1jc.normalTitle" = "あとでみる";
+
+/* Class = "UILabel"; text = "の設定をお願いします！"; ObjectID = "gKU-F5-vuF"; */
+"gKU-F5-vuF.text" = "の設定をお願いします！";
+
+/* Class = "UIButton"; normalTitle = "保存してはじめる！"; ObjectID = "iCI-sC-YGC"; */
+"iCI-sC-YGC.normalTitle" = "保存してはじめる！";
+
+/* Class = "UIButton"; normalTitle = "メールアドレスでログイン"; ObjectID = "jGU-AD-LHr"; */
+"jGU-AD-LHr.normalTitle" = "メールアドレスでログイン";
+
+/* Class = "UILabel"; text = "あなた専用のおすすめ芸人さんを知れる"; ObjectID = "kzn-x9-M44"; */
+"kzn-x9-M44.text" = "あなた専用のおすすめ芸人さんを知れる";
+
+/* Class = "UILabel"; text = "この芸人さんは、"; ObjectID = "lFB-pY-6aB"; */
+"lFB-pY-6aB.text" = "この芸人さんは、";
+
+/* Class = "UIButton"; normalTitle = "保存する"; ObjectID = "oWz-N1-2ft"; */
+"oWz-N1-2ft.normalTitle" = "保存する";
+
+/* Class = "UIButton"; normalTitle = "ユーザー登録する"; ObjectID = "pCp-xm-DuD"; */
+"pCp-xm-DuD.normalTitle" = "ユーザー登録する";
+
+/* Class = "UIButton"; normalTitle = "　メールアドレスで登録"; ObjectID = "poI-pW-SCa"; */
+"poI-pW-SCa.normalTitle" = "　メールアドレスで登録";
+
+/* Class = "UIButton"; normalTitle = "非公開で保存する"; ObjectID = "rA4-cA-6xe"; */
+"rA4-cA-6xe.normalTitle" = "非公開で保存する";
+
+/* Class = "UITextField"; placeholder = "xxxx@xxxx"; ObjectID = "rHA-YK-TTa"; */
+"rHA-YK-TTa.placeholder" = "xxxx@xxxx";
+
+/* Class = "UILabel"; text = "気になる芸人さんを"; ObjectID = "sDx-cA-ct3"; */
+"sDx-cA-ct3.text" = "気になる芸人さんを";
+
+/* Class = "UILabel"; text = "メールアドレス"; ObjectID = "tTI-xJ-JxA"; */
+"tTI-xJ-JxA.text" = "メールアドレス";
+
+/* Class = "UILabel"; text = "マイページからいつでも感想を見返せる"; ObjectID = "uUM-zO-W8c"; */
+"uUM-zO-W8c.text" = "マイページからいつでも感想を見返せる";
+
+/* Class = "UILabel"; text = "と"; ObjectID = "uk5-08-geb"; */
+"uk5-08-geb.text" = "と";
+
+/* Class = "UIButton"; normalTitle = "メールアドレスでログイン"; ObjectID = "vUA-QT-COj"; */
+"vUA-QT-COj.normalTitle" = "メールアドレスでログイン";
+
+/* Class = "UIButton"; normalTitle = "ログインする"; ObjectID = "voM-VV-ss9"; */
+"voM-VV-ss9.normalTitle" = "ログインする";
+
+/* Class = "UILabel"; text = "ツボった度"; ObjectID = "vvW-mO-0dL"; */
+"vvW-mO-0dL.text" = "ツボった度";
+
+/* Class = "UILabel"; text = "と"; ObjectID = "wZT-iv-dMa"; */
+"wZT-iv-dMa.text" = "と";
+
+/* Class = "UILabel"; text = "メールアドレス"; ObjectID = "yNt-Lj-83H"; */
+"yNt-Lj-83H.text" = "メールアドレス";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "ySJ-E0-Bbi"; */
+"ySJ-E0-Bbi.normalTitle" = "Button";
+
+/* Class = "UIButton"; normalTitle = "　Twitterで登録/ログイン"; ObjectID = "yrL-7S-qn4"; */
+"yrL-7S-qn4.normalTitle" = "　Twitterで登録/ログイン";
+
+/* Class = "UILabel"; text = "レビューデータから分析した"; ObjectID = "yxM-6b-gbr"; */
+"yxM-6b-gbr.text" = "レビューデータから分析した";

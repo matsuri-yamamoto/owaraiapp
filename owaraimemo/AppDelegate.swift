@@ -7,14 +7,20 @@
 
 import UIKit
 import Firebase
+import IQKeyboardManagerSwift
+import OAuthSwift
+import FirebaseDynamicLinks
+
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    var window: UIWindow?
 
-
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+//         Override point for customization after application launch.
+        IQKeyboardManager.shared.enable = true
         FirebaseApp.configure()
         return true
     }
@@ -32,7 +38,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
-
-
+    
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        //URLの確認
+        print("url : \(url.absoluteString)")
+        print("url.scheme:\(url.scheme)")
+        print("url.host:\(url.host)")
+        print("url.path:\(url.path)")
+        print("url.query:\(url.query)")
+        
+        applicationHandle(url: url)
+        return true
+    }
 }
 
+extension AppDelegate {
+
+    func applicationHandle(url: URL) {
+        if (url.host == "oauth-callback") {
+            OAuthSwift.handle(url: url)
+        } else {
+            // Google provider is the only one wuth your.bundle.id url schema.
+            OAuthSwift.handle(url: url)
+        }
+    }
+}
