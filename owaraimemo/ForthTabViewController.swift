@@ -15,9 +15,14 @@ class ForthTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     @IBOutlet weak var collectionView: UICollectionView!
 
     
-    var comedianIdArray1: [String] = ["真空ジェシカ_1","ストレッチーズ_1","ひつじねいり_1","シンクロニシティ_1","さすらいラビー_1","Aマッソ_1"]
-    var comedianIdArray2: [String] = ["シシガシラ_1","ダンビラムーチョ_1","ジュースマンズ_1","にぼしいわし_1","マリオネットブラザーズ_1","トルクレンチガールズ_1"]
-    var comedianIdArray3: [String] = ["令和ロマン_1","マタンゴ_1","ヤング_1","ジャンク_1","赤もみじ_1","パンプキンポテトフライ_1"]
+//    var comedianIdArray1: [String] = ["真空ジェシカ_1","ストレッチーズ_1","ひつじねいり_1","シンクロニシティ_1","さすらいラビー_1","Aマッソ_1"]
+//    var comedianIdArray2: [String] = ["シシガシラ_1","ダンビラムーチョ_1","ジュースマンズ_1","にぼしいわし_1","マリオネットブラザーズ_1","トルクレンチガールズ_1"]
+//    var comedianIdArray3: [String] = ["令和ロマン_1","マタンゴ_1","ヤング_1","ジャンク_1","赤もみじ_1","パンプキンポテトフライ_1"]
+    
+    var comedianIdArray1: [String] = []
+    var comedianIdArray2: [String] = []
+    var comedianIdArray3: [String] = []
+
 
     var comedianNameArrayId1: [String] = []
     var comedianNameArrayId2: [String] = []
@@ -98,117 +103,148 @@ class ForthTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     func cellComedianNameData() {
         
-        //comedianIdArray1~3に紐づく芸人名を一つずつ呼び出して、順にcomedianNameArrayにappendする
-        //1つ目のArrayの芸人名をセットする
-        self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray1).whereField("delete_flag", isEqualTo: "false").getDocuments() { (querySnapshot, err) in
-            
-            if let err = err {
-                print("Error getting documents: \(err)")
-                return
+        //Arrayにcomedian_idをセットする
+        DispatchQueue.main.async {
+            self.db.collection("forth_tab_comedian_array").getDocuments() { (querySnapshot, err) in
                 
-            } else {
-                for document in querySnapshot!.documents {
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    return
                     
-//                    print("data:\(document.data())")
-                    let comedianName = document.get("for_list_name") as! String
-                    self.comedianNameArray1.append(comedianName)
-                    
-                    let comedianId = document.documentID
-                    self.comedianNameArrayId1.append(comedianId)
-                    
-                    let comedianCopyRight = document.get("copyright_flag") as! String
-                    self.comedianCopyRightArray1.append(comedianCopyRight)
-                    
-                    
-                }
-                //※forinの外で処理しないと、データの数分の回数処理が行われてしまう
-                print("comedianNameArray1(初回):\(self.comedianNameArray1)")
-                self.comedianNameArray.append(contentsOf: self.comedianNameArray1)
-                print("comedianNameArray(初回):\(self.comedianNameArray)")
-                self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId1)
-                
-                self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray1)
-                
-                
-                
-                
-                //2つ目のArrayの芸人名をセットする
-                self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray2).whereField("delete_flag", isEqualTo: "false").getDocuments() { (querySnapshot, err) in
-                    
-                    if let err = err {
-                        print("Error getting documents: \(err)")
-                        return
+                } else {
+                    for document in querySnapshot!.documents {
                         
-                    } else {
-                        for document in querySnapshot!.documents {
-                            
-                            let comedianName = document.get("for_list_name") as! String
-                            self.comedianNameArray2.append(comedianName)
-                            
-                            let comedianId = document.documentID
-                            self.comedianNameArrayId2.append(comedianId)
-                            
-                            let comedianCopyRight = document.get("copyright_flag") as! String
-                            self.comedianCopyRightArray2.append(comedianCopyRight)
-                            
-                            
-                            
-                        }
+                        var comedianIdArray1 :[String] = []
+                        var comedianIdArray2 :[String] = []
+                        var comedianIdArray3 :[String] = []
                         
-                        self.comedianNameArray.append(contentsOf: self.comedianNameArray2)
-                        print("comedianNameArray2(初回):\(self.comedianNameArray2)")
-                        self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId2)
+                        comedianIdArray1 = document.get("array1") as! [String]
+                        self.comedianIdArray1.append(contentsOf: comedianIdArray1)
                         
-                        self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray2)
+                        comedianIdArray2 = document.get("array2") as! [String]
+                        self.comedianIdArray2.append(contentsOf: comedianIdArray2)
+                        
+                        comedianIdArray3 = document.get("array3") as! [String]
+                        self.comedianIdArray3.append(contentsOf: comedianIdArray3)
                         
                         
-                        if self.comedianIdArray3 == [] {
-                            
-                            self.collectionView.reloadData()
-                            
+                        
+                    }
+                    
+                    //comedianIdArray1~3に紐づく芸人名を一つずつ呼び出して、順にcomedianNameArrayにappendする
+                    //1つ目のArrayの芸人名をセットする
+                    self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray1).whereField("delete_flag", isEqualTo: "false").getDocuments() { (querySnapshot, err) in
+                        
+                        if let err = err {
+                            print("Error getting documents: \(err)")
+                            return
                             
                         } else {
+                            for document in querySnapshot!.documents {
+                                
+                                //                    print("data:\(document.data())")
+                                let comedianName = document.get("for_list_name") as! String
+                                self.comedianNameArray1.append(comedianName)
+                                
+                                let comedianId = document.documentID
+                                self.comedianNameArrayId1.append(comedianId)
+                                
+                                let comedianCopyRight = document.get("copyright_flag") as! String
+                                self.comedianCopyRightArray1.append(comedianCopyRight)
+                                
+                                
+                            }
+                            //※forinの外で処理しないと、データの数分の回数処理が行われてしまう
+                            print("comedianNameArray1(初回):\(self.comedianNameArray1)")
+                            self.comedianNameArray.append(contentsOf: self.comedianNameArray1)
+                            print("comedianNameArray(初回):\(self.comedianNameArray)")
+                            self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId1)
                             
-                            //3つ目のArrayの芸人名をセットする
-                            self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray3).whereField("delete_flag", isEqualTo: "false").getDocuments() {(querySnapshot, err) in
+                            self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray1)
+                            
+                            
+                            
+                            
+                            //2つ目のArrayの芸人名をセットする
+                            self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray2).whereField("delete_flag", isEqualTo: "false").getDocuments() { (querySnapshot, err) in
                                 
                                 if let err = err {
                                     print("Error getting documents: \(err)")
                                     return
                                     
                                 } else {
-                                    
                                     for document in querySnapshot!.documents {
                                         
                                         let comedianName = document.get("for_list_name") as! String
-                                        self.comedianNameArray3.append(comedianName)
+                                        self.comedianNameArray2.append(comedianName)
                                         
                                         let comedianId = document.documentID
-                                        self.comedianNameArrayId3.append(comedianId)
+                                        self.comedianNameArrayId2.append(comedianId)
                                         
                                         let comedianCopyRight = document.get("copyright_flag") as! String
-                                        self.comedianCopyRightArray3.append(comedianCopyRight)
+                                        self.comedianCopyRightArray2.append(comedianCopyRight)
                                         
-                                                                                
+                                        
+                                        
                                     }
                                     
-                                    print("comedianNameArray3(初回):\(self.comedianNameArray3)")
-                                    self.comedianNameArray.append(contentsOf: self.comedianNameArray3)
-                                    print("comedianNameArray(2回目):\(self.comedianNameArray)")
-                                    self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId3)
+                                    self.comedianNameArray.append(contentsOf: self.comedianNameArray2)
+                                    print("comedianNameArray2(初回):\(self.comedianNameArray2)")
+                                    self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId2)
                                     
-                                    self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray3)
+                                    self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray2)
                                     
-                                    self.collectionView.reloadData()
                                     
+                                    if self.comedianIdArray3 == [] {
+                                        
+                                        self.collectionView.reloadData()
+                                        
+                                        
+                                    } else {
+                                        
+                                        //3つ目のArrayの芸人名をセットする
+                                        self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray3).whereField("delete_flag", isEqualTo: "false").getDocuments() {(querySnapshot, err) in
+                                            
+                                            if let err = err {
+                                                print("Error getting documents: \(err)")
+                                                return
+                                                
+                                            } else {
+                                                
+                                                for document in querySnapshot!.documents {
+                                                    
+                                                    let comedianName = document.get("for_list_name") as! String
+                                                    self.comedianNameArray3.append(comedianName)
+                                                    
+                                                    let comedianId = document.documentID
+                                                    self.comedianNameArrayId3.append(comedianId)
+                                                    
+                                                    let comedianCopyRight = document.get("copyright_flag") as! String
+                                                    self.comedianCopyRightArray3.append(comedianCopyRight)
+                                                    
+                                                    
+                                                }
+                                                
+                                                print("comedianNameArray3(初回):\(self.comedianNameArray3)")
+                                                self.comedianNameArray.append(contentsOf: self.comedianNameArray3)
+                                                print("comedianNameArray(2回目):\(self.comedianNameArray)")
+                                                self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId3)
+                                                
+                                                self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray3)
+                                                
+                                                self.collectionView.reloadData()
+                                                
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
+                    
                 }
             }
         }
-        
     }
     
     

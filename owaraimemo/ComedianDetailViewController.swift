@@ -1379,7 +1379,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     }
                                 }
                                 //紐づくtrueのlike_reviewの件数をチェックしてラベルに反映
-                                self.db.collection("like_review").whereField("review_id", isEqualTo: tappedReviewId).whereField("like_flag", isEqualTo: true).getDocuments() {(querySnapshot, err) in
+                                self.db.collection("like_review").whereField("review_id", isEqualTo: tappedReviewId).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
                                     
                                     if let err = err {
                                         print("Error getting documents: \(err)")
