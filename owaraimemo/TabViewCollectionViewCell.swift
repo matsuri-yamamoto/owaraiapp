@@ -45,16 +45,18 @@ class TabViewCollectionViewCell: UICollectionViewCell {
             self.comedianImageViewHeight.constant = CGFloat(self.frame.height*0.8)
             self.blankLabelWidth.constant = CGFloat(self.frame.width*0.05)
             
-        } else if UIScreen.main.nativeBounds.height <= 2532 {
-            //iPhone12,iPhone12Proなど
+        } else if UIScreen.main.nativeBounds.height <= 2556 {
+            //iPhone12,iPhone12Proなど(2532)
+            //iPhone14Pro(2556)
+
+            self.comedianImageViewHeight.constant = CGFloat(self.frame.height*0.85)
+            self.blankLabelWidth.constant = CGFloat(self.frame.width*0.05)
             
-            self.comedianImageViewHeight.constant = CGFloat(self.frame.height*0.9)
-            self.blankLabelWidth.constant = CGFloat(self.frame.width*0.09)
             
         } else {
             //iPhone11ProMax,iPhone12ProMaxなど
             
-            self.comedianImageViewHeight.constant = CGFloat(self.frame.height*0.93)
+            self.comedianImageViewHeight.constant = CGFloat(self.frame.height*0.95)
             self.blankLabelWidth.constant = CGFloat(self.frame.width*0.05)
             
         }
