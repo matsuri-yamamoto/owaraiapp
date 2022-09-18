@@ -44,10 +44,9 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
     let currentUser = Auth.auth().currentUser
     
     
-    
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidLoad() {
         
-        super.viewWillAppear(animated)
+        super.viewDidLoad()
         
         print("comedianName:\(comedianName)")
         

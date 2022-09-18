@@ -22,6 +22,9 @@ class TabViewController: TabmanViewController {
         self.title = "おすすめ"
         
         
+        
+        
+        
         // Create bar
         let bar = TMBar.ButtonBar()
         bar.layout.transitionStyle = .snap // Customize
