@@ -818,6 +818,7 @@ PODS:
 DEPENDENCIES:
   - Firebase/Analytics
   - Firebase/Auth
+  - Firebase/Core
   - Firebase/DynamicLinks
   - Firebase/Firestore
   - Firebase/Storage
@@ -910,6 +911,6 @@ SPEC CHECKSUMS:
   TabPageViewController: 8bd4104909754416b35a98f3b72a5b674ab20dd5
   youtube-ios-player-helper: e9b97535e816db3152179d84d999bc1807ecd689
 
-PODFILE CHECKSUM: 1bd8244c93b67840e194309b4a564cbe21983bc3
+PODFILE CHECKSUM: 04ef29ebcbf4496d76594c14e565df082181af49
 
 COCOAPODS: 1.11.2
