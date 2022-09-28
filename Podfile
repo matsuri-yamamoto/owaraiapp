@@ -21,6 +21,8 @@ target 'owaraimemo' do
   pod 'KeychainAccess'
   pod 'Firebase/DynamicLinks'
   pod 'Firebase/Core'
+  pod 'FirebaseStorageUI'
+
 
 
 

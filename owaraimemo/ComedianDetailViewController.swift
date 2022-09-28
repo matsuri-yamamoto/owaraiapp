@@ -10,13 +10,17 @@ import FirebaseFirestore
 import Firebase
 import WebKit
 import youtube_ios_player_helper
+import FirebaseStorage
+import FirebaseStorageUI
+import SDWebImage
+
 
 class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITableViewDelegate, UITableViewDataSource {
     
     
     //comedian_idが渡される用の変数
     var comedianId: String = ""
-    
+        
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var scrollVIewHight: NSLayoutConstraint!
@@ -124,6 +128,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     let currentUser = Auth.auth().currentUser
     let db = Firestore.firestore()
     
+    //画像のアップロードパス
+    let storage = Storage.storage()
+    let reference = Storage.storage().reference()
     
     
     override func viewDidAppear(_ animated: Bool) {
@@ -416,7 +423,13 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                             //許諾取得済みなら宣材写真をセット
                             if self.comedianCopyRight == "true" {
                                 
-                                self.comedianImageView.image = UIImage(named: "\(self.comedianId)")
+                                let imageRef = URL(string: "gs://owaraiapp-f80fd.appspot.com/comedian_image/シマウマフック_1.jpg")
+                                self.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"), options:[], context: [.imageLoader : StorageImageLoader.shared])
+                                
+                                                                                                
+
+                                
+//                                self.comedianImageView.image = UIImage(named: "\(self.comedianId)")
                                 
                                 
                                 if self.movieId2 != "" {
@@ -831,6 +844,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .comedianDetailVC))
         
     }
+    
+    
 
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -1405,5 +1420,42 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                 }
             }
         }
+    }
+}
+
+extension UIImage {
+    // Firebase URLからUIImage取得
+    static func contentOfFIRStorage(path: String, callback: @escaping (UIImage?) -> Void) {
+        let storage = Storage.storage()
+        let host = "gs://owaraiapp-f80fd.appspot.com/comedian_image/"
+        storage.reference(forURL: host).child(path)
+            .getData(maxSize: 1024 * 1024 * 10) { (data: Data?, error: Error?) in
+            if error != nil {
+                callback(nil)
+                return
+            }
+            if let imageData = data {
+                let image = UIImage(data: imageData)
+                callback(image)
+            }
+        }
+    }
+    
+    func resizeUIImageRatio(ratio: CGFloat) -> UIImage! {
+        
+        // 指定された画像の大きさのコンテキストを用意.
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: ratio, height: ratio - 50), false, 0.0)
+        //UIGraphicsBeginImageContext(CGSize(width: ratio, height: ratio - 50))
+        
+        // コンテキストに自身に設定された画像を描画する.
+        self.draw(in: CGRect(x: 0, y: 0, width: ratio, height: ratio - 50))
+        
+        // コンテキストからUIImageを作る.
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        
+        // コンテキストを閉じる.
+        UIGraphicsEndImageContext()
+        
+        return newImage
     }
 }
