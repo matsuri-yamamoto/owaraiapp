@@ -12,7 +12,6 @@ import WebKit
 import youtube_ios_player_helper
 import FirebaseStorage
 import FirebaseStorageUI
-import SDWebImage
 
 
 class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITableViewDelegate, UITableViewDataSource {
@@ -129,8 +128,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     let db = Firestore.firestore()
     
     //画像のアップロードパス
-    let storage = Storage.storage()
-    let reference = Storage.storage().reference()
+    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
+
     
     
     override func viewDidAppear(_ animated: Bool) {
@@ -170,6 +169,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         }
         
         
+        self.tableView.rowHeight = UITableView.automaticDimension;
+        // set estimatedRowHeight to whatever is the fallBack rowHeight
         
         
         //レビューボタンの画像を設定
@@ -405,6 +406,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     
                     print("comedianCopyRight:\(self.comedianCopyRight)")
                     
+
+                    
                     
                     var reviewCount :Int?
                     
@@ -423,8 +426,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                             //許諾取得済みなら宣材写真をセット
                             if self.comedianCopyRight == "true" {
                                 
-                                let imageRef = URL(string: "gs://owaraiapp-f80fd.appspot.com/comedian_image/シマウマフック_1.jpg")
-                                self.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"), options:[], context: [.imageLoader : StorageImageLoader.shared])
+                                let imageRef = self.storage.child("comedian_image/シマウマフック_1.jpg")
+
+                                self.comedianImageView.sd_setImage(with: imageRef)
                                 
                                                                                                 
 
@@ -848,11 +852,12 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
 
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        return 250
-        
-    }
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//
+//        self.tableView.estimatedRowHeight = 300
+//        return UITableView.automaticDimension
+//
+//    }
     
     
     
@@ -1151,7 +1156,23 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             cell.scoreLabel.text = self.reviewScoreArray[indexPath.row]
             cell.scoreImageView.image = UIImage(named: "score_\(self.reviewScoreArray[indexPath.row])")
         }
+        
+        //行間を設定
         cell.commentLabel.text = self.reviewCommentArray[indexPath.row]
+        cell.commentLabel.attributedText = cell.commentLabel.text?.attributedString(lineSpace: 5)
+        cell.commentLabel.font = cell.commentLabel.font.withSize(13)
+        cell.commentLabel.tintColor = UIColor.darkGray
+        cell.commentLabel.textAlignment = NSTextAlignment.left
+        
+        if cell.commentLabel.text!.count >= 202 {
+            
+            cell.continuationLabel.text = "全文を読む>"
+            
+        } else {
+            
+            cell.continuationLabel.text = ""
+            
+        }
         
         
         //likeButtonをセット
@@ -1203,6 +1224,18 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         return cell
         
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //セルタップでレビュー全文に遷移
+        let allReviewVC = storyboard?.instantiateViewController(withIdentifier: "AllReview") as! AllReviewViewController
+        
+        allReviewVC.reviewId = self.reviewIdArray[indexPath.row]
+        self.navigationController?.pushViewController(allReviewVC, animated: true)
+        hidesBottomBarWhenPushed = true
+        
+    }
+    
+    
     
     @objc func tappedLikeButton(sender: UIButton) {
         
@@ -1457,5 +1490,26 @@ extension UIImage {
         UIGraphicsEndImageContext()
         
         return newImage
+    }
+}
+
+extension String {
+    func attributedString(
+        _ color: UIColor = UIColor.black,
+        font: UIFont = UIFont.systemFont(ofSize: 20),
+        align: NSTextAlignment = .center,
+        lineSpace: CGFloat = 10,
+        kern: CGFloat = 0
+    ) -> NSAttributedString {
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.lineSpacing = lineSpace
+        paragraph.alignment = align
+        
+        return NSAttributedString(string: self, attributes: [
+            NSAttributedString.Key.paragraphStyle: paragraph,
+            NSAttributedString.Key.font: font,
+            NSAttributedString.Key.foregroundColor: color,
+            NSAttributedString.Key.kern: kern,
+        ])
     }
 }

@@ -20,7 +20,7 @@ class ComedianReviewTableViewCell: UITableViewCell {
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var likeCountLabel: UILabel!
     @IBOutlet weak var scoreLabel: UILabel!
-    
+    @IBOutlet weak var continuationLabel: UILabel!
     
     var comedianDetailVC = ComedianDetailViewController()
     
