@@ -25,6 +25,8 @@
 		633FA35928E6A9EF00A0E77C /* NewReviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633FA35728E6A9EF00A0E77C /* NewReviewTableViewCell.swift */; };
 		633FA35A28E6A9EF00A0E77C /* NewReviewTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 633FA35828E6A9EF00A0E77C /* NewReviewTableViewCell.xib */; };
 		633FA35C28EA774A00A0E77C /* AllReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633FA35B28EA774900A0E77C /* AllReviewViewController.swift */; };
+		633FA35F28EBF33500A0E77C /* MyReviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633FA35D28EBF33500A0E77C /* MyReviewTableViewCell.swift */; };
+		633FA36028EBF33500A0E77C /* MyReviewTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 633FA35E28EBF33500A0E77C /* MyReviewTableViewCell.xib */; };
 		634F867A28A637B700CAE6BA /* AnalyticsUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634F867928A637B600CAE6BA /* AnalyticsUtil.swift */; };
 		634F867C28A63C8300CAE6BA /* AnalyticsUserProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634F867B28A63C8300CAE6BA /* AnalyticsUserProperty.swift */; };
 		635AC59628CDABFD00C9D0E5 /* SignInWithAppleIDButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635AC59528CDABFD00C9D0E5 /* SignInWithAppleIDButton.swift */; };
@@ -76,6 +78,8 @@
 		633FA35728E6A9EF00A0E77C /* NewReviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewReviewTableViewCell.swift; sourceTree = "<group>"; };
 		633FA35828E6A9EF00A0E77C /* NewReviewTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewReviewTableViewCell.xib; sourceTree = "<group>"; };
 		633FA35B28EA774900A0E77C /* AllReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllReviewViewController.swift; sourceTree = "<group>"; };
+		633FA35D28EBF33500A0E77C /* MyReviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReviewTableViewCell.swift; sourceTree = "<group>"; };
+		633FA35E28EBF33500A0E77C /* MyReviewTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyReviewTableViewCell.xib; sourceTree = "<group>"; };
 		634F867928A637B600CAE6BA /* AnalyticsUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsUtil.swift; sourceTree = "<group>"; };
 		634F867B28A63C8300CAE6BA /* AnalyticsUserProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsUserProperty.swift; sourceTree = "<group>"; };
 		635AC59528CDABFD00C9D0E5 /* SignInWithAppleIDButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAppleIDButton.swift; sourceTree = "<group>"; };
@@ -183,6 +187,8 @@
 				635FC56428618364000835C4 /* ForthTabViewController.swift */,
 				63D7E54227E9942D00E99C75 /* SearchViewController.swift */,
 				63D7E54427E9947300E99C75 /* MyReviewViewController.swift */,
+				633FA35D28EBF33500A0E77C /* MyReviewTableViewCell.swift */,
+				633FA35E28EBF33500A0E77C /* MyReviewTableViewCell.xib */,
 				639ACA2F28483E7D005E7BE3 /* ComedianDetailViewController.swift */,
 				633FA35B28EA774900A0E77C /* AllReviewViewController.swift */,
 				63D7E54627E9949200E99C75 /* ReviewViewController.swift */,
@@ -279,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6381D13D27E7319D005BDBE2 /* LaunchScreen.storyboard in Resources */,
+				633FA36028EBF33500A0E77C /* MyReviewTableViewCell.xib in Resources */,
 				632F88D727FABF9500350624 /* ComedianTableViewCell.xib in Resources */,
 				6381D13A27E7319D005BDBE2 /* Assets.xcassets in Resources */,
 				6381D13827E7319A005BDBE2 /* Main.storyboard in Resources */,
@@ -352,6 +359,7 @@
 				63CAA0BD28ACA3D600AA99E4 /* UserNameViewController.swift in Sources */,
 				633FA35928E6A9EF00A0E77C /* NewReviewTableViewCell.swift in Sources */,
 				632F88D627FABF9500350624 /* ComedianTableViewCell.swift in Sources */,
+				633FA35F28EBF33500A0E77C /* MyReviewTableViewCell.swift in Sources */,
 				63FB59962849EA8D00497210 /* TabViewController.swift in Sources */,
 				63134BB428B706BD00B0926D /* PlaceTextView.swift in Sources */,
 				63CB62102850A8DE0023638F /* CircleImageView.swift in Sources */,

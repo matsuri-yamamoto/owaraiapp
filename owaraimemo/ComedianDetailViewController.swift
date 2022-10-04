@@ -1109,6 +1109,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
     
     
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         print("reviewIdArray.count:\(reviewIdArray.count)")

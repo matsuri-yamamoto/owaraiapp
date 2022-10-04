@@ -61,13 +61,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BZG-vG-AJx">
-                                <rect key="frame" x="0.0" y="104" width="187.66666666666666" height="44"/>
+                                <rect key="frame" x="0.0" y="118" width="93" height="30"/>
                                 <color key="backgroundColor" systemColor="systemYellowColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="187.5" id="ba6-g3-lML"/>
-                                    <constraint firstAttribute="height" constant="44" id="g3b-7D-23v"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                                 <color key="tintColor" red="0.2442787347" green="0.2442787347" blue="0.2442787347" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" title="レビュー"/>
@@ -76,12 +72,9 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f15-3h-1jc">
-                                <rect key="frame" x="187.66666666666663" y="104" width="187.33333333333337" height="44"/>
+                                <rect key="frame" x="94" y="118" width="93" height="30"/>
                                 <color key="backgroundColor" red="1" green="0.93104977335837358" blue="0.69579085097632121" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="KVJ-1U-xYA"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                                 <color key="tintColor" red="0.59895835316666668" green="0.56181967435117275" blue="0.57323050173974888" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" title="あとでみる"/>
@@ -89,57 +82,76 @@
                                     <action selector="stockButton:" destination="keI-lg-nSB" eventType="touchUpInside" id="rYQ-O8-eB2"/>
                                 </connections>
                             </button>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="mb4-4d-PW6">
-                                <rect key="frame" x="16" y="156" width="343" height="602"/>
-                                <color key="backgroundColor" red="0.97016620330000003" green="0.97016620330000003" blue="0.97016620330000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="MZ1-aB-Xs8">
-                                    <size key="itemSize" width="128" height="128"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="ueJ-PD-DIz" customClass="TabViewCollectionViewCell" customModule="owaraimemo" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="160" height="218"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="r3K-Rp-HRs">
-                                            <rect key="frame" x="0.0" y="0.0" width="160" height="218"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ktK-9G-nan">
+                                <rect key="frame" x="188" y="118" width="93" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.93104977339999995" blue="0.69579085100000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <color key="tintColor" red="0.59895835320000002" green="0.56181967440000002" blue="0.57323050170000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="フォロー中"/>
+                                <connections>
+                                    <action selector="followingButton:" destination="keI-lg-nSB" eventType="touchUpInside" id="r4s-vu-iYd"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="alK-k7-4lc">
+                                <rect key="frame" x="282" y="118" width="93" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.93104977339999995" blue="0.69579085100000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <color key="tintColor" red="0.59895835320000002" green="0.56181967440000002" blue="0.57323050170000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="いいね"/>
+                                <connections>
+                                    <action selector="likeListButton:" destination="keI-lg-nSB" eventType="touchUpInside" id="TDV-s3-gPV"/>
+                                </connections>
+                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="PT4-e7-2as">
+                                <rect key="frame" x="0.0" y="158" width="375" height="600"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="c3i-Za-C7i">
+                                        <rect key="frame" x="0.0" y="44.666666030883789" width="375" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="c3i-Za-C7i" id="Ljd-7b-Mqv">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IvS-ml-ULe">
-                                                    <rect key="frame" x="-17" y="-267" width="378" height="816"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </view>
-                                            </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </collectionViewCellContentView>
-                                        <color key="backgroundColor" red="0.98432417309999998" green="0.98432417309999998" blue="0.98432417309999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <size key="customSize" width="160" height="218"/>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="j4V-KI-kSe"/>
                         <color key="backgroundColor" red="0.97016620330000003" green="0.97016620330000003" blue="0.97016620330000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="f15-3h-1jc" firstAttribute="top" secondItem="j4V-KI-kSe" secondAttribute="top" constant="48" id="FmD-ZO-7LR"/>
-                            <constraint firstItem="f15-3h-1jc" firstAttribute="leading" secondItem="BZG-vG-AJx" secondAttribute="trailing" id="INg-9u-20N"/>
-                            <constraint firstItem="mb4-4d-PW6" firstAttribute="top" secondItem="j4V-KI-kSe" secondAttribute="top" constant="100" id="L2G-UU-t1e"/>
-                            <constraint firstAttribute="bottom" secondItem="mb4-4d-PW6" secondAttribute="bottom" id="MtC-a1-nAm"/>
+                            <constraint firstItem="PT4-e7-2as" firstAttribute="leading" secondItem="j4V-KI-kSe" secondAttribute="leading" id="43Q-pJ-K3l"/>
+                            <constraint firstItem="alK-k7-4lc" firstAttribute="leading" secondItem="ktK-9G-nan" secondAttribute="trailing" constant="1" id="4LY-qk-KRh"/>
+                            <constraint firstItem="f15-3h-1jc" firstAttribute="top" secondItem="j4V-KI-kSe" secondAttribute="top" constant="62" id="FmD-ZO-7LR"/>
+                            <constraint firstItem="ktK-9G-nan" firstAttribute="leading" secondItem="f15-3h-1jc" secondAttribute="trailing" constant="1" id="H2p-2G-k0Y"/>
+                            <constraint firstItem="f15-3h-1jc" firstAttribute="leading" secondItem="BZG-vG-AJx" secondAttribute="trailing" constant="1" id="INg-9u-20N"/>
+                            <constraint firstItem="PT4-e7-2as" firstAttribute="top" secondItem="BZG-vG-AJx" secondAttribute="bottom" constant="10" id="Jg7-xX-IVI"/>
+                            <constraint firstItem="PT4-e7-2as" firstAttribute="trailing" secondItem="j4V-KI-kSe" secondAttribute="trailing" id="K9c-xg-25y"/>
+                            <constraint firstItem="ktK-9G-nan" firstAttribute="top" secondItem="j4V-KI-kSe" secondAttribute="top" constant="62" id="LQ7-XU-dOI"/>
                             <constraint firstItem="BZG-vG-AJx" firstAttribute="leading" secondItem="j4V-KI-kSe" secondAttribute="leading" id="NVB-Dm-Jdb"/>
-                            <constraint firstItem="j4V-KI-kSe" firstAttribute="trailing" secondItem="mb4-4d-PW6" secondAttribute="trailing" constant="16" id="TAn-sV-nrP"/>
-                            <constraint firstItem="mb4-4d-PW6" firstAttribute="leading" secondItem="j4V-KI-kSe" secondAttribute="leading" constant="16" id="aHn-iw-w5l"/>
-                            <constraint firstItem="f15-3h-1jc" firstAttribute="trailing" secondItem="j4V-KI-kSe" secondAttribute="trailing" id="nA0-8S-bAz"/>
-                            <constraint firstItem="BZG-vG-AJx" firstAttribute="top" secondItem="j4V-KI-kSe" secondAttribute="top" constant="48" id="uiy-R0-ZdU"/>
+                            <constraint firstItem="j4V-KI-kSe" firstAttribute="trailing" secondItem="alK-k7-4lc" secondAttribute="trailing" id="RLP-fG-opG"/>
+                            <constraint firstItem="j4V-KI-kSe" firstAttribute="bottom" secondItem="alK-k7-4lc" secondAttribute="bottom" constant="581" id="SDQ-55-KfL"/>
+                            <constraint firstItem="j4V-KI-kSe" firstAttribute="trailing" secondItem="f15-3h-1jc" secondAttribute="trailing" constant="188" id="UMM-cK-Ysj"/>
+                            <constraint firstItem="j4V-KI-kSe" firstAttribute="bottom" secondItem="ktK-9G-nan" secondAttribute="bottom" constant="581" id="V72-ag-GXG"/>
+                            <constraint firstAttribute="bottom" secondItem="PT4-e7-2as" secondAttribute="bottom" id="XA2-pA-Gkg"/>
+                            <constraint firstItem="f15-3h-1jc" firstAttribute="height" secondItem="BZG-vG-AJx" secondAttribute="height" id="mTH-FE-YBi"/>
+                            <constraint firstItem="j4V-KI-kSe" firstAttribute="trailing" secondItem="BZG-vG-AJx" secondAttribute="trailing" constant="282" id="mtn-Ph-hOH"/>
+                            <constraint firstItem="j4V-KI-kSe" firstAttribute="bottom" secondItem="f15-3h-1jc" secondAttribute="bottom" constant="581" id="nzU-El-vXu"/>
+                            <constraint firstItem="j4V-KI-kSe" firstAttribute="bottom" secondItem="BZG-vG-AJx" secondAttribute="bottom" constant="581" id="sWb-Q7-PkA"/>
+                            <constraint firstItem="alK-k7-4lc" firstAttribute="top" secondItem="j4V-KI-kSe" secondAttribute="top" constant="62" id="sa7-NQ-s8w"/>
+                            <constraint firstItem="BZG-vG-AJx" firstAttribute="leading" secondItem="j4V-KI-kSe" secondAttribute="leading" id="tGL-kp-CCZ"/>
+                            <constraint firstItem="f15-3h-1jc" firstAttribute="leading" secondItem="j4V-KI-kSe" secondAttribute="leading" constant="94" id="tpU-7g-n9f"/>
+                            <constraint firstItem="BZG-vG-AJx" firstAttribute="top" secondItem="j4V-KI-kSe" secondAttribute="top" constant="62" id="uiy-R0-ZdU"/>
+                            <constraint firstItem="j4V-KI-kSe" firstAttribute="trailing" secondItem="ktK-9G-nan" secondAttribute="trailing" constant="94" id="wDc-yL-djO"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="FgZ-4k-yWk"/>
                     <connections>
-                        <outlet property="collectionView" destination="mb4-4d-PW6" id="Tdz-rc-Iu4"/>
                         <outlet property="reviewButton" destination="BZG-vG-AJx" id="qrX-Ei-f0V"/>
-                        <outlet property="reviewButtonWidth" destination="ba6-g3-lML" id="XvQ-sh-oeh"/>
                         <outlet property="stockButton" destination="f15-3h-1jc" id="qhr-FV-1mm"/>
+                        <outlet property="tableView" destination="PT4-e7-2as" id="dtq-z1-ZdA"/>
                         <segue destination="kdc-bj-bUn" kind="presentation" identifier="cellSegue" id="YKy-q5-s1g"/>
                         <segue destination="dzq-87-3hp" kind="show" identifier="settingSegue" id="8Ku-wh-MHT"/>
                     </connections>
