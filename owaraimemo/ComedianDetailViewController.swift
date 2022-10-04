@@ -127,7 +127,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     let currentUser = Auth.auth().currentUser
     let db = Firestore.firestore()
     
-    //画像のアップロードパス
+    //画像のパス
     let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
 
     
@@ -426,9 +426,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                             //許諾取得済みなら宣材写真をセット
                             if self.comedianCopyRight == "true" {
                                 
-                                let imageRef = self.storage.child("comedian_image/シマウマフック_1.jpg")
-
-                                self.comedianImageView.sd_setImage(with: imageRef)
+                                let imageRef = self.storage.child("comedian_image/\(self.comedianId).jpg")
+                                self.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
                                 
                                                                                                 
 
@@ -1164,7 +1163,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         cell.commentLabel.tintColor = UIColor.darkGray
         cell.commentLabel.textAlignment = NSTextAlignment.left
         
-        if cell.commentLabel.text!.count >= 202 {
+        if cell.commentLabel.text!.count > 202 {
             
             cell.continuationLabel.text = "全文を読む>"
             

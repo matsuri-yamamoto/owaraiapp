@@ -8,7 +8,23 @@
 import UIKit
 
 class NewReviewTableViewCell: UITableViewCell {
-
+    
+    @IBOutlet weak var userNameButton: UIButton!
+    @IBOutlet weak var userDisplayIdLabel: UILabel!
+    @IBOutlet weak var comedianNameLabel: UILabel!
+    @IBOutlet weak var scoreLabel: UILabel!
+    @IBOutlet weak var scoreImageView: UIImageView!
+    @IBOutlet weak var commentLabel: UILabel!
+    @IBOutlet weak var comedianImageView: UIImageView!
+    @IBOutlet weak var continuationLabel: UILabel!
+    @IBOutlet weak var likeButton: UIButton!
+    @IBOutlet weak var likeCountLabel: UILabel!
+    
+    @IBOutlet weak var beforeRelationalLabel: UILabel!
+    @IBOutlet weak var relationalComedianLabel: UILabel!
+    @IBOutlet weak var afterRelationalLabel: UILabel!
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -19,5 +35,6 @@ class NewReviewTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
     
 }

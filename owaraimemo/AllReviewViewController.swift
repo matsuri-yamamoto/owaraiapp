@@ -36,6 +36,8 @@ class AllReviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationItem.hidesBackButton = false
+
         //reviewの内容をセットする
         db.collection("review").whereField(FieldPath.documentID(), isEqualTo: self.reviewId).getDocuments() { (querySnapshot, err) in
 
