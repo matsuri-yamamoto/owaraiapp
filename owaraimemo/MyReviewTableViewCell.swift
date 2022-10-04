@@ -9,13 +9,13 @@ import UIKit
 
 class MyReviewTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var comedianNameLabel: UILabel!
+    @IBOutlet weak var comedianNameButton: UIButton!
     @IBOutlet weak var updatedLabel: UILabel!
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var scoreImageView: UIImageView!
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var comedianImageView: UIImageView!
-    @IBOutlet weak var continuationLabel: UILabel!
+    @IBOutlet weak var continuationButton: UIButton!
     @IBOutlet weak var likeCountLabel: UILabel!
     
 //    @IBOutlet weak var beforeRelationalLabel: UILabel!

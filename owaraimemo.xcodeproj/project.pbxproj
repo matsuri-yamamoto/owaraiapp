@@ -27,6 +27,12 @@
 		633FA35C28EA774A00A0E77C /* AllReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633FA35B28EA774900A0E77C /* AllReviewViewController.swift */; };
 		633FA35F28EBF33500A0E77C /* MyReviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633FA35D28EBF33500A0E77C /* MyReviewTableViewCell.swift */; };
 		633FA36028EBF33500A0E77C /* MyReviewTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 633FA35E28EBF33500A0E77C /* MyReviewTableViewCell.xib */; };
+		633FA36228EC70E700A0E77C /* MyPageTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633FA36128EC70E700A0E77C /* MyPageTabViewController.swift */; };
+		633FA36428EC8AAD00A0E77C /* StockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633FA36328EC8AAD00A0E77C /* StockViewController.swift */; };
+		633FA36628EC8B4A00A0E77C /* FollowingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633FA36528EC8B4A00A0E77C /* FollowingViewController.swift */; };
+		633FA36828EC8B7D00A0E77C /* LikeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633FA36728EC8B7D00A0E77C /* LikeListViewController.swift */; };
+		633FA36F28ECA3AF00A0E77C /* StockCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633FA36D28ECA3AF00A0E77C /* StockCollectionViewCell.swift */; };
+		633FA37028ECA3AF00A0E77C /* StockCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 633FA36E28ECA3AF00A0E77C /* StockCollectionViewCell.xib */; };
 		634F867A28A637B700CAE6BA /* AnalyticsUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634F867928A637B600CAE6BA /* AnalyticsUtil.swift */; };
 		634F867C28A63C8300CAE6BA /* AnalyticsUserProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634F867B28A63C8300CAE6BA /* AnalyticsUserProperty.swift */; };
 		635AC59628CDABFD00C9D0E5 /* SignInWithAppleIDButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635AC59528CDABFD00C9D0E5 /* SignInWithAppleIDButton.swift */; };
@@ -80,6 +86,12 @@
 		633FA35B28EA774900A0E77C /* AllReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllReviewViewController.swift; sourceTree = "<group>"; };
 		633FA35D28EBF33500A0E77C /* MyReviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReviewTableViewCell.swift; sourceTree = "<group>"; };
 		633FA35E28EBF33500A0E77C /* MyReviewTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyReviewTableViewCell.xib; sourceTree = "<group>"; };
+		633FA36128EC70E700A0E77C /* MyPageTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageTabViewController.swift; sourceTree = "<group>"; };
+		633FA36328EC8AAD00A0E77C /* StockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockViewController.swift; sourceTree = "<group>"; };
+		633FA36528EC8B4A00A0E77C /* FollowingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingViewController.swift; sourceTree = "<group>"; };
+		633FA36728EC8B7D00A0E77C /* LikeListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeListViewController.swift; sourceTree = "<group>"; };
+		633FA36D28ECA3AF00A0E77C /* StockCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockCollectionViewCell.swift; sourceTree = "<group>"; };
+		633FA36E28ECA3AF00A0E77C /* StockCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StockCollectionViewCell.xib; sourceTree = "<group>"; };
 		634F867928A637B600CAE6BA /* AnalyticsUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsUtil.swift; sourceTree = "<group>"; };
 		634F867B28A63C8300CAE6BA /* AnalyticsUserProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsUserProperty.swift; sourceTree = "<group>"; };
 		635AC59528CDABFD00C9D0E5 /* SignInWithAppleIDButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAppleIDButton.swift; sourceTree = "<group>"; };
@@ -179,6 +191,7 @@
 				633FA35728E6A9EF00A0E77C /* NewReviewTableViewCell.swift */,
 				633FA35828E6A9EF00A0E77C /* NewReviewTableViewCell.xib */,
 				63FB59952849EA8D00497210 /* TabViewController.swift */,
+				633FA36128EC70E700A0E77C /* MyPageTabViewController.swift */,
 				639DED0028C89C3D00C79BD3 /* TabViewCollectionViewCell.swift */,
 				639DED0128C89C3D00C79BD3 /* TabViewCollectionViewCell.xib */,
 				63162842286F3DE8007679DC /* FirstTabViewController.swift */,
@@ -189,6 +202,11 @@
 				63D7E54427E9947300E99C75 /* MyReviewViewController.swift */,
 				633FA35D28EBF33500A0E77C /* MyReviewTableViewCell.swift */,
 				633FA35E28EBF33500A0E77C /* MyReviewTableViewCell.xib */,
+				633FA36328EC8AAD00A0E77C /* StockViewController.swift */,
+				633FA36D28ECA3AF00A0E77C /* StockCollectionViewCell.swift */,
+				633FA36E28ECA3AF00A0E77C /* StockCollectionViewCell.xib */,
+				633FA36528EC8B4A00A0E77C /* FollowingViewController.swift */,
+				633FA36728EC8B7D00A0E77C /* LikeListViewController.swift */,
 				639ACA2F28483E7D005E7BE3 /* ComedianDetailViewController.swift */,
 				633FA35B28EA774900A0E77C /* AllReviewViewController.swift */,
 				63D7E54627E9949200E99C75 /* ReviewViewController.swift */,
@@ -284,6 +302,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				633FA37028ECA3AF00A0E77C /* StockCollectionViewCell.xib in Resources */,
 				6381D13D27E7319D005BDBE2 /* LaunchScreen.storyboard in Resources */,
 				633FA36028EBF33500A0E77C /* MyReviewTableViewCell.xib in Resources */,
 				632F88D727FABF9500350624 /* ComedianTableViewCell.xib in Resources */,
@@ -362,25 +381,30 @@
 				633FA35F28EBF33500A0E77C /* MyReviewTableViewCell.swift in Sources */,
 				63FB59962849EA8D00497210 /* TabViewController.swift in Sources */,
 				63134BB428B706BD00B0926D /* PlaceTextView.swift in Sources */,
+				633FA36628EC8B4A00A0E77C /* FollowingViewController.swift in Sources */,
 				63CB62102850A8DE0023638F /* CircleImageView.swift in Sources */,
 				634F867C28A63C8300CAE6BA /* AnalyticsUserProperty.swift in Sources */,
 				639ACA3028483E7E005E7BE3 /* ComedianDetailViewController.swift in Sources */,
+				633FA36428EC8AAD00A0E77C /* StockViewController.swift in Sources */,
 				639D9A91287558B400291D28 /* SearchCollectionReusableView.swift in Sources */,
 				634F867A28A637B700CAE6BA /* AnalyticsUtil.swift in Sources */,
 				635FC56128618336000835C4 /* SecondTabViewController.swift in Sources */,
 				630FAE6D2880F66600A3E0F9 /* ComedianReviewTableViewCell.swift in Sources */,
 				630964B7281EDB32006F211B /* TermViewController.swift in Sources */,
 				639DED0228C89C3D00C79BD3 /* TabViewCollectionViewCell.swift in Sources */,
+				633FA36F28ECA3AF00A0E77C /* StockCollectionViewCell.swift in Sources */,
 				6381D13127E7319A005BDBE2 /* AppDelegate.swift in Sources */,
 				63D7E54727E9949200E99C75 /* ReviewViewController.swift in Sources */,
 				635FC56528618364000835C4 /* ForthTabViewController.swift in Sources */,
 				638CD1EB27F29812002DCEFC /* StartViewController.swift in Sources */,
 				6301AE2A28B494E1001B03E5 /* InquiryViewController.swift in Sources */,
 				632F88D327FA8A7900350624 /* ComedianData.swift in Sources */,
+				633FA36228EC70E700A0E77C /* MyPageTabViewController.swift in Sources */,
 				630964B9281EDBA3006F211B /* PrivacyPolicyViewController.swift in Sources */,
 				63D7E54527E9947300E99C75 /* MyReviewViewController.swift in Sources */,
 				63D7E54327E9942D00E99C75 /* SearchViewController.swift in Sources */,
 				63162843286F3DE8007679DC /* FirstTabViewController.swift in Sources */,
+				633FA36828EC8B7D00A0E77C /* LikeListViewController.swift in Sources */,
 				6381D13327E7319A005BDBE2 /* SceneDelegate.swift in Sources */,
 				638CD1ED27F2987B002DCEFC /* CreateNewViewController.swift in Sources */,
 			);
