@@ -1,17 +1,11 @@
-//
-//  MyPageTabViewController.swift
-//  owaraimemo
-//
-//  Created by 山本梨野 on 2022/10/04.
-//
 
 import UIKit
 import Tabman
 import Pageboy
 
-class MyPageTabViewController: TabmanViewController {
+class NewReviewTabViewController: TabmanViewController {
 
-    private var viewControllers = [UIViewController(), UIViewController(), UIViewController()]
+    private var viewControllers = [UIViewController(), UIViewController()]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,7 +13,7 @@ class MyPageTabViewController: TabmanViewController {
         self.dataSource = self
         
         self.navigationItem.hidesBackButton = true
-        self.title = "マイページ"
+        self.title = "タイムライン"
         
         
         
@@ -30,7 +24,7 @@ class MyPageTabViewController: TabmanViewController {
         bar.layout.transitionStyle = .snap // Customize
         bar.backgroundView.style = .flat(color: .white)
         
-        bar.layout.contentInset = UIEdgeInsets(top: 50.0, left: 10.0, bottom: 0.0, right: 10.0)
+        bar.layout.contentInset = UIEdgeInsets(top: 0.0, left: 10.0, bottom: 0.0, right: 10.0)
         
         bar.layout.contentMode = .fit
 
@@ -46,16 +40,6 @@ class MyPageTabViewController: TabmanViewController {
         // Add to view
         addBar(bar, dataSource: self, at: .top)
         
-        //ナビゲーションバーのボタン設置
-        settingButtonItem = UIBarButtonItem(image: UIImage(systemName: "text.justify"), style: .done, target: self, action: #selector(settingButtonPressed))
-        self.navigationItem.rightBarButtonItem = settingButtonItem
-        
-        navigationController?.navigationItem.leftBarButtonItem?.customView?.isHidden = true
-        
-        self.tabBarController?.tabBar.isHidden = false
-        
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        
 
         
     }
@@ -63,26 +47,18 @@ class MyPageTabViewController: TabmanViewController {
     private func setTabsControllers() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
-        let firstVC = storyboard.instantiateViewController(withIdentifier: "MyReview") as! MyReviewViewController
-        let secondVC = storyboard.instantiateViewController(withIdentifier: "Stock") as! StockViewController
-        let thirdVC = storyboard.instantiateViewController(withIdentifier: "LikeList") as! LikeListViewController
+        let firstVC = storyboard.instantiateViewController(withIdentifier: "NewReview") as! NewReivewViewController
+        let secondVC = storyboard.instantiateViewController(withIdentifier: "Following") as! FollowingViewController
         
         viewControllers[0] = firstVC
         viewControllers[1] = secondVC
-        viewControllers[2] = thirdVC
 
-    }
-    
-    @objc func settingButtonPressed() {
-        
-        performSegue(withIdentifier: "settingSegue", sender: nil)
-        
     }
 }
 
 
 
-extension MyPageTabViewController: PageboyViewControllerDataSource, TMBarDataSource {
+extension NewReviewTabViewController: PageboyViewControllerDataSource, TMBarDataSource {
 
     //タブの数を決める
     func numberOfViewControllers(in pageboyViewController: PageboyViewController) -> Int {
@@ -105,7 +81,7 @@ extension MyPageTabViewController: PageboyViewControllerDataSource, TMBarDataSou
 
     //タブバーの要件を決める
     func barItem(for bar: TMBar, at index: Int) -> TMBarItemable {
-        let title = ["レビュー", "あとでみる", "いいね"]
+        let title = ["新着", "フォロー中"]
         return TMBarItem(title: title[index])
         
         

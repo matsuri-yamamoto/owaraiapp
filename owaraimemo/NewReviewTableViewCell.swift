@@ -11,7 +11,7 @@ class NewReviewTableViewCell: UITableViewCell {
     
     @IBOutlet weak var userNameButton: UIButton!
     @IBOutlet weak var userDisplayIdLabel: UILabel!
-    @IBOutlet weak var comedianNameLabel: UILabel!
+    @IBOutlet weak var comedianNameButton: UIButton!
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var scoreImageView: UIImageView!
     @IBOutlet weak var commentLabel: UILabel!

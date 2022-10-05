@@ -15,6 +15,7 @@
 		630FAE6E2880F66600A3E0F9 /* ComedianReviewTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 630FAE6C2880F66600A3E0F9 /* ComedianReviewTableViewCell.xib */; };
 		63134BB428B706BD00B0926D /* PlaceTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63134BB328B706BD00B0926D /* PlaceTextView.swift */; };
 		63134BB628B706D800B0926D /* PlaceTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63134BB528B706D800B0926D /* PlaceTextView.xib */; };
+		6313CB8E28ED629E00E71BFB /* NewReviewTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6313CB8D28ED629D00E71BFB /* NewReviewTabViewController.swift */; };
 		631590EC289B95E8001FFDA0 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 631590EB289B95E8001FFDA0 /* AdSupport.framework */; };
 		63162843286F3DE8007679DC /* FirstTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63162842286F3DE8007679DC /* FirstTabViewController.swift */; };
 		632F88D127F3054B00350624 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D027F3054B00350624 /* SettingViewController.swift */; };
@@ -73,6 +74,7 @@
 		630FAE6C2880F66600A3E0F9 /* ComedianReviewTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ComedianReviewTableViewCell.xib; sourceTree = "<group>"; };
 		63134BB328B706BD00B0926D /* PlaceTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceTextView.swift; sourceTree = "<group>"; };
 		63134BB528B706D800B0926D /* PlaceTextView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaceTextView.xib; sourceTree = "<group>"; };
+		6313CB8D28ED629D00E71BFB /* NewReviewTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewReviewTabViewController.swift; sourceTree = "<group>"; };
 		631590EB289B95E8001FFDA0 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		63162842286F3DE8007679DC /* FirstTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstTabViewController.swift; sourceTree = "<group>"; };
 		632A473C2868400100FB28EA /* Carthage */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Carthage; sourceTree = "<group>"; };
@@ -187,11 +189,11 @@
 				63D7E54827E9C4DB00E99C75 /* LoginViewController.swift */,
 				630964B6281EDB32006F211B /* TermViewController.swift */,
 				630964B8281EDBA3006F211B /* PrivacyPolicyViewController.swift */,
+				6313CB8D28ED629D00E71BFB /* NewReviewTabViewController.swift */,
 				633FA35328E6996B00A0E77C /* NewReivewTableViewController.swift */,
 				633FA35728E6A9EF00A0E77C /* NewReviewTableViewCell.swift */,
 				633FA35828E6A9EF00A0E77C /* NewReviewTableViewCell.xib */,
 				63FB59952849EA8D00497210 /* TabViewController.swift */,
-				633FA36128EC70E700A0E77C /* MyPageTabViewController.swift */,
 				639DED0028C89C3D00C79BD3 /* TabViewCollectionViewCell.swift */,
 				639DED0128C89C3D00C79BD3 /* TabViewCollectionViewCell.xib */,
 				63162842286F3DE8007679DC /* FirstTabViewController.swift */,
@@ -199,6 +201,7 @@
 				635FC5622861834F000835C4 /* ThirdTabViewController.swift */,
 				635FC56428618364000835C4 /* ForthTabViewController.swift */,
 				63D7E54227E9942D00E99C75 /* SearchViewController.swift */,
+				633FA36128EC70E700A0E77C /* MyPageTabViewController.swift */,
 				63D7E54427E9947300E99C75 /* MyReviewViewController.swift */,
 				633FA35D28EBF33500A0E77C /* MyReviewTableViewCell.swift */,
 				633FA35E28EBF33500A0E77C /* MyReviewTableViewCell.xib */,
@@ -393,6 +396,7 @@
 				630964B7281EDB32006F211B /* TermViewController.swift in Sources */,
 				639DED0228C89C3D00C79BD3 /* TabViewCollectionViewCell.swift in Sources */,
 				633FA36F28ECA3AF00A0E77C /* StockCollectionViewCell.swift in Sources */,
+				6313CB8E28ED629E00E71BFB /* NewReviewTabViewController.swift in Sources */,
 				6381D13127E7319A005BDBE2 /* AppDelegate.swift in Sources */,
 				63D7E54727E9949200E99C75 /* ReviewViewController.swift in Sources */,
 				635FC56528618364000835C4 /* ForthTabViewController.swift in Sources */,

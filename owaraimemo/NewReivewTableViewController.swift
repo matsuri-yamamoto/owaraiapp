@@ -24,7 +24,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     var userIdArray: [String] = []
     var userNameArray: [String] = []
     var userDisplayIdArray: [String] = []
-    var reviewCreateDatetimeArray: [String] = []
+    var reviewUpdateDatetimeArray: [String] = []
     var reviewScoreArray: [String] = []
     var reviewCommentArray: [String] = []
     var reviewRelationalArray: [String] = []
@@ -49,7 +49,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         let nib = UINib(nibName: "NewReviewTableViewCell", bundle: nil)
         self.tableView.register(nib, forCellReuseIdentifier: "NewReviewCell")
 
-        db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "create_datetime", descending: true).limit(to: 30).getDocuments() { (querySnapshot, err) in
+        db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).limit(to: 30).getDocuments() { (querySnapshot, err) in
             
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -73,10 +73,10 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                     dateFormatter.locale = Locale(identifier: "ja_JP")
                     
                     dateFormatter.dateFormat = "yyyy/mm/dd hh:mm"
-                    let created = document.data()["create_datetime"] as! Timestamp
-                    let createdDate = created.dateValue()
-                    let createdDateTime = dateFormatter.string(from: createdDate)
-                    self.reviewCreateDatetimeArray.append(createdDateTime)
+                    let updated = document.data()["update_datetime"] as! Timestamp
+                    let updatedDate = updated.dateValue()
+                    let updatedDateTime = dateFormatter.string(from: updatedDate)
+                    self.reviewUpdateDatetimeArray.append(updatedDateTime)
                     
                     let reviewFloatScoreArray = document.data()["score"] as! Float
                     self.reviewScoreArray.append(String(reviewFloatScoreArray))
@@ -96,12 +96,10 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         
         print("self.reviewIdArray.count:\(self.reviewIdArray.count)")
         return self.reviewIdArray.count
@@ -120,8 +118,15 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.userNameButton.contentHorizontalAlignment = .left
         cell.userNameButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14.0)
         cell.userNameButton.setTitle("　" + self.userNameArray[indexPath.row], for: .normal)
-        cell.userDisplayIdLabel.text = "　@" + self.userDisplayIdArray[indexPath.row] + " - " + self.reviewCreateDatetimeArray[indexPath.row]
-        cell.comedianNameLabel.text = self.comedianNameArray[indexPath.row]
+        cell.userDisplayIdLabel.text = "　@" + self.userDisplayIdArray[indexPath.row] + " - " + self.reviewUpdateDatetimeArray[indexPath.row]
+        
+        cell.comedianNameButton.tag = indexPath.row
+        cell.comedianNameButton.addTarget(self, action: #selector(tappedcomedianButton(sender:)), for: .touchUpInside)
+
+        cell.comedianNameButton.contentHorizontalAlignment = .left
+        cell.comedianNameButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13.0)
+        cell.comedianNameButton.setTitle("　" + self.comedianNameArray[indexPath.row], for: .normal)
+
         cell.scoreLabel.text = self.reviewScoreArray[indexPath.row]
         cell.scoreImageView.image = UIImage(named: "score_\(self.reviewScoreArray[indexPath.row])")
 
@@ -466,6 +471,26 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
             }
         }
     }
+    //芸人名タップでcomedianDetailに遷移
+    @objc func tappedcomedianButton(sender: UIButton) {
+        
+        
+        let buttonTag = sender.tag
+        let tappedComedianId = self.comedianIdArray[buttonTag]
+        
+        let button = sender
+        let cell = button.superview?.superview as! NewReviewTableViewCell
+        
+        //セルタップでレビュー全文に遷移
+        let comedianVC = storyboard?.instantiateViewController(withIdentifier: "Comedian") as! ComedianDetailViewController
+        
+        comedianVC.comedianId = tappedComedianId
+        self.navigationController?.pushViewController(comedianVC, animated: true)
+        hidesBottomBarWhenPushed = true
+        
+        
+    }
+    
     
     //ユーザーネームタップでプロフィールページに遷移
 }
