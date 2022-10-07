@@ -1,8 +1,8 @@
 //
-//  StockViewController.swift
+//  ProfileStockViewController.swift
 //  owaraimemo
 //
-//  Created by 山本梨野 on 2022/10/05.
+//  Created by 山本梨野 on 2022/10/07.
 //
 
 import UIKit
@@ -11,9 +11,10 @@ import FirebaseFirestore
 import FirebaseStorageUI
 
 
-class StockViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class ProfileStockViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    
+    var profileUserId :String = ""
+
     @IBOutlet weak var collectionView: UICollectionView!
     
     
@@ -30,7 +31,6 @@ class StockViewController: UIViewController, UICollectionViewDelegate, UICollect
     var cellSize :CGFloat = 0
     
     //Firestoreを使うための下準備
-    let currentUser = Auth.auth().currentUser
     let db = Firestore.firestore()
     
     override func viewWillAppear(_ animated: Bool) {
@@ -56,7 +56,7 @@ class StockViewController: UIViewController, UICollectionViewDelegate, UICollect
         collectionView.collectionViewLayout = layout
         
         //ストックデータを配列にセットする
-        db.collection("stock").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).whereField("valid_flag", isEqualTo: true).order(by: "create_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
+        db.collection("stock").whereField("user_id", isEqualTo: self.profileUserId).whereField("valid_flag", isEqualTo: true).order(by: "create_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
             if let err = err {
                         print("Error getting documents: \(err)")
                         return
@@ -181,5 +181,6 @@ class StockViewController: UIViewController, UICollectionViewDelegate, UICollect
                                              actionLabel: .template(ActionLabelTemplate.myPageCellTap)))
 
     }
+    
     
 }

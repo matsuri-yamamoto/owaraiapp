@@ -17,21 +17,28 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="65"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="75r-2Q-tsX">
-                        <rect key="frame" x="35" y="22" width="72" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="75r-2Q-tsX">
+                        <rect key="frame" x="35" y="22" width="119" height="18"/>
                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                         <color key="textColor" red="0.1268742108" green="0.1268742108" blue="0.1268742108" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eYs-fh-AVm">
-                        <rect key="frame" x="129" y="23" width="157" height="16"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eYs-fh-AVm">
+                        <rect key="frame" x="154" y="23" width="150" height="16"/>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <color key="textColor" red="0.22267597850000001" green="0.22267597850000001" blue="0.22267597850000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="75r-2Q-tsX" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="35" id="H9n-ha-Jk6"/>
+                    <constraint firstItem="eYs-fh-AVm" firstAttribute="centerY" secondItem="75r-2Q-tsX" secondAttribute="centerY" id="HZt-Ps-HCq"/>
+                    <constraint firstItem="75r-2Q-tsX" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="-1.5" id="NXa-g8-cDW"/>
+                    <constraint firstItem="eYs-fh-AVm" firstAttribute="leading" secondItem="75r-2Q-tsX" secondAttribute="trailing" id="lW5-RV-OIV"/>
+                    <constraint firstAttribute="trailing" secondItem="75r-2Q-tsX" secondAttribute="trailing" constant="166" id="lih-Wi-0Iv"/>
+                    <constraint firstItem="75r-2Q-tsX" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="35" id="mns-3l-gJr"/>
+                    <constraint firstAttribute="trailing" secondItem="eYs-fh-AVm" secondAttribute="trailing" constant="16" id="nSg-LN-M3Y"/>
+                </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>

@@ -5,43 +5,20 @@ import Firebase
 import FirebaseFirestore
 import FirebaseStorageUI
 
-//ナビゲーションバーのボタンの変数
-var settingButtonItem: UIBarButtonItem!
 
 class MyReviewViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    
-//    @IBOutlet weak var userNameLabel: UILabel!
-//    @IBOutlet weak var userDisplayIdLabel: UILabel!
-//
-//    @IBOutlet weak var followingButton: UIButton!
-//    @IBOutlet weak var followedButton: UIButton!
-
     
     
     @IBOutlet weak var tableView: UITableView!
         
             
     var comedianNameArray: [String] = []
-//    var comedianNameUniqueArray: [String] = []
-
     var comedianIdArray: [String] = []
-//    var comedianIdUniqueArray: [String] = []
-    
     var reviewIdArray: [String] = []
-//    var reviewIdUniqueArray: [String] = []
-    
     var updatedArray: [String] = []
-//    var updatedUniqueArray: [String] = []
-
     var scoreArray: [Double] = []
-//    var scoreUniqueArray: [Double] = []
-    
     var commentArray: [String] = []
-//    var commentUniqueArray: [String] = []
-    
-//    var myReviewRelationalArray: [String] = []
-//    var myReviewRelationalUniqueArray: [String] = []
     
 
     var reviewId :String = ""
@@ -115,7 +92,7 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
                         dateFormatter.dateStyle = .short
                         dateFormatter.timeStyle = .short
                         dateFormatter.locale = Locale(identifier: "ja_JP")
-                        dateFormatter.dateFormat = "yyyy/mm/dd hh:mm"
+                        dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
                         let updated = document.data()["update_datetime"] as! Timestamp
                         let updatedDate = updated.dateValue()
                         let updatedDateTime = dateFormatter.string(from: updatedDate)
@@ -148,17 +125,6 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
             let nib = UINib(nibName: "MyReviewTableViewCell", bundle: nil)
             self.tableView.register(nib, forCellReuseIdentifier: "MyReviewCell")
             
-            title = "マイページ"
-            
-            //ナビゲーションバーのボタン設置
-            settingButtonItem = UIBarButtonItem(image: UIImage(systemName: "text.justify"), style: .done, target: self, action: #selector(settingButtonPressed))
-            self.navigationItem.rightBarButtonItem = settingButtonItem
-            
-            navigationController?.navigationItem.leftBarButtonItem?.customView?.isHidden = true
-            
-            self.tabBarController?.tabBar.isHidden = false
-            
-            self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
 
                         
         }
@@ -178,59 +144,6 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        //ユーザー名をセット
-//        self.userNameLabel.text = currentUser?.displayName
-//
-//        //displayIdをセット
-//        self.db.collection("user_detail").whereField("user_id", isEqualTo: currentUser?.uid).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
-//            if let err = err {
-//                print("Error getting documents: \(err)")
-//                return
-//
-//            } else {
-//                for document in querySnapshot!.documents {
-//
-//                    self.userDisplayIdLabel.text = document.data()["display_id"] as! String
-//
-//                }
-//            }
-//        }
-//
-//        //フォロー中のユーザー数をカウント
-//        self.db.collection("follow").whereField("following_user_id", isEqualTo: currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
-//            if let err = err {
-//                print("Error getting documents: \(err)")
-//                return
-//
-//            } else {
-//
-//                let documentCount = querySnapshot?.documents.count
-//
-//                self.followingButton.setTitle(String(documentCount!), for: .normal)
-//
-//
-//            }
-//        }
-//
-//        //フォロワー数をカウント
-//        self.db.collection("follow").whereField("followed_user_id", isEqualTo: currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
-//            if let err = err {
-//                print("Error getting documents: \(err)")
-//                return
-//
-//            } else {
-//
-//                let documentCount = querySnapshot?.documents.count
-//
-//                self.followedButton.setTitle(String(documentCount!), for: .normal)
-//
-//
-//            }
-//        }
-    }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -266,12 +179,6 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         cell.commentLabel.tintColor = UIColor.darkGray
         cell.commentLabel.textAlignment = NSTextAlignment.left
         
-//        cell.continuationButton.tag = indexPath.row
-//        cell.continuationButton.addTarget(self, action: #selector(tappedContinuationButton(sender:)), for: .touchUpInside)
-//        cell.continuationButton.setTitle("全文を読む>", for: .normal)
-//
-//        print("行数(\(self.comedianIdArray[indexPath.row])：\(cell.commentLabel.lineNumber())")
-
         
         //copyrightflagを取得して画像をセット
         db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: self.comedianIdArray[indexPath.row]).getDocuments() {(querySnapshot, err) in
@@ -286,8 +193,13 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     if copyrightFlag == "true" {
                         
-                        let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
-                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+//                        let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
+//                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+                        
+                        cell.comedianImageView.image = UIImage(named: "\(self.comedianIdArray[indexPath.row])")
+                        cell.comedianImageView.contentMode = .scaleAspectFill
+                        cell.comedianImageView.clipsToBounds = true
+
                         
                     }
                     
@@ -302,6 +214,10 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         
 
         //likereviewをセット
+        
+        cell.likeCountButton.addTarget(self, action: #selector(tappedLikeCountButton(sender:)), for: .touchUpInside)
+
+        
         db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -309,30 +225,12 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 
-                cell.likeCountLabel.text = "\(querySnapshot!.documents.count)"
+                cell.likeCountButton.contentHorizontalAlignment = .left
+                cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
+                cell.likeCountButton.setTitle("\(querySnapshot!.documents.count)", for: .normal)
+                
             }
         }
-        
-        
-        
-        
-//            //relationalcomedianがいる場合はセット、いない場合は空白
-//            if self.myReviewRelationalUniqueArray[indexPath.row] == "" {
-//
-//                cell.beforeRelationalLabel.text = ""
-//                cell.relationalComedianLabel.text = ""
-//                cell.afterRelationalLabel.text = ""
-//
-//            }
-//
-//            if self.myReviewRelationalUniqueArray[indexPath.row] != "" {
-//
-//                cell.beforeRelationalLabel.text = "この芸人さんは"
-//                cell.relationalComedianLabel.text = self.myReviewRelationalUniqueArray[indexPath.row]
-//                cell.afterRelationalLabel.text = "が好きな人にハマりそう！"
-//
-//            }
-        
 
         return cell
 
@@ -347,12 +245,6 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //セルタップでレビュー画面に遷移
-//        let reviewVC = storyboard?.instantiateViewController(withIdentifier: "Review") as! ReviewViewController
-//
-//        reviewVC.comedianID = self.comedianIdArray[indexPath.row]
-//        self.navigationController?.pushViewController(reviewVC, animated: true)
-//        hidesBottomBarWhenPushed = true
-        
         
         
         let reviewVC = storyboard?.instantiateViewController(withIdentifier: "Review") as! ReviewViewController
@@ -390,7 +282,6 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         
         comedianVC.comedianId = tappedComedianId
         self.navigationController?.pushViewController(comedianVC, animated: true)
-        hidesBottomBarWhenPushed = true
         
         
     }
@@ -414,38 +305,27 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-    @IBAction func tappedFollowingButton(_ sender: Any) {
+    //いいね欄タップでfollowVCに遷移
+    @objc func tappedLikeCountButton(sender: UIButton) {
+        
+        
+        let buttonTag = sender.tag
+        let tappedReviewId = self.reviewIdArray[buttonTag]
+        
+        let button = sender
+        let cell = button.superview?.superview as! MyReviewTableViewCell
+        
+        //セルタップでレビュー全文に遷移
+        let followVC = storyboard?.instantiateViewController(withIdentifier: "FollowUser") as! FollowUserViewController
+        
+        followVC.reviewId = tappedReviewId
+        followVC.userType = "likeReview"
+        self.navigationController?.pushViewController(followVC, animated: true)
+        hidesBottomBarWhenPushed = true
+        
+        
     }
-    
-    @IBAction func tappedFollowedButton(_ sender: Any) {
-    }
-    
-    
-    
-    
-    
 
     
 }
 
-extension UILabel {
-
-  /// 行数を返す
-  func lineNumber() -> Int {
-    let oneLineRect  =  "a".boundingRect(
-      with: self.bounds.size,
-      options: .usesLineFragmentOrigin,
-      attributes: [NSAttributedString.Key.font: self.font ?? UIFont()],
-      context: nil
-    )
-    let boundingRect = (self.text ?? "").boundingRect(
-      with: self.bounds.size,
-      options: .usesLineFragmentOrigin,
-      attributes: [NSAttributedString.Key.font: self.font ?? UIFont()],
-      context: nil
-    )
-
-    return Int(boundingRect.height / oneLineRect.height)
-  }
-
-}

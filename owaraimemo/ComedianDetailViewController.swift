@@ -133,7 +133,17 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
 
     
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
+        
+        
+        self.reviewIdArray = []
+        self.reviewUserNameArray = []
+        self.reviewDisplayIdArray = []
+        self.reviewUserIdArray = []
+        self.reviewCreatedArray = []
+        self.reviewScoreArray = []
+        self.reviewCommentArray = []
+
         
 //        self.scrollVIewHight.constant = CGFloat(2000)
         
@@ -227,11 +237,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     var reviewId = Set<String>()
                     self.reviewIdArray = self.reviewBeforeUniqueArray.filter { reviewId.insert($0).inserted }
                     
-
                     
-                    
-                    
-                    
+                    self.reviewUserIdArray.append(document.data()["user_id"] as! String)
                     self.reviewUserNameArray.append(document.data()["user_name"] as! String)
                     self.reviewDisplayIdArray.append(document.data()["display_id"] as! String)
                     
@@ -432,9 +439,10 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                             //許諾取得済みなら宣材写真をセット
                             if self.comedianCopyRight == "true" {
                                 
-                                let imageRef = self.storage.child("comedian_image/\(self.comedianId).jpg")
-                                self.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
-                                
+                                self.comedianImageView.image = UIImage(named: "\(self.comedianId)")
+                                self.comedianImageView.contentMode = .scaleAspectFill
+                                self.comedianImageView.clipsToBounds = true
+
                                                                                                 
 
                                 
@@ -940,7 +948,6 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             
             self.navigationController?.pushViewController(recLoginVC, animated: true)
             
-            hidesBottomBarWhenPushed = true
             
             //ログ
             AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
@@ -981,7 +988,6 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             
             self.navigationController?.pushViewController(recLoginVC, animated: true)
             
-            hidesBottomBarWhenPushed = true
             
             //ログ
             AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
@@ -1144,8 +1150,17 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         
         //※プロフィール画像の仕様が決まったらここに追加する(reviewUserIdArryがあるのでそれを使う)
         //ユーザー名
+        
+        cell.userNameButton.tag = indexPath.row
         reviewUserName = reviewUserNameArray[indexPath.row]
-        cell.userNameLabel.text = reviewUserName
+        
+        cell.userNameButton.contentHorizontalAlignment = .left
+        cell.userNameButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14.0)
+        cell.userNameButton.setTitle("　" + reviewUserName, for: .normal)
+
+        cell.userNameButton.addTarget(self, action: #selector(self.tappedUserNameButton(sender:)), for: .touchUpInside)
+
+        
         
         //ユーザーID
         reviewUserId = reviewDisplayIdArray[indexPath.row]
@@ -1171,15 +1186,6 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         cell.commentLabel.tintColor = UIColor.darkGray
         cell.commentLabel.textAlignment = NSTextAlignment.left
         
-        if cell.commentLabel.text!.count > 202 {
-            
-            cell.continuationLabel.text = "全文を読む>"
-            
-        } else {
-            
-            cell.continuationLabel.text = ""
-            
-        }
         
         
         //likeButtonをセット
@@ -1190,6 +1196,10 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         
         
         //likereviewをセット
+        
+        cell.likeCountButton.addTarget(self, action: #selector(tappedLikeCountButton(sender:)), for: .touchUpInside)
+
+        
         db.collection("like_review").whereField("review_id", isEqualTo: reviewId).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -1198,10 +1208,19 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             } else {
                 //like_reviewドキュメントが0件の場合
                 if querySnapshot!.documents.count == 0 {
-                    cell.likeCountLabel.text = "いいね！はまだありません"
-                } else {
-                    cell.likeCountLabel.text = "\(querySnapshot!.documents.count)件のいいね！"
                     
+                    cell.likeCountButton.contentHorizontalAlignment = .left
+                    cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
+                    cell.likeCountButton.setTitle("いいね！はまだありません", for: .normal)
+
+                    cell.likeButton.setImage(self.unLikeImage, for: .normal)
+                    
+                } else {
+                    
+                    cell.likeCountButton.contentHorizontalAlignment = .left
+                    cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
+                    cell.likeCountButton.setTitle("\(querySnapshot!.documents.count)件のいいね！", for: .normal)
+
                     //自分のlike_frag==trueのレビュー有無でレビューボタンの色を変える
                     self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_user_id", isEqualTo: self.currentUser?.uid as Any).whereField("like_flag", isEqualTo: true).getDocuments() { [self](querySnapshot, err) in
                         
@@ -1238,11 +1257,33 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         
         allReviewVC.reviewId = self.reviewIdArray[indexPath.row]
         self.navigationController?.pushViewController(allReviewVC, animated: true)
-        hidesBottomBarWhenPushed = true
         
     }
     
-    
+    //ユーザーネームタップでプロフィールページに遷移
+    @objc func tappedUserNameButton(sender: UIButton) {
+        
+        let buttonTag = sender.tag
+        let tappedUserId = self.reviewUserIdArray[buttonTag]
+        let tappedUserName = self.reviewUserNameArray[buttonTag]
+
+        
+        let button = sender
+        let cell = button.superview?.superview as! ComedianReviewTableViewCell
+
+        
+        //セルタップでプロフィールに遷移
+        let profileVC = storyboard?.instantiateViewController(withIdentifier: "ProfileTab") as! ProfilePageTabViewController
+
+        profileVC.userId = tappedUserId
+        profileVC.userName = tappedUserName
+
+        
+        
+        self.navigationController?.pushViewController(profileVC, animated: true)
+
+        
+    }
     
     @objc func tappedLikeButton(sender: UIButton) {
         
@@ -1259,7 +1300,6 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             
             self.navigationController?.pushViewController(recLoginVC, animated: true)
             
-            hidesBottomBarWhenPushed = true
             
             //ログ
             AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
@@ -1444,11 +1484,14 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                         
                                         //like_reviewの件数のラベル(cellで使用する)
                                         if querySnapshot!.documents.count == 0 {
-                                            cell.likeCountLabel.text = "いいね！はまだありません"
+                                            cell.likeCountButton.contentHorizontalAlignment = .left
+                                            cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
+                                            cell.likeCountButton.setTitle("いいね！はまだありません", for: .normal)
 
                                         } else {
-                                            cell.likeCountLabel.text = "\(querySnapshot!.documents.count)件のいいね！"
-
+                                            cell.likeCountButton.contentHorizontalAlignment = .left
+                                            cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
+                                            cell.likeCountButton.setTitle("\(querySnapshot!.documents.count)件のいいね！", for: .normal)
                                         }
 
                                         
@@ -1461,6 +1504,27 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             }
         }
     }
+    
+    //いいね欄タップでfollowVCに遷移
+    @objc func tappedLikeCountButton(sender: UIButton) {
+        
+        
+        let buttonTag = sender.tag
+        let tappedReviewId = self.reviewIdArray[buttonTag]
+        
+        let button = sender
+        let cell = button.superview?.superview as! NewReviewTableViewCell
+        
+        //セルタップでレビュー全文に遷移
+        let followVC = storyboard?.instantiateViewController(withIdentifier: "FollowUser") as! FollowUserViewController
+        
+        followVC.reviewId = tappedReviewId
+        followVC.userType = "likeReview"
+        self.navigationController?.pushViewController(followVC, animated: true)
+        
+        
+    }
+    
 }
 
 extension UIImage {

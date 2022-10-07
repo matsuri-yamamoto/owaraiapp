@@ -20,6 +20,9 @@
 		6313CB9528EFA7A200E71BFB /* FollowUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6313CB9328EFA7A200E71BFB /* FollowUserTableViewCell.swift */; };
 		6313CB9628EFA7A200E71BFB /* FollowUserTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6313CB9428EFA7A200E71BFB /* FollowUserTableViewCell.xib */; };
 		6313CB9828EFB3AD00E71BFB /* ProfilePageTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6313CB9728EFB3AD00E71BFB /* ProfilePageTabViewController.swift */; };
+		6313CB9A28F0160200E71BFB /* ProfileMyReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6313CB9928F0160100E71BFB /* ProfileMyReviewViewController.swift */; };
+		6313CB9C28F0169A00E71BFB /* ProfileStockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6313CB9B28F0169A00E71BFB /* ProfileStockViewController.swift */; };
+		6313CB9E28F0176300E71BFB /* ProfileLikeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6313CB9D28F0176300E71BFB /* ProfileLikeListViewController.swift */; };
 		631590EC289B95E8001FFDA0 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 631590EB289B95E8001FFDA0 /* AdSupport.framework */; };
 		63162843286F3DE8007679DC /* FirstTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63162842286F3DE8007679DC /* FirstTabViewController.swift */; };
 		632F88D127F3054B00350624 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D027F3054B00350624 /* SettingViewController.swift */; };
@@ -83,6 +86,9 @@
 		6313CB9328EFA7A200E71BFB /* FollowUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowUserTableViewCell.swift; sourceTree = "<group>"; };
 		6313CB9428EFA7A200E71BFB /* FollowUserTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FollowUserTableViewCell.xib; sourceTree = "<group>"; };
 		6313CB9728EFB3AD00E71BFB /* ProfilePageTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePageTabViewController.swift; sourceTree = "<group>"; };
+		6313CB9928F0160100E71BFB /* ProfileMyReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMyReviewViewController.swift; sourceTree = "<group>"; };
+		6313CB9B28F0169A00E71BFB /* ProfileStockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStockViewController.swift; sourceTree = "<group>"; };
+		6313CB9D28F0176300E71BFB /* ProfileLikeListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLikeListViewController.swift; sourceTree = "<group>"; };
 		631590EB289B95E8001FFDA0 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		63162842286F3DE8007679DC /* FirstTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstTabViewController.swift; sourceTree = "<group>"; };
 		632A473C2868400100FB28EA /* Carthage */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Carthage; sourceTree = "<group>"; };
@@ -224,6 +230,9 @@
 				639ACA2F28483E7D005E7BE3 /* ComedianDetailViewController.swift */,
 				633FA35B28EA774900A0E77C /* AllReviewViewController.swift */,
 				6313CB9728EFB3AD00E71BFB /* ProfilePageTabViewController.swift */,
+				6313CB9928F0160100E71BFB /* ProfileMyReviewViewController.swift */,
+				6313CB9B28F0169A00E71BFB /* ProfileStockViewController.swift */,
+				6313CB9D28F0176300E71BFB /* ProfileLikeListViewController.swift */,
 				63D7E54627E9949200E99C75 /* ReviewViewController.swift */,
 				632F88D027F3054B00350624 /* SettingViewController.swift */,
 				639DECFA28C77B0E00C79BD3 /* AboutTsubologViewController.swift */,
@@ -395,11 +404,14 @@
 				6313CB9528EFA7A200E71BFB /* FollowUserTableViewCell.swift in Sources */,
 				6313CB9228EFA6F400E71BFB /* FollowUserViewController.swift in Sources */,
 				633FA35928E6A9EF00A0E77C /* NewReviewTableViewCell.swift in Sources */,
+				6313CB9C28F0169A00E71BFB /* ProfileStockViewController.swift in Sources */,
 				632F88D627FABF9500350624 /* ComedianTableViewCell.swift in Sources */,
+				6313CB9A28F0160200E71BFB /* ProfileMyReviewViewController.swift in Sources */,
 				633FA35F28EBF33500A0E77C /* MyReviewTableViewCell.swift in Sources */,
 				63FB59962849EA8D00497210 /* TabViewController.swift in Sources */,
 				63134BB428B706BD00B0926D /* PlaceTextView.swift in Sources */,
 				633FA36628EC8B4A00A0E77C /* FollowingViewController.swift in Sources */,
+				6313CB9E28F0176300E71BFB /* ProfileLikeListViewController.swift in Sources */,
 				63CB62102850A8DE0023638F /* CircleImageView.swift in Sources */,
 				634F867C28A63C8300CAE6BA /* AnalyticsUserProperty.swift in Sources */,
 				6313CB9828EFB3AD00E71BFB /* ProfilePageTabViewController.swift in Sources */,
@@ -588,7 +600,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.3;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.owaraiapp.rino.yamamoto.owaraimemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -612,7 +624,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.3;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.owaraiapp.rino.yamamoto.owaraimemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

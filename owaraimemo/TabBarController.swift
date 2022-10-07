@@ -7,9 +7,10 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // タブアイコンの色
-        self.tabBar.tintColor = UIColor.darkGray
+        self.tabBar.tintColor = UIColor.systemYellow
+        self.tabBar.unselectedItemTintColor = UIColor.white
         // タブバーの背景色
-        self.tabBar.barTintColor = UIColor.systemYellow
+        self.tabBar.barTintColor = #colorLiteral(red: 0.06914851636, green: 0.06914851636, blue: 0.06914851636, alpha: 1)
         // UITabBarControllerDelegateプロトコルのメソッドをこのクラスで処理する。
         self.delegate = self
                 
@@ -32,3 +33,4 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         }
 
 }
+

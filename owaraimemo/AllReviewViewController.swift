@@ -67,7 +67,7 @@ class AllReviewViewController: UIViewController {
                     dateFormatter.timeStyle = .short
                     dateFormatter.locale = Locale(identifier: "ja_JP")
                     
-                    dateFormatter.dateFormat = "yyyy/mm/dd hh:mm"
+                    dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
                     let created = document.data()["create_datetime"] as! Timestamp
                     let createdDate = created.dateValue()
                     let createdDateTime = dateFormatter.string(from: createdDate)
@@ -142,7 +142,6 @@ class AllReviewViewController: UIViewController {
             
             self.navigationController?.pushViewController(recLoginVC, animated: true)
             
-            hidesBottomBarWhenPushed = true
             
             //ログ
             AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,

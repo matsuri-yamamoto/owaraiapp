@@ -190,6 +190,61 @@ class SettingViewController: UIViewController {
                     }
                 }
             }
+            
+            //フォロー中のfollowを削除
+            self.db.collection("follow").whereField("following_user_id", isEqualTo: self.currentUser?.uid).getDocuments { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    
+                } else {
+                    
+                    for document in querySnapshot!.documents{
+                        
+                        var documentId :String
+                        documentId = document.documentID
+                        
+                        let existLikeReviewRef = self.db.collection("follow").document(documentId)
+                        existLikeReviewRef.updateData([
+                            "delete_flag": true,
+                            "delete_datetime": FieldValue.serverTimestamp(),
+                        ]) { err in
+                            if let err = err {
+                                print("Error updating document: \(err)")
+                            } else {
+                                print("Document successfully updated")
+                            }
+                        }
+                    }
+                }
+            }
+            
+            //フォローされているfollowを削除
+            self.db.collection("follow").whereField("followed_user_id", isEqualTo: self.currentUser?.uid).getDocuments { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    
+                } else {
+                    
+                    for document in querySnapshot!.documents{
+                        
+                        var documentId :String
+                        documentId = document.documentID
+                        
+                        let existLikeReviewRef = self.db.collection("follow").document(documentId)
+                        existLikeReviewRef.updateData([
+                            "delete_flag": true,
+                            "delete_datetime": FieldValue.serverTimestamp(),
+                        ]) { err in
+                            if let err = err {
+                                print("Error updating document: \(err)")
+                            } else {
+                                print("Document successfully updated")
+                            }
+                        }
+                    }
+                }
+            }
+
 
             
             //アカウントを削除

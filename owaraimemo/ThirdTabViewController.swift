@@ -8,6 +8,8 @@
 import UIKit
 import Firebase
 import FirebaseFirestore
+import FirebaseStorage
+
 
 class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
@@ -57,7 +59,9 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     
     let db = Firestore.firestore()
-    
+    //画像のパス
+    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,7 +95,6 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     override func viewDidAppear(_ animated: Bool) {
         
-        hidesBottomBarWhenPushed = true
         
         //pvログ
         AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .thirdTabVC))
@@ -331,6 +334,11 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
             cell.comedianImageView.contentMode = .scaleAspectFill
             cell.comedianImageView.clipsToBounds = true
             
+//            let imageRef = self.storage.child("comedian_image/\(comedianNameArrayId[indexPath.row]).jpg")
+//            cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+//            cell.comedianImageView.contentMode = .scaleAspectFill
+//            cell.comedianImageView.clipsToBounds = true
+            
             
         }
         
@@ -391,7 +399,6 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         comedianVC.comedianId = self.comedianNameArrayId[indexPath.row]
         self.comedianId = self.comedianNameArrayId[indexPath.row]
         self.navigationController?.pushViewController(comedianVC, animated: true)
-        hidesBottomBarWhenPushed = true
         
         AnalyticsUtil.sendAction(ActionEvent(screenName: .thirdTabVC,
                                              actionType: .tap,

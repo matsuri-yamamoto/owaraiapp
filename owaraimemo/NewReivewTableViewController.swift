@@ -72,7 +72,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                     dateFormatter.timeStyle = .short
                     dateFormatter.locale = Locale(identifier: "ja_JP")
                     
-                    dateFormatter.dateFormat = "yyyy/mm/dd hh:mm"
+                    dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
                     let updated = document.data()["update_datetime"] as! Timestamp
                     let updatedDate = updated.dateValue()
                     let updatedDateTime = dateFormatter.string(from: updatedDate)
@@ -106,7 +106,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 360
+        return 370
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -118,6 +118,8 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.userNameButton.contentHorizontalAlignment = .left
         cell.userNameButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14.0)
         cell.userNameButton.setTitle("　" + self.userNameArray[indexPath.row], for: .normal)
+        cell.userNameButton.addTarget(self, action: #selector(self.tappedUserNameButton(sender:)), for: .touchUpInside)
+        
         cell.userDisplayIdLabel.text = "　@" + self.userDisplayIdArray[indexPath.row] + " - " + self.reviewUpdateDatetimeArray[indexPath.row]
         
         cell.comedianNameButton.tag = indexPath.row
@@ -151,8 +153,13 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                     
                     if copyrightFlag == "true" {
                         
-                        let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
-                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+//                        let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
+//                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+                        
+                        cell.comedianImageView.image = UIImage(named: "\(self.comedianIdArray[indexPath.row])")
+//                        cell.comedianImageView.contentMode = .scaleAspectFill
+//                        cell.comedianImageView.clipsToBounds = true
+
                         
                     }
                     
@@ -189,6 +196,10 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.likeButton.addTarget(self, action: #selector(tappedLikeButton(sender:)), for: .touchUpInside)
 
         //likereviewをセット
+        
+        cell.likeCountButton.addTarget(self, action: #selector(tappedLikeCountButton(sender:)), for: .touchUpInside)
+
+        
         db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -197,10 +208,20 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
             } else {
                 //like_reviewドキュメントが0件の場合
                 if querySnapshot!.documents.count == 0 {
-                    cell.likeCountLabel.text = "いいね！はまだありません"
-                } else {
-                    cell.likeCountLabel.text = "\(querySnapshot!.documents.count)件のいいね！"
                     
+                    cell.likeCountButton.contentHorizontalAlignment = .left
+                    cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
+                    cell.likeCountButton.setTitle("いいね！はまだありません", for: .normal)
+                    
+                    cell.likeButton.setImage(self.unLikeImage, for: .normal)
+                    
+                } else {
+                    
+                    cell.likeCountButton.contentHorizontalAlignment = .left
+                    cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
+                    cell.likeCountButton.setTitle("\(querySnapshot!.documents.count)件のいいね！", for: .normal)
+
+                                        
                     //自分のlike_frag==trueのレビュー有無でレビューボタンの色を変える
                     self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_user_id", isEqualTo: self.currentUser?.uid as Any).whereField("like_flag", isEqualTo: true).getDocuments() { [self](querySnapshot, err) in
                         
@@ -224,6 +245,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                         }
                     }
                     
+                    
                 }
             }
         }
@@ -237,7 +259,6 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         
         allReviewVC.reviewId = self.reviewIdArray[indexPath.row]
         self.navigationController?.pushViewController(allReviewVC, animated: true)
-        hidesBottomBarWhenPushed = true
         
         self.tableView.deselectRow(at: indexPath, animated: true)
         
@@ -260,7 +281,6 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
             
             self.navigationController?.pushViewController(recLoginVC, animated: true)
             
-            hidesBottomBarWhenPushed = true
             
             //ログ
             AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
@@ -445,10 +465,22 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                                         
                                         //like_reviewの件数のラベル(cellで使用する)
                                         if querySnapshot!.documents.count == 0 {
-                                            cell.likeCountLabel.text = "いいね！はまだありません"
+                                            
+                                            
+                                            cell.likeCountButton.contentHorizontalAlignment = .left
+                                            cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
+                                            cell.likeCountButton.setTitle("いいね！はまだありません", for: .normal)
+                                            
+                                            cell.likeButton.setImage(self.unLikeImage, for: .normal)
+                                                                            
+                                            
 
                                         } else {
-                                            cell.likeCountLabel.text = "\(querySnapshot!.documents.count)件のいいね！"
+                                            
+                                            cell.likeCountButton.contentHorizontalAlignment = .left
+                                            cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
+                                            cell.likeCountButton.setTitle("\(querySnapshot!.documents.count)件のいいね！", for: .normal)
+
 
                                         }
 
@@ -477,12 +509,58 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         
         comedianVC.comedianId = tappedComedianId
         self.navigationController?.pushViewController(comedianVC, animated: true)
-        hidesBottomBarWhenPushed = true
+        
+        
+    }
+    
+    //いいね欄タップでfollowVCに遷移
+    @objc func tappedLikeCountButton(sender: UIButton) {
+        
+        
+        let buttonTag = sender.tag
+        let tappedReviewId = self.reviewIdArray[buttonTag]
+        
+        let button = sender
+        let cell = button.superview?.superview as! NewReviewTableViewCell
+        
+        //セルタップでレビュー全文に遷移
+        let followVC = storyboard?.instantiateViewController(withIdentifier: "FollowUser") as! FollowUserViewController
+        
+        followVC.reviewId = tappedReviewId
+        followVC.userType = "likeReview"
+        self.navigationController?.pushViewController(followVC, animated: true)
         
         
     }
     
     
+    
+    
     //ユーザーネームタップでプロフィールページに遷移
+    
+    @objc func tappedUserNameButton(sender: UIButton) {
+        
+        let buttonTag = sender.tag
+        let tappedUserId = self.userIdArray[buttonTag]
+        let tappedUserName = self.userNameArray[buttonTag]
+
+        
+        let button = sender
+        let cell = button.superview?.superview as! NewReviewTableViewCell
+
+
+        
+        //セルタップでプロフィールに遷移
+        let profileVC = storyboard?.instantiateViewController(withIdentifier: "ProfileTab") as! ProfilePageTabViewController
+
+        profileVC.userId = tappedUserId
+        profileVC.userName = tappedUserName
+
+        
+        
+        self.navigationController?.pushViewController(profileVC, animated: true)
+
+        
+    }
 }
  

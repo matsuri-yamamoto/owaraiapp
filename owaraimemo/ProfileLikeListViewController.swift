@@ -1,8 +1,8 @@
 //
-//  LikeListViewController.swift
+//  ProfileLikeListViewController.swift
 //  owaraimemo
 //
-//  Created by 山本梨野 on 2022/10/05.
+//  Created by 山本梨野 on 2022/10/07.
 //
 
 import UIKit
@@ -10,13 +10,13 @@ import FirebaseFirestore
 import FirebaseAuth
 import FirebaseStorageUI
 
+class ProfileLikeListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-class LikeListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
+    var profileUserId :String = ""
+
     @IBOutlet weak var tableView: UITableView!
-
+    
     let db = Firestore.firestore()
-    let currentUser = Auth.auth().currentUser
     
     var reviewIdArray: [String] = []
     var comedianIdArray: [String] = []
@@ -68,7 +68,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
         
         
         //自分がいいねしたreviewのidを参照する
-        self.db.collection("like_review").whereField("like_user_id", isEqualTo: currentUser?.uid).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { (querySnapshot, err) in
+        self.db.collection("like_review").whereField("like_user_id", isEqualTo: profileUserId).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { (querySnapshot, err) in
             
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -80,7 +80,6 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
                     self.reviewIdArray.append(document.data()["review_id"] as! String)
                     self.userIdArray.append(document.data()["review_user_id"] as! String)
                     self.userNameArray.append(document.data()["review_user_name"] as! String)
-
 
                     
                 }
@@ -143,7 +142,6 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
                     cell.userNameButton.contentHorizontalAlignment = .left
                     cell.userNameButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14.0)
                     cell.userNameButton.setTitle("　" + self.userName, for: .normal)
-
                     cell.userNameButton.addTarget(self, action: #selector(self.tappedUserNameButton(sender:)), for: .touchUpInside)
 
 
@@ -271,7 +269,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
                             cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
                             cell.likeCountButton.setTitle("\(querySnapshot!.documents.count)件のいいね！", for: .normal)
                             //自分のlike_frag==trueのレビュー有無でレビューボタンの色を変える
-                            self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_user_id", isEqualTo: self.currentUser?.uid as Any).whereField("like_flag", isEqualTo: true).getDocuments() { [self](querySnapshot, err) in
+                            self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_user_id", isEqualTo: self.profileUserId).whereField("like_flag", isEqualTo: true).getDocuments() { [self](querySnapshot, err) in
                                 
                                 if let err = err {
                                     print("Error getting documents: \(err)")
@@ -357,7 +355,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
         //likeしている状態の場合
         //likereviewレコードのflagがfalseになり、画像がlike前のものに切り替わる（cellのクラス側で設定）
         
-        db.collection("user_detail").whereField("user_id", isEqualTo: currentUser?.uid as Any).getDocuments() {(querySnapshot, err) in
+        db.collection("user_detail").whereField("user_id", isEqualTo: profileUserId).getDocuments() {(querySnapshot, err) in
             
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -405,7 +403,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
 
                     
                     //すでに自分がいいねしたことがあるレビューかどうかをチェック
-                    self.db.collection("like_review").whereField("review_id", isEqualTo: tappedReviewId).whereField("like_user_id", isEqualTo: self.currentUser?.uid as Any).getDocuments() {(querySnapshot, err) in
+                    self.db.collection("like_review").whereField("review_id", isEqualTo: tappedReviewId).whereField("like_user_id", isEqualTo: self.profileUserId).getDocuments() {(querySnapshot, err) in
                         
                         if let err = err {
                             print("Error getting documents: \(err)")
@@ -523,7 +521,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-//    //芸人名タップでcomedianDetailに遷移
+    //芸人名タップでcomedianDetailに遷移
 //    @objc func tappedcomedianButton(sender: UIButton) {
 //
 //
@@ -563,7 +561,6 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     //ユーザーネームタップでプロフィールページに遷移
-    
     @objc func tappedUserNameButton(sender: UIButton) {
         
         let buttonTag = sender.tag
@@ -588,5 +585,6 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
 
         
     }
-    
+
+
 }

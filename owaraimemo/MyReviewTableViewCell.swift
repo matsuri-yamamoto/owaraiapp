@@ -15,8 +15,7 @@ class MyReviewTableViewCell: UITableViewCell {
     @IBOutlet weak var scoreImageView: UIImageView!
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var comedianImageView: UIImageView!
-    @IBOutlet weak var continuationButton: UIButton!
-    @IBOutlet weak var likeCountLabel: UILabel!
+    @IBOutlet weak var likeCountButton: UIButton!
     
 //    @IBOutlet weak var beforeRelationalLabel: UILabel!
 //    @IBOutlet weak var relationalComedianLabel: UILabel!

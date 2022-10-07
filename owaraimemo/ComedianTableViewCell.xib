@@ -17,14 +17,19 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wvd-RI-V9i">
-                        <rect key="frame" x="26" y="12" width="270" height="21"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wvd-RI-V9i">
+                        <rect key="frame" x="26" y="12" width="268" height="20"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="wvd-RI-V9i" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="12" id="9AW-Tj-1kK"/>
+                    <constraint firstItem="wvd-RI-V9i" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="26" id="ET4-Oj-mfW"/>
+                    <constraint firstAttribute="bottom" secondItem="wvd-RI-V9i" secondAttribute="bottom" constant="12" id="cYG-ef-o8S"/>
+                    <constraint firstAttribute="trailing" secondItem="wvd-RI-V9i" secondAttribute="trailing" constant="26" id="dMC-2i-ioC"/>
+                </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>

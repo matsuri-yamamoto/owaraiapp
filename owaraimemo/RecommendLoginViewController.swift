@@ -26,6 +26,7 @@ class RecommendLoginViewController: UIViewController {
     @IBOutlet weak var mailNewButton: UIButton!
     
     var backAnotherButton: UIBarButtonItem!
+    var backButton: UIBarButtonItem!
     
     
     override func viewDidLoad() {
@@ -35,19 +36,24 @@ class RecommendLoginViewController: UIViewController {
         
         self.tabBarController?.tabBar.isHidden = true
         
-        let count = (self.navigationController?.viewControllers.count)! - 2
-        if self.navigationController?.viewControllers[count] is MyReviewViewController {
+//        let count = (self.navigationController?.viewControllers.count)! - 2
+//
+//        if self.navigationController?.viewControllers[count] is MyPageTabViewController {
             
             self.navigationItem.hidesBackButton = true
             backAnotherButton = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(backAnotherButtonTapped(_:)))
             self.navigationItem.rightBarButtonItems = [backAnotherButton]
             
         
-            } else {
-                
-                return
-                
-            }
+//        } else {
+//
+//            return
+            
+//        }
+        
+        
+        
+        
         
 //        self.twitterLoginButton.layer.cornerRadius = 8
 //        self.twitterLoginButton.clipsToBounds = true

@@ -13,7 +13,7 @@ class NewReviewTabViewController: TabmanViewController {
         self.dataSource = self
         
         self.navigationItem.hidesBackButton = true
-        self.title = "タイムライン"
+        self.title = "ホーム"
         
         
         

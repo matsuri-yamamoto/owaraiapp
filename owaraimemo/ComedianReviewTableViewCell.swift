@@ -12,13 +12,13 @@ import Firebase
 class ComedianReviewTableViewCell: UITableViewCell {
     
 //    @IBOutlet weak var userImageView: CircleImageView!
-    @IBOutlet weak var userNameLabel: UILabel!
+    @IBOutlet weak var userNameButton: UIButton!
     @IBOutlet weak var userIdLabel: UILabel!
     @IBOutlet weak var createdLabel: UILabel!
     @IBOutlet weak var scoreImageView: UIImageView!
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var likeButton: UIButton!
-    @IBOutlet weak var likeCountLabel: UILabel!
+    @IBOutlet weak var likeCountButton: UIButton!
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var continuationLabel: UILabel!
     
