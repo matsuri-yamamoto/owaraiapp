@@ -18,6 +18,8 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderLabel: UILabel!
     @IBOutlet weak var comedianTextField: MultiAutoCompleteTextField!
+    @IBOutlet weak var relationalComedianTextField: MultiAutoCompleteTextField!
+    
     
     @IBOutlet weak var tweetButton: UIButton!
     @IBOutlet weak var twitterImageView: UIImageView!
@@ -86,6 +88,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                     for document in querySnapshot!.documents {
                         self.slider.value = document.get("score") as! Float
                         self.textView.text = document.get("comment") as? String
+                        self.relationalComedianTextField.text = document.get("relational_comedian_listname") as? String
                         
                         let sliderDoubleValue = Double(self.slider.value)
                         self.sliderLabel.text = String(format: "%.1f", sliderDoubleValue)
@@ -154,90 +157,244 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
     
     
     @IBAction func tappedSaveButton(_ sender: Any) {
-        //値の置換
-        let score:Double = Double(slider.value)
-        let textView:String = String(textView.text)
         
-        //渡されるデータの定義
-        let userId = Auth.auth().currentUser?.uid
-        let userName = Auth.auth().currentUser?.displayName
         
-        let deleteDateTime :String? = nil
-        var documentID :String?
-        var displayId :String?
-        
-        //ニックネームの取得
-        Firestore.firestore().collection("user_detail").whereField("user_id", isEqualTo: currentUser?.uid).getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
+        if (self.sliderLabel.text == "0" || self.sliderLabel.text == "0.0") {
+            
+            //アラート生成
+            //UIAlertControllerのスタイルがalert
+            let alert: UIAlertController = UIAlertController(title: "ツボった度が0点です", message:  "入力漏れの場合はキャンセルしツボった度を入力してください", preferredStyle:  UIAlertController.Style.alert)
+            
+            // 確定ボタンの処理
+            let confirmAction: UIAlertAction = UIAlertAction(title: "保存", style: UIAlertAction.Style.default, handler:{
+                // 確定ボタンが押された時の処理をクロージャ実装する
+                (action: UIAlertAction!) -> Void in
                 
-            } else {
-                print("件数:\(querySnapshot?.documents.count)")
+                //値の置換
+                let score:Double = Double(self.slider.value)
+                let textView:String = String(self.textView.text)
                 
-                for document in querySnapshot!.documents {
-                    displayId = document.get("display_id") as? String
-                    print("displayId:\(displayId)")
+                //渡されるデータの定義
+                let userId = Auth.auth().currentUser?.uid
+                let userName = Auth.auth().currentUser?.displayName
+                
+                let deleteDateTime :String? = nil
+                var documentID :String?
+                var displayId :String?
+                
+                //ニックネームの取得
+                Firestore.firestore().collection("user_detail").whereField("user_id", isEqualTo: self.currentUser?.uid).getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                        
+                    } else {
+                        print("件数:\(querySnapshot?.documents.count)")
+                        
+                        for document in querySnapshot!.documents {
+                            displayId = document.get("display_id") as? String
+                            print("displayId:\(displayId)")
 
-                    //user_id=currentUserかつcomedian_idが前画面から渡されたidであるreviewドキュメントを探す
-                    //該当ドキュメントがあればdocumentidを取得し、なければ"doesNotExist"を入れる
-                    
-                    Firestore.firestore().collection("review").whereField("user_id", isEqualTo: self.currentUser?.uid).whereField("comedian_id", isEqualTo: self.comedianID).getDocuments() { (querySnapshot, err) in
-                        if let err = err {
-                            print("Error getting documents: \(err)")
+                            //user_id=currentUserかつcomedian_idが前画面から渡されたidであるreviewドキュメントを探す
+                            //該当ドキュメントがあればdocumentidを取得し、なければ"doesNotExist"を入れる
                             
-                        } else {
-                            for document in querySnapshot!.documents {
-                                documentID = document.documentID
+                            Firestore.firestore().collection("review").whereField("user_id", isEqualTo: self.currentUser?.uid).whereField("comedian_id", isEqualTo: self.comedianID).getDocuments() { (querySnapshot, err) in
+                                if let err = err {
+                                    print("Error getting documents: \(err)")
+                                    
+                                } else {
+                                    for document in querySnapshot!.documents {
+                                        documentID = document.documentID
+                                    }
+                                    
+                                    //ドキュメントidがnilの場合、レビューを書いたことがないということなので新しくレビューを作成する
+                                    if documentID == nil {
+                                        let reviewRef = Firestore.firestore().collection("review").document()
+                                        let reviewDic = [
+                                            "user_id": userId!,
+                                            "display_id": displayId!,
+                                            "user_name": userName!,
+                                            "comedian_id": self.comedianID,
+                                            "comedian_display_name": self.comedianName,
+                                            "score": score,
+                                            "comment": textView,
+                                            "tag_1": self.tag1,
+                                            "tag_2": self.tag2,
+                                            "tag_3": self.tag3,
+                                            "tag_4": self.tag4,
+                                            "tag_5": self.tag5,
+                                            "private_flag": false,
+                                            "relational_comedian_listname": self.comedianTextField.text!,
+                                            "create_datetime": FieldValue.serverTimestamp(),
+                                            "update_datetime": FieldValue.serverTimestamp(),
+                                            "delete_flag": false,
+                                            "delete_datetime": deleteDateTime,
+                                        ] as [String : Any]
+                                        reviewRef.setData(reviewDic)
+                                        self.dismiss(animated: true)
+                                        
+                                    } else {
+                                        //nilじゃなかったら、該当ドキュメントのidを持ってくる
+                                        for document in querySnapshot!.documents {
+                                            print("\(document.documentID) => \(document.data())")
+                                            documentID = document.documentID
+                                            
+                                            //ドキュメントidがnilでない場合、レビューを書いたことがあるということなのでドキュメントを更新する
+                                            let existReviewRef = Firestore.firestore().collection("review").document(documentID!)
+                                            existReviewRef.updateData([
+                                                "display_id": displayId!,
+                                                "user_name": userName!,
+                                                "score": score,
+                                                "comment": textView,
+                                                "private_flag": false,
+                                                "relational_comedian_listname": self.comedianTextField.text!,
+                                                "update_datetime": FieldValue.serverTimestamp(),
+                                            ]) { err in
+                                                if let err = err {
+                                                    print("Error updating document: \(err)")
+                                                } else {
+                                                    print("Document successfully updated")
+                                                    self.dismiss(animated: true)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                            
-                            //ドキュメントidがnilの場合、レビューを書いたことがないということなので新しくレビューを作成する
-                            if documentID == nil {
-                                let reviewRef = Firestore.firestore().collection("review").document()
-                                let reviewDic = [
-                                    "user_id": userId!,
-                                    "display_id": displayId!,
-                                    "user_name": userName!,
-                                    "comedian_id": self.comedianID,
-                                    "comedian_display_name": self.comedianName,
-                                    "score": score,
-                                    "comment": textView,
-                                    "tag_1": self.tag1,
-                                    "tag_2": self.tag2,
-                                    "tag_3": self.tag3,
-                                    "tag_4": self.tag4,
-                                    "tag_5": self.tag5,
-                                    "private_flag": false,
-                                    "relational_comedian_listname": self.comedianTextField.text!,
-                                    "create_datetime": FieldValue.serverTimestamp(),
-                                    "update_datetime": FieldValue.serverTimestamp(),
-                                    "delete_flag": false,
-                                    "delete_datetime": deleteDateTime,
-                                ] as [String : Any]
-                                reviewRef.setData(reviewDic)
-                                self.dismiss(animated: true)
+                        }
+                    }
+                    
+                }
+                
+                //TwitterフラグがtrueならばTwitterを起動
+                if self.twitterShareFlag == true {
+                    self.shareOnTwitter()
+                    
+                    //ログ
+                    AnalyticsUtil.sendAction(ActionEvent(screenName: .reviewVC,
+                                                                 actionType: .tap,
+                                                         actionLabel: .template(ActionLabelTemplate.reviewSaveButtonTap_shareTwitter)))
+
+                }
+                
+                if self.twitterShareFlag == false {
+                    
+                    //ログ
+                    AnalyticsUtil.sendAction(ActionEvent(screenName: .reviewVC,
+                                                                 actionType: .tap,
+                                                         actionLabel: .template(ActionLabelTemplate.reviewSaveButtonTap_noTwitter)))
+                    
+                    return
+                }
+                
+                
+                
+            })
+            
+            // キャンセルボタンの処理
+            let cancelAction: UIAlertAction = UIAlertAction(title: "キャンセル", style: UIAlertAction.Style.cancel, handler:{
+                // キャンセルボタンが押された時の処理をクロージャ実装する
+                (action: UIAlertAction!) -> Void in
+                //実際の処理
+                print("キャンセル")
+                return
+
+            })
+            
+            //UIAlertControllerにキャンセルボタンと確定ボタンをActionを追加
+            alert.addAction(cancelAction)
+            alert.addAction(confirmAction)
+            
+            //実際にAlertを表示する
+            present(alert, animated: true, completion: nil)
+                                                             
+            
+        } else {
+        
+            //値の置換
+            let score:Double = Double(slider.value)
+            let textView:String = String(textView.text)
+            
+            //渡されるデータの定義
+            let userId = Auth.auth().currentUser?.uid
+            let userName = Auth.auth().currentUser?.displayName
+            
+            let deleteDateTime :String? = nil
+            var documentID :String?
+            var displayId :String?
+            
+            //ニックネームの取得
+            Firestore.firestore().collection("user_detail").whereField("user_id", isEqualTo: currentUser?.uid).getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    
+                } else {
+                    print("件数:\(querySnapshot?.documents.count)")
+                    
+                    for document in querySnapshot!.documents {
+                        displayId = document.get("display_id") as? String
+                        print("displayId:\(displayId)")
+
+                        //user_id=currentUserかつcomedian_idが前画面から渡されたidであるreviewドキュメントを探す
+                        //該当ドキュメントがあればdocumentidを取得し、なければ"doesNotExist"を入れる
+                        
+                        Firestore.firestore().collection("review").whereField("user_id", isEqualTo: self.currentUser?.uid).whereField("comedian_id", isEqualTo: self.comedianID).getDocuments() { (querySnapshot, err) in
+                            if let err = err {
+                                print("Error getting documents: \(err)")
                                 
                             } else {
-                                //nilじゃなかったら、該当ドキュメントのidを持ってくる
                                 for document in querySnapshot!.documents {
-                                    print("\(document.documentID) => \(document.data())")
                                     documentID = document.documentID
-                                    
-                                    //ドキュメントidがnilでない場合、レビューを書いたことがあるということなのでドキュメントを更新する
-                                    let existReviewRef = Firestore.firestore().collection("review").document(documentID!)
-                                    existReviewRef.updateData([
+                                }
+                                
+                                //ドキュメントidがnilの場合、レビューを書いたことがないということなので新しくレビューを作成する
+                                if documentID == nil {
+                                    let reviewRef = Firestore.firestore().collection("review").document()
+                                    let reviewDic = [
+                                        "user_id": userId!,
                                         "display_id": displayId!,
                                         "user_name": userName!,
+                                        "comedian_id": self.comedianID,
+                                        "comedian_display_name": self.comedianName,
                                         "score": score,
                                         "comment": textView,
+                                        "tag_1": self.tag1,
+                                        "tag_2": self.tag2,
+                                        "tag_3": self.tag3,
+                                        "tag_4": self.tag4,
+                                        "tag_5": self.tag5,
                                         "private_flag": false,
                                         "relational_comedian_listname": self.comedianTextField.text!,
+                                        "create_datetime": FieldValue.serverTimestamp(),
                                         "update_datetime": FieldValue.serverTimestamp(),
-                                    ]) { err in
-                                        if let err = err {
-                                            print("Error updating document: \(err)")
-                                        } else {
-                                            print("Document successfully updated")
-                                            self.dismiss(animated: true)
+                                        "delete_flag": false,
+                                        "delete_datetime": deleteDateTime,
+                                    ] as [String : Any]
+                                    reviewRef.setData(reviewDic)
+                                    self.dismiss(animated: true)
+                                    
+                                } else {
+                                    //nilじゃなかったら、該当ドキュメントのidを持ってくる
+                                    for document in querySnapshot!.documents {
+                                        print("\(document.documentID) => \(document.data())")
+                                        documentID = document.documentID
+                                        
+                                        //ドキュメントidがnilでない場合、レビューを書いたことがあるということなのでドキュメントを更新する
+                                        let existReviewRef = Firestore.firestore().collection("review").document(documentID!)
+                                        existReviewRef.updateData([
+                                            "display_id": displayId!,
+                                            "user_name": userName!,
+                                            "score": score,
+                                            "comment": textView,
+                                            "private_flag": false,
+                                            "relational_comedian_listname": self.comedianTextField.text!,
+                                            "update_datetime": FieldValue.serverTimestamp(),
+                                        ]) { err in
+                                            if let err = err {
+                                                print("Error updating document: \(err)")
+                                            } else {
+                                                print("Document successfully updated")
+                                                self.dismiss(animated: true)
+                                            }
                                         }
                                     }
                                 }
@@ -245,117 +402,244 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                         }
                     }
                 }
+                
             }
             
-        }
-        
-        //TwitterフラグがtrueならばTwitterを起動
-        if twitterShareFlag == true {
-            shareOnTwitter()
-            
-            //ログ
-            AnalyticsUtil.sendAction(ActionEvent(screenName: .reviewVC,
-                                                         actionType: .tap,
-                                                 actionLabel: .template(ActionLabelTemplate.reviewSaveButtonTap_shareTwitter)))
+            //TwitterフラグがtrueならばTwitterを起動
+            if twitterShareFlag == true {
+                shareOnTwitter()
+                
+                //ログ
+                AnalyticsUtil.sendAction(ActionEvent(screenName: .reviewVC,
+                                                             actionType: .tap,
+                                                     actionLabel: .template(ActionLabelTemplate.reviewSaveButtonTap_shareTwitter)))
 
-        }
-        
-        if twitterShareFlag == false {
+            }
             
-            //ログ
-            AnalyticsUtil.sendAction(ActionEvent(screenName: .reviewVC,
-                                                         actionType: .tap,
-                                                 actionLabel: .template(ActionLabelTemplate.reviewSaveButtonTap_noTwitter)))
-            
-            return
+            if twitterShareFlag == false {
+                
+                //ログ
+                AnalyticsUtil.sendAction(ActionEvent(screenName: .reviewVC,
+                                                             actionType: .tap,
+                                                     actionLabel: .template(ActionLabelTemplate.reviewSaveButtonTap_noTwitter)))
+                
+                return
+            }
         }
     }
     
     @IBAction func tappedPrivateSaveButton(_ sender: Any) {
         
         
-        //値の置換
-        let score:Double = Double(slider.value)
-        let textView:String = String(textView.text)
-        
-        //渡されるデータの定義
-        let userId = Auth.auth().currentUser?.uid
-        let userName = Auth.auth().currentUser?.displayName
-        
-        let deleteDateTime :String? = nil
-        var documentID :String?
-        var displayId :String?
-        
-        //ニックネームの取得
-        Firestore.firestore().collection("user_detail").whereField("user_id", isEqualTo: currentUser?.uid).getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
+        if (self.sliderLabel.text == "0" || self.sliderLabel.text == "0.0") {
+            
+            //アラート生成
+            //UIAlertControllerのスタイルがalert
+            let alert: UIAlertController = UIAlertController(title: "ツボった度が0点です", message:  "入力漏れの場合はキャンセルしツボった度を入力してください", preferredStyle:  UIAlertController.Style.alert)
+            
+            // 確定ボタンの処理
+            let confirmAction: UIAlertAction = UIAlertAction(title: "保存", style: UIAlertAction.Style.default, handler:{
+                // 確定ボタンが押された時の処理をクロージャ実装する
+                (action: UIAlertAction!) -> Void in
                 
-            } else {
-                for document in querySnapshot!.documents {
-                    displayId = document.data()["display_id"] as? String
-                    print("displayId:\(displayId)")
-                    
-                    //user_id=currentUserかつcomedian_idが前画面から渡されたidであるreviewドキュメントを探す
-                    //該当ドキュメントがあればdocumentidを取得し、なければ"doesNotExist"を入れる
-                    
-                    Firestore.firestore().collection("review").whereField("user_id", isEqualTo: self.currentUser?.uid).whereField("comedian_id", isEqualTo: self.comedianID).getDocuments() { (querySnapshot, err) in
-                        if let err = err {
-                            print("Error getting documents: \(err)")
+                
+                //値の置換
+                let score:Double = Double(self.slider.value)
+                let textView:String = String(self.textView.text)
+                
+                //渡されるデータの定義
+                let userId = Auth.auth().currentUser?.uid
+                let userName = Auth.auth().currentUser?.displayName
+                
+                let deleteDateTime :String? = nil
+                var documentID :String?
+                var displayId :String?
+                
+                //ニックネームの取得
+                Firestore.firestore().collection("user_detail").whereField("user_id", isEqualTo: self.currentUser?.uid).getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                        
+                    } else {
+                        for document in querySnapshot!.documents {
+                            displayId = document.data()["display_id"] as? String
+                            print("displayId:\(displayId)")
                             
-                        } else {
-                            for document in querySnapshot!.documents {
-                                documentID = document.documentID
+                            //user_id=currentUserかつcomedian_idが前画面から渡されたidであるreviewドキュメントを探す
+                            //該当ドキュメントがあればdocumentidを取得し、なければ"doesNotExist"を入れる
+                            
+                            Firestore.firestore().collection("review").whereField("user_id", isEqualTo: self.currentUser?.uid).whereField("comedian_id", isEqualTo: self.comedianID).getDocuments() { (querySnapshot, err) in
+                                if let err = err {
+                                    print("Error getting documents: \(err)")
+                                    
+                                } else {
+                                    for document in querySnapshot!.documents {
+                                        documentID = document.documentID
+                                    }
+                                                                
+                                    //ドキュメントidがnilの場合、レビューを書いたことがないということなので新しくレビューを作成する
+                                    if documentID == nil {
+                                        let reviewRef = Firestore.firestore().collection("review").document()
+                                        let reviewDic = [
+                                            "user_id": userId!,
+                                            "display_id": displayId! as String,
+                                            "user_name": userName!,
+                                            "comedian_id": self.comedianID,
+                                            "comedian_display_name": self.comedianName,
+                                            "score": score,
+                                            "comment": textView,
+                                            "tag_1": self.tag1,
+                                            "tag_2": self.tag2,
+                                            "tag_3": self.tag3,
+                                            "tag_4": self.tag4,
+                                            "tag_5": self.tag5,
+                                            "private_flag": true,
+                                            "relational_comedian_listname": self.comedianTextField.text!,
+                                            "create_datetime": FieldValue.serverTimestamp(),
+                                            "update_datetime": FieldValue.serverTimestamp(),
+                                            "delete_flag": false,
+                                            "delete_datetime": deleteDateTime,
+                                        ] as [String : Any]
+                                        reviewRef.setData(reviewDic)
+                                        self.dismiss(animated: true)
+                                        
+                                    } else {
+                                        //nilじゃなかったら、該当ドキュメントのidを持ってくる
+                                        for document in querySnapshot!.documents {
+                                            print("\(document.documentID) => \(document.data())")
+                                            documentID = document.documentID
+                                            
+                                            //ドキュメントidがnilでない場合、レビューを書いたことがあるということなのでドキュメントを更新する
+                                            let existReviewRef = Firestore.firestore().collection("review").document(documentID!)
+                                            existReviewRef.updateData([
+                                                "display_id": displayId!,
+                                                "user_name": userName!,
+                                                "score": score,
+                                                "comment": textView,
+                                                "private_flag": true,
+                                                "relational_comedian_listname": self.comedianTextField.text!,
+                                                "update_datetime": FieldValue.serverTimestamp(),
+                                            ]) { err in
+                                                if let err = err {
+                                                    print("Error updating document: \(err)")
+                                                } else {
+                                                    print("Document successfully updated")
+                                                    self.dismiss(animated: true)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                                                        
-                            //ドキュメントidがnilの場合、レビューを書いたことがないということなので新しくレビューを作成する
-                            if documentID == nil {
-                                let reviewRef = Firestore.firestore().collection("review").document()
-                                let reviewDic = [
-                                    "user_id": userId!,
-                                    "display_id": displayId! as String,
-                                    "user_name": userName!,
-                                    "comedian_id": self.comedianID,
-                                    "comedian_display_name": self.comedianName,
-                                    "score": score,
-                                    "comment": textView,
-                                    "tag_1": self.tag1,
-                                    "tag_2": self.tag2,
-                                    "tag_3": self.tag3,
-                                    "tag_4": self.tag4,
-                                    "tag_5": self.tag5,
-                                    "private_flag": true,
-                                    "relational_comedian_listname": self.comedianTextField.text!,
-                                    "create_datetime": FieldValue.serverTimestamp(),
-                                    "update_datetime": FieldValue.serverTimestamp(),
-                                    "delete_flag": false,
-                                    "delete_datetime": deleteDateTime,
-                                ] as [String : Any]
-                                reviewRef.setData(reviewDic)
-                                self.dismiss(animated: true)
+                        }
+                    }
+                }
+            })
+            
+            // キャンセルボタンの処理
+            let cancelAction: UIAlertAction = UIAlertAction(title: "キャンセル", style: UIAlertAction.Style.cancel, handler:{
+                // キャンセルボタンが押された時の処理をクロージャ実装する
+                (action: UIAlertAction!) -> Void in
+                //実際の処理
+                print("キャンセル")
+                return
+
+            })
+            
+            //UIAlertControllerにキャンセルボタンと確定ボタンをActionを追加
+            alert.addAction(cancelAction)
+            alert.addAction(confirmAction)
+            
+            //実際にAlertを表示する
+            present(alert, animated: true, completion: nil)
+
+            
+        } else {
+        
+        
+            //値の置換
+            let score:Double = Double(slider.value)
+            let textView:String = String(textView.text)
+            
+            //渡されるデータの定義
+            let userId = Auth.auth().currentUser?.uid
+            let userName = Auth.auth().currentUser?.displayName
+            
+            let deleteDateTime :String? = nil
+            var documentID :String?
+            var displayId :String?
+            
+            //ニックネームの取得
+            Firestore.firestore().collection("user_detail").whereField("user_id", isEqualTo: currentUser?.uid).getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    
+                } else {
+                    for document in querySnapshot!.documents {
+                        displayId = document.data()["display_id"] as? String
+                        print("displayId:\(displayId)")
+                        
+                        //user_id=currentUserかつcomedian_idが前画面から渡されたidであるreviewドキュメントを探す
+                        //該当ドキュメントがあればdocumentidを取得し、なければ"doesNotExist"を入れる
+                        
+                        Firestore.firestore().collection("review").whereField("user_id", isEqualTo: self.currentUser?.uid).whereField("comedian_id", isEqualTo: self.comedianID).getDocuments() { (querySnapshot, err) in
+                            if let err = err {
+                                print("Error getting documents: \(err)")
                                 
                             } else {
-                                //nilじゃなかったら、該当ドキュメントのidを持ってくる
                                 for document in querySnapshot!.documents {
-                                    print("\(document.documentID) => \(document.data())")
                                     documentID = document.documentID
-                                    
-                                    //ドキュメントidがnilでない場合、レビューを書いたことがあるということなのでドキュメントを更新する
-                                    let existReviewRef = Firestore.firestore().collection("review").document(documentID!)
-                                    existReviewRef.updateData([
-                                        "display_id": displayId!,
+                                }
+                                                            
+                                //ドキュメントidがnilの場合、レビューを書いたことがないということなので新しくレビューを作成する
+                                if documentID == nil {
+                                    let reviewRef = Firestore.firestore().collection("review").document()
+                                    let reviewDic = [
+                                        "user_id": userId!,
+                                        "display_id": displayId! as String,
                                         "user_name": userName!,
+                                        "comedian_id": self.comedianID,
+                                        "comedian_display_name": self.comedianName,
                                         "score": score,
                                         "comment": textView,
+                                        "tag_1": self.tag1,
+                                        "tag_2": self.tag2,
+                                        "tag_3": self.tag3,
+                                        "tag_4": self.tag4,
+                                        "tag_5": self.tag5,
                                         "private_flag": true,
                                         "relational_comedian_listname": self.comedianTextField.text!,
+                                        "create_datetime": FieldValue.serverTimestamp(),
                                         "update_datetime": FieldValue.serverTimestamp(),
-                                    ]) { err in
-                                        if let err = err {
-                                            print("Error updating document: \(err)")
-                                        } else {
-                                            print("Document successfully updated")
-                                            self.dismiss(animated: true)
+                                        "delete_flag": false,
+                                        "delete_datetime": deleteDateTime,
+                                    ] as [String : Any]
+                                    reviewRef.setData(reviewDic)
+                                    self.dismiss(animated: true)
+                                    
+                                } else {
+                                    //nilじゃなかったら、該当ドキュメントのidを持ってくる
+                                    for document in querySnapshot!.documents {
+                                        print("\(document.documentID) => \(document.data())")
+                                        documentID = document.documentID
+                                        
+                                        //ドキュメントidがnilでない場合、レビューを書いたことがあるということなのでドキュメントを更新する
+                                        let existReviewRef = Firestore.firestore().collection("review").document(documentID!)
+                                        existReviewRef.updateData([
+                                            "display_id": displayId!,
+                                            "user_name": userName!,
+                                            "score": score,
+                                            "comment": textView,
+                                            "private_flag": true,
+                                            "relational_comedian_listname": self.comedianTextField.text!,
+                                            "update_datetime": FieldValue.serverTimestamp(),
+                                        ]) { err in
+                                            if let err = err {
+                                                print("Error updating document: \(err)")
+                                            } else {
+                                                print("Document successfully updated")
+                                                self.dismiss(animated: true)
+                                            }
                                         }
                                     }
                                 }
@@ -370,7 +654,6 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
         AnalyticsUtil.sendAction(ActionEvent(screenName: .reviewVC,
                                                      actionType: .tap,
                                              actionLabel: .template(ActionLabelTemplate.reviewPrivateSaveButtonTap)))
-        
     }
     
     

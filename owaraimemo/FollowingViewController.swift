@@ -142,7 +142,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
         
         print("followedUserArray1:\(self.followedUserArray1)")
         
-        self.db.collection("review").whereField("user_id", isEqualTo: self.followedUserArray1).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
+        self.db.collection("review").whereField("user_id", in: self.followedUserArray1).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
             
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -157,9 +157,10 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                     
                 }
                 
+                
                 if self.followedUserArray2 != [] {
                     
-                    self.db.collection("review").whereField("user_id", isEqualTo: self.followedUserArray2).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
+                    self.db.collection("review").whereField("user_id", in: self.followedUserArray2).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
                         
                         if let err = err {
                             print("Error getting documents: \(err)")
@@ -172,10 +173,11 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                                 self.reviewIdArray += self.reviewIdArray2
                                 
                             }
+
                             
                             if self.followedUserArray3 != [] {
                                 
-                                self.db.collection("review").whereField("user_id", isEqualTo: self.followedUserArray3).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
+                                self.db.collection("review").whereField("user_id", in: self.followedUserArray3).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
                                     
                                     if let err = err {
                                         print("Error getting documents: \(err)")
@@ -188,10 +190,11 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                                             self.reviewIdArray += self.reviewIdArray3
 
                                         }
+
                                         
                                         if self.followedUserArray4 != [] {
                                             
-                                            self.db.collection("review").whereField("user_id", isEqualTo: self.followedUserArray4).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
+                                            self.db.collection("review").whereField("user_id", in: self.followedUserArray4).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
                                                 
                                                 if let err = err {
                                                     print("Error getting documents: \(err)")
@@ -205,10 +208,11 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
 
 
                                                     }
+
                                                     
                                                     if self.followedUserArray5 != [] {
                                                         
-                                                        self.db.collection("review").whereField("user_id", isEqualTo: self.followedUserArray5).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
+                                                        self.db.collection("review").whereField("user_id", in: self.followedUserArray5).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
                                                             
                                                             if let err = err {
                                                                 print("Error getting documents: \(err)")
@@ -223,6 +227,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
 
                                                                     
                                                                 }
+
                                                             }
                                                         }
                                                 }
@@ -246,11 +251,10 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                     }
                     
                 }
+                self.tableView.reloadData()
                 
             }
-            
-            self.tableView.reloadData()
-
+                        
         }
                 
     }
@@ -270,7 +274,11 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewReviewCell", for: indexPath) as! NewReviewTableViewCell
         
-        db.collection("review").whereField(FieldPath.documentID(), isEqualTo: self.reviewIdArray[indexPath.row]).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).getDocuments() { (querySnapshot, err) in
+        self.reviewId = self.reviewIdArray[indexPath.row]
+        print("following_reviewId:\(self.reviewId)")
+
+        
+        db.collection("review").whereField(FieldPath.documentID(), isEqualTo: self.reviewId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).getDocuments() { (querySnapshot, err) in
             
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -279,7 +287,6 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
             } else {
                 for document in querySnapshot!.documents {
                     
-                    self.reviewId = document.documentID
                     self.userId = document.data()["user_id"] as! String
                     self.comedianId = document.data()["comedian_id"] as! String
  
@@ -315,7 +322,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                     cell.comedianNameButton.setTitle("　" + self.comedianName, for: .normal)
                     
 
-                    self.score = document.data()["score"] as! String
+                    self.score = String(document.data()["score"] as! Float)
                     cell.scoreLabel.text = self.score
                     cell.scoreImageView.image = UIImage(named: "score_\(self.score)")
 
@@ -333,7 +340,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                 }
                                                 
                 //copyrightflagを取得して画像をセット
-                self.db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: self.comedianIdArray[indexPath.row]).getDocuments() {(querySnapshot, err) in
+                self.db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: self.comedianId).getDocuments() {(querySnapshot, err) in
                     if let err = err {
                         print("Error getting documents: \(err)")
                         return
@@ -345,7 +352,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                             
                             if copyrightFlag == "true" {
                                 
-                                let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
+                                let imageRef = self.storage.child("comedian_image/\(self.comedianId).jpg")
                                 cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
                                 
                             }
@@ -433,7 +440,6 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                 }
             }
         }
-        self.tableView.reloadData()
         return cell
 
     }

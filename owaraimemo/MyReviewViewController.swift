@@ -10,17 +10,18 @@ var settingButtonItem: UIBarButtonItem!
 
 class MyReviewViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var tableView: UITableView!
-        
     
 //    @IBOutlet weak var userNameLabel: UILabel!
-//    @IBOutlet weak var userIdLabel: UILabel!
+//    @IBOutlet weak var userDisplayIdLabel: UILabel!
+//
+//    @IBOutlet weak var followingButton: UIButton!
+//    @IBOutlet weak var followedButton: UIButton!
+
     
-//    @IBOutlet weak var reviewButtonWidth: NSLayoutConstraint!
     
-    
-    
+    @IBOutlet weak var tableView: UITableView!
         
+            
     var comedianNameArray: [String] = []
 //    var comedianNameUniqueArray: [String] = []
 
@@ -121,6 +122,7 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
                         self.updatedArray.append(updatedDateTime)
                         
                         self.scoreArray.append(document.data()["score"] as! Double)
+
                         self.commentArray.append(document.data()["comment"] as! String)
 //                        self.myReviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
                         
@@ -176,127 +178,59 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     
-//    @IBAction func reviewButton(_ sender: Any) {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        //ユーザー名をセット
+//        self.userNameLabel.text = currentUser?.displayName
 //
-//        //ボタンの色を切り替え
-//        self.reviewButton.backgroundColor = UIColor.systemYellow
-//        self.reviewButton.tintColor = #colorLiteral(red: 0.2442787347, green: 0.2442787347, blue: 0.2442787347, alpha: 1)
-//
-//        self.stockButton.backgroundColor = #colorLiteral(red: 1, green: 0.9310497734, blue: 0.695790851, alpha: 1)
-//        self.stockButton.tintColor = #colorLiteral(red: 0.5989583532, green: 0.5618196744, blue: 0.5732305017, alpha: 1)
-//
-//        //comedianNameArrayとcomedianIdArrayの配列から一旦stockのデータを消す
-//        self.comedianNameArray = []
-//        self.comedianIdArray = []
-//        self.comedianNameUniqueArray = []
-//        self.comedianIdUniqueArray = []
-//
-//        self.tableView.reloadData()
-//
-//        //レビューデータを配列にセットする
-//        db.collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).order(by: "create_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
+//        //displayIdをセット
+//        self.db.collection("user_detail").whereField("user_id", isEqualTo: currentUser?.uid).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
 //            if let err = err {
-//                        print("Error getting documents: \(err)")
-//                        return
+//                print("Error getting documents: \(err)")
+//                return
+//
 //            } else {
-//
 //                for document in querySnapshot!.documents {
-//                    print("\(document.documentID) => \(document.data())")
 //
-//                    //自分のレビューデータのcomedian_nameを配列に格納する
-//                    self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
-////                    print("comedianNameArray: \(self.comedianNameArray)")
-//
-//
-//                    //自分のレビューデータのcomedian_idを配列に格納する
-//                    self.comedianIdArray.append(document.data()["comedian_id"] as! String)
-////                    print("comedianIdArray: \(self.comedianIdArray)")
-//
-//
-//                    //comedian_nameの値をユニークにする
-//                    var setName = Set<String>()
-//                    self.comedianNameUniqueArray = self.comedianNameArray.filter { setName.insert($0).inserted }
-////                    print("comedianUniqueArray: \(self.comedianNameUniqueArray)")
-//
-//                    //comedian_idの値をユニークにする
-//                    var setData = Set<String>()
-//                    self.comedianIdUniqueArray = self.comedianIdArray.filter { setData.insert($0).inserted }
-////                    print("comedianUniqueArray: \(self.comedianIdUniqueArray)")
-//
-//                    self.tableView.reloadData()
+//                    self.userDisplayIdLabel.text = document.data()["display_id"] as! String
 //
 //                }
 //            }
 //        }
-//        //ログ
-//        AnalyticsUtil.sendAction(ActionEvent(screenName: .myReviewVC,
-//                                                     actionType: .tap,
-//                                             actionLabel: .template(ActionLabelTemplate.myPageReviewButtonTap)))
-//    }
 //
-//
-//    @IBAction func stockButton(_ sender: Any) {
-//
-//        //ボタンの色を切り替え
-//        self.stockButton.backgroundColor = UIColor.systemYellow
-//        self.stockButton.tintColor = #colorLiteral(red: 0.2442787347, green: 0.2442787347, blue: 0.2442787347, alpha: 1)
-//
-//        self.reviewButton.backgroundColor = #colorLiteral(red: 1, green: 0.9310497734, blue: 0.695790851, alpha: 1)
-//        self.reviewButton.tintColor = #colorLiteral(red: 0.5989583532, green: 0.5618196744, blue: 0.5732305017, alpha: 1)
-//
-//
-//        //comedianNameArrayとcomedianIdArrayの配列から一旦reviewのデータを消す
-//        self.comedianNameArray = []
-//        self.comedianIdArray = []
-//        self.comedianNameUniqueArray = []
-//        self.comedianIdUniqueArray = []
-//
-//        self.tableView.reloadData()
-//
-//
-//        //ストックデータを配列にセットする
-//        db.collection("stock").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).whereField("valid_flag", isEqualTo: true).order(by: "create_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
+//        //フォロー中のユーザー数をカウント
+//        self.db.collection("follow").whereField("following_user_id", isEqualTo: currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
 //            if let err = err {
-//                        print("Error getting documents: \(err)")
-//                        return
+//                print("Error getting documents: \(err)")
+//                return
+//
 //            } else {
 //
+//                let documentCount = querySnapshot?.documents.count
 //
-//                    for document in querySnapshot!.documents {
-//                        print("\(document.documentID) => \(document.data())")
+//                self.followingButton.setTitle(String(documentCount!), for: .normal)
 //
 //
-//
-//                        //自分のレビューデータのcomedian_nameを配列に格納する
-//                        self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
-////                        print("stockcomedianNameArray: \(self.comedianNameArray)")
-//
-//                        //自分のレビューデータのcomedian_idを配列に格納する
-//                        self.comedianIdArray.append(document.data()["comedian_id"] as! String)
-////                        print("stockcomedianIdArray: \(self.comedianIdArray)")
-//
-//                        //comedian_nameの値をユニークにする
-//                        var setName = Set<String>()
-//                        self.comedianNameUniqueArray = self.comedianNameArray.filter { setName.insert($0).inserted }
-////                        print("stockcomedianUniqueArray: \(self.comedianNameUniqueArray)")
-//
-//                        //comedian_idの値をユニークにする
-//                        var setData = Set<String>()
-//                        self.comedianIdUniqueArray = self.comedianIdArray.filter { setData.insert($0).inserted }
-////                        print("stockcomedianUniqueArray: \(self.comedianIdUniqueArray)")
-//
-//                        self.tableView.reloadData()
-//                    }
 //            }
 //        }
-//        //ログ
-//        AnalyticsUtil.sendAction(ActionEvent(screenName: .myReviewVC,
-//                                                     actionType: .tap,
-//                                             actionLabel: .template(ActionLabelTemplate.myPageStockButtonTap)))
+//
+//        //フォロワー数をカウント
+//        self.db.collection("follow").whereField("followed_user_id", isEqualTo: currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
+//            if let err = err {
+//                print("Error getting documents: \(err)")
+//                return
+//
+//            } else {
+//
+//                let documentCount = querySnapshot?.documents.count
+//
+//                self.followedButton.setTitle(String(documentCount!), for: .normal)
 //
 //
-//    }
-    
+//            }
+//        }
+    }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -320,9 +254,11 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         cell.comedianNameButton.setTitle(self.comedianNameArray[indexPath.row], for: .normal)
         cell.updatedLabel.text = "最終更新 - " + self.updatedArray[indexPath.row]
         
-        let roundValue = round(self.scoreArray[indexPath.row]*10)/10
-        cell.scoreLabel.text = String(roundValue)
-        cell.scoreImageView.image = UIImage(named: "score_\(self.scoreArray[indexPath.row])")
+        
+        
+        let scoreText = String(format: "%.1f", self.scoreArray[indexPath.row])
+        cell.scoreLabel.text = scoreText
+        cell.scoreImageView.image = UIImage(named: "score_\(scoreText)")
 
         cell.commentLabel.text = self.commentArray[indexPath.row]
         cell.commentLabel.attributedText = cell.commentLabel.text?.attributedString(lineSpace: 5)
@@ -330,8 +266,11 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         cell.commentLabel.tintColor = UIColor.darkGray
         cell.commentLabel.textAlignment = NSTextAlignment.left
         
-        cell.continuationButton.tag = indexPath.row
-        cell.continuationButton.addTarget(self, action: #selector(tappedContinuationButton(sender:)), for: .touchUpInside)
+//        cell.continuationButton.tag = indexPath.row
+//        cell.continuationButton.addTarget(self, action: #selector(tappedContinuationButton(sender:)), for: .touchUpInside)
+//        cell.continuationButton.setTitle("全文を読む>", for: .normal)
+//
+//        print("行数(\(self.comedianIdArray[indexPath.row])：\(cell.commentLabel.lineNumber())")
 
         
         //copyrightflagを取得して画像をセット
@@ -359,13 +298,6 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
                     }
                 }
             }
-        }
-        
-        
-        if cell.commentLabel.text!.count > 209 {
-            
-            cell.comedianNameButton.setTitle("全文を読む>", for: .normal)
-            
         }
         
 
@@ -409,17 +341,37 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        return 300
+        return 350
     
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //セルタップでレビュー画面に遷移
-        let reviewVC = storyboard?.instantiateViewController(withIdentifier: "Review") as! ReviewViewController
+//        let reviewVC = storyboard?.instantiateViewController(withIdentifier: "Review") as! ReviewViewController
+//
+//        reviewVC.comedianID = self.comedianIdArray[indexPath.row]
+//        self.navigationController?.pushViewController(reviewVC, animated: true)
+//        hidesBottomBarWhenPushed = true
         
+        
+        
+        let reviewVC = storyboard?.instantiateViewController(withIdentifier: "Review") as! ReviewViewController
+        let nav = UINavigationController(rootViewController: reviewVC)
+        
+        //comedian_idを渡す
         reviewVC.comedianID = self.comedianIdArray[indexPath.row]
-        self.navigationController?.pushViewController(reviewVC, animated: true)
-        hidesBottomBarWhenPushed = true
+        
+        reviewVC.comedianName = self.comedianNameArray[indexPath.row]
+        
+        self.present(nav, animated: true, completion: nil)
+        
+        //ログ
+        AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
+                                                     actionType: .tap,
+                                             actionLabel: .template(ActionLabelTemplate.reviewButtonTap)))
+
+        
+        
 
     }
     
@@ -461,6 +413,39 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         
         
     }
+    
+    @IBAction func tappedFollowingButton(_ sender: Any) {
+    }
+    
+    @IBAction func tappedFollowedButton(_ sender: Any) {
+    }
+    
+    
+    
+    
+    
 
     
+}
+
+extension UILabel {
+
+  /// 行数を返す
+  func lineNumber() -> Int {
+    let oneLineRect  =  "a".boundingRect(
+      with: self.bounds.size,
+      options: .usesLineFragmentOrigin,
+      attributes: [NSAttributedString.Key.font: self.font ?? UIFont()],
+      context: nil
+    )
+    let boundingRect = (self.text ?? "").boundingRect(
+      with: self.bounds.size,
+      options: .usesLineFragmentOrigin,
+      attributes: [NSAttributedString.Key.font: self.font ?? UIFont()],
+      context: nil
+    )
+
+    return Int(boundingRect.height / oneLineRect.height)
+  }
+
 }

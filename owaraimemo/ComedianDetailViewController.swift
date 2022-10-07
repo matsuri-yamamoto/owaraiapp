@@ -37,6 +37,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     @IBOutlet weak var scoreImageView: UIImageView!
     @IBOutlet weak var averageScoreLabel: UILabel!
     
+    
     @IBOutlet weak var mediaButton1: UIButton!
     @IBOutlet weak var mediaButton2: UIButton!
     @IBOutlet weak var mediaButton3: UIButton!
@@ -186,7 +187,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         
         
         
-        db.collection("review").whereField("comedian_id", isEqualTo: comedianId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "create_datetime", descending: true).getDocuments() {(querySnapshot, err) in
+        db.collection("review").whereField("comedian_id", isEqualTo: comedianId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() {(querySnapshot, err) in
             
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -225,6 +226,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     //レビューをユニークにする
                     var reviewId = Set<String>()
                     self.reviewIdArray = self.reviewBeforeUniqueArray.filter { reviewId.insert($0).inserted }
+                    
 
                     
                     
@@ -242,9 +244,13 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     self.reviewScoreArray.append(String(document.data()["score"] as! Float))
                     self.reviewCommentArray.append(document.data()["comment"] as! String)
                     
-                    self.tableView.reloadData()
                     
                 }
+                
+                print("comedianVC_reviewIdArray:\(self.reviewIdArray)")
+                self.tableView.reloadData()
+
+
                 
             }
         }
@@ -951,9 +957,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             //comedian_idを渡す
             reviewVC.comedianID = self.comedianId
             
-            //comedianNameLabelをStringに変換して芸人名を渡す
-            var comedianName = comedianNameLabel.text! as String
-            reviewVC.comedianName = comedianName
+//            //comedianNameLabelをStringに変換して芸人名を渡す
+//            var comedianName = comedianNameLabel.text! as String
+            reviewVC.comedianName = self.comedianDisplayName
             
             self.present(nav, animated: true, completion: nil)
             

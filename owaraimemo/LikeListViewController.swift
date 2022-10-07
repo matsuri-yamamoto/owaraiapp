@@ -31,6 +31,17 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
     
     var reviewId :String = ""
     
+    var userId :String = ""
+    var userName :String = ""
+    var userDisplayId :String = ""
+    var comedianName :String = ""
+    var comedianId :String = ""
+    var updated :String = ""
+    var score :String = ""
+    var comment :String = ""
+    var relational :String = ""
+
+    
     //いいねボタン用の画像
     let likeImage = UIImage(systemName: "heart.fill")
     let unLikeImage = UIImage(systemName: "heart")
@@ -38,12 +49,47 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
     //画像のパス
     let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        
+        let nib = UINib(nibName: "NewReviewTableViewCell", bundle: nil)
+        self.tableView.register(nib, forCellReuseIdentifier: "NewReviewCell")
+        
+        
+//        //自分がいいねしたreviewのidを参照する
+//        self.db.collection("like_review").whereField("like_user_id", isEqualTo: currentUser?.uid).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { (querySnapshot, err) in
+//
+//            if let err = err {
+//                print("Error getting documents: \(err)")
+//                return
+//
+//            } else {
+//                for document in querySnapshot!.documents {
+//
+//                    self.reviewIdArray.append(document.data()["review_id"] as! String)
+//
+//
+//                }
+//
+//                print("self.reviewIdArray:\(self.reviewIdArray)")
+//
+//
+//
+//            }
+//        }
+        
+        self.setReviewId()
+
+    }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    func setReviewId() {
+        
         
         //自分がいいねしたreviewのidを参照する
-        db.collection("like_review").whereField("user_id", isEqualTo: currentUser?.uid).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { (querySnapshot, err) in
+        self.db.collection("like_review").whereField("like_user_id", isEqualTo: currentUser?.uid).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { (querySnapshot, err) in
             
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -56,26 +102,22 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
 
                     
                 }
+                
+                print("self.reviewIdArray:\(self.reviewIdArray)")
+                
+                
             }
+            
+            defer {
+                self.tableView.reloadData()
+            }
+
         }
         
-        self.tableView.reloadData()
-        
-        
     }
     
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        
-        let nib = UINib(nibName: "NewReviewTableViewCell", bundle: nil)
-        self.tableView.register(nib, forCellReuseIdentifier: "NewReviewCell")
-        
 
-    }
+    
     
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -85,7 +127,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        print("self.reviewIdArray.count:\(self.reviewIdArray.count)")
+        print("likelist_self.reviewIdArray.count:\(self.reviewIdArray.count)")
         return self.reviewIdArray.count
     }
     
@@ -97,8 +139,11 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewReviewCell", for: indexPath) as! NewReviewTableViewCell
 
+        self.reviewId = self.reviewIdArray[indexPath.row]
+        print("likelist_reviewId:\(self.reviewId)")
+
         
-        db.collection("review").whereField(FieldPath.documentID(), isEqualTo: self.reviewIdArray[indexPath.row]).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).getDocuments() { (querySnapshot, err) in
+        db.collection("review").whereField(FieldPath.documentID(), isEqualTo: self.reviewId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).getDocuments() { (querySnapshot, err) in
             
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -106,15 +151,19 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 for document in querySnapshot!.documents {
+                                    
                     
+                    self.userId = document.data()["user_id"] as! String
+                    self.comedianId = document.data()["comedian_id"] as! String
+ 
                     
-                    self.reviewIdArray.append(document.documentID)
-                    self.comedianIdArray.append(document.data()["comedian_id"] as! String)
-                    self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
-                    self.userIdArray.append(document.data()["user_id"] as! String)
-                    self.userNameArray.append(document.data()["user_name"] as! String)
+                    self.userName = document.data()["user_name"] as! String
+                    cell.userNameButton.contentHorizontalAlignment = .left
+                    cell.userNameButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14.0)
+                    cell.userNameButton.setTitle("　" + self.userName, for: .normal)
+
                     
-                    self.userDisplayIdArray.append(document.data()["display_id"] as! String)
+                    self.userDisplayId = document.data()["display_id"] as! String
                     
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateStyle = .short
@@ -122,54 +171,44 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
                     dateFormatter.locale = Locale(identifier: "ja_JP")
                     
                     dateFormatter.dateFormat = "yyyy/mm/dd hh:mm"
-                    let created = document.data()["create_datetime"] as! Timestamp
-                    let createdDate = created.dateValue()
-                    let createdDateTime = dateFormatter.string(from: createdDate)
-                    self.reviewCreateDatetimeArray.append(createdDateTime)
+                    let updated = document.data()["update_datetime"] as! Timestamp
+                    let updatedDate = updated.dateValue()
+                    let updatedDateTime = dateFormatter.string(from: updatedDate)
+                    self.updated = updatedDateTime
+
+                    cell.userDisplayIdLabel.text = "　@" + self.userDisplayId + " - " + self.updated
                     
-                    let reviewFloatScoreArray = document.data()["score"] as! Float
-                    self.reviewScoreArray.append(String(reviewFloatScoreArray))
+                    self.comedianName = document.data()["comedian_display_name"] as! String
+                    cell.comedianNameButton.tag = indexPath.row
+                    cell.comedianNameButton.addTarget(self, action: #selector(self.tappedcomedianButton(sender:)), for: .touchUpInside)
+
                     
-                    self.reviewCommentArray.append(document.data()["comment"] as! String)
+                    cell.comedianNameButton.contentHorizontalAlignment = .left
+                    cell.comedianNameButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13.0)
+                    cell.comedianNameButton.setTitle("　" + self.comedianName, for: .normal)
                     
-                    self.reviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
-                    //reviewRelationalArrayで、nilの場合に空白がセットされているのか確認する
-                    print("reviewRelationalArray:\(self.reviewRelationalArray)")
+
+                    self.score = String(document.data()["score"] as! Float)
+                    cell.scoreLabel.text = self.score
+                    cell.scoreImageView.image = UIImage(named: "score_\(self.score)")
+
+                    
+                    self.comment = document.data()["comment"] as! String
+                    cell.commentLabel.text = self.comment
+                    cell.commentLabel.attributedText = cell.commentLabel.text?.attributedString(lineSpace: 5)
+                    cell.commentLabel.font = cell.commentLabel.font.withSize(12)
+                    cell.commentLabel.tintColor = UIColor.darkGray
+                    cell.commentLabel.textAlignment = NSTextAlignment.left
+                    
+                    self.relational = document.data()["relational_comedian_listname"] as! String
                     
                     
                 }
                 
-                self.tableView.reloadData()
-                
-                self.reviewId = self.reviewIdArray[indexPath.row]
-                
-                
-                cell.userNameButton.contentHorizontalAlignment = .left
-                cell.userNameButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14.0)
-                cell.userNameButton.setTitle("　" + self.userNameArray[indexPath.row], for: .normal)
-                cell.userDisplayIdLabel.text = "　@" + self.userDisplayIdArray[indexPath.row] + " - " + self.reviewCreateDatetimeArray[indexPath.row]
-                
-                cell.comedianNameButton.tag = indexPath.row
-                cell.comedianNameButton.addTarget(self, action: #selector(self.tappedcomedianButton(sender:)), for: .touchUpInside)
-
-                
-                cell.comedianNameButton.contentHorizontalAlignment = .left
-                cell.comedianNameButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13.0)
-                cell.comedianNameButton.setTitle("　" + self.comedianNameArray[indexPath.row], for: .normal)
-
-                cell.scoreLabel.text = self.reviewScoreArray[indexPath.row]
-                cell.scoreImageView.image = UIImage(named: "score_\(self.reviewScoreArray[indexPath.row])")
-
-                cell.commentLabel.text = self.reviewCommentArray[indexPath.row]
-                cell.commentLabel.attributedText = cell.commentLabel.text?.attributedString(lineSpace: 5)
-                cell.commentLabel.font = cell.commentLabel.font.withSize(12)
-                cell.commentLabel.tintColor = UIColor.darkGray
-                cell.commentLabel.textAlignment = NSTextAlignment.left
-                
                 
                 
                 //copyrightflagを取得して画像をセット
-                self.db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: self.comedianIdArray[indexPath.row]).getDocuments() {(querySnapshot, err) in
+                self.db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: self.comedianId).getDocuments() {(querySnapshot, err) in
                     if let err = err {
                         print("Error getting documents: \(err)")
                         return
@@ -181,7 +220,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
                             
                             if copyrightFlag == "true" {
                                 
-                                let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
+                                let imageRef = self.storage.child("comedian_image/\(self.comedianId).jpg")
                                 cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
                                 
                             }
@@ -197,7 +236,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 //relationalcomedianがいる場合はセット、いない場合は空白
                 
-                if self.reviewRelationalArray[indexPath.row] == "" {
+                if self.relational == "" {
                     
                     cell.beforeRelationalLabel.text = ""
                     cell.relationalComedianLabel.text = ""
@@ -205,23 +244,14 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 }
                 
-                if self.reviewRelationalArray[indexPath.row] != "" {
+                if self.relational != "" {
                     
                     cell.beforeRelationalLabel.text = "この芸人さんは"
-                    cell.relationalComedianLabel.text = self.reviewRelationalArray[indexPath.row]
+                    cell.relationalComedianLabel.text = self.relational
                     cell.afterRelationalLabel.text = "が好きな人にハマりそう！"
                     
                 }
                 
-                if cell.commentLabel.text!.count > 209 {
-                    
-                    cell.continuationLabel.text = "全文を読む>"
-                    
-                } else {
-                    
-                    cell.continuationLabel.text = ""
-                    
-                }
                 
                 //likeButtonをセット
                 cell.likeButton.tag = indexPath.row

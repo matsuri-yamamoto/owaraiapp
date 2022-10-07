@@ -183,15 +183,6 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
             
         }
         
-        if cell.commentLabel.text!.count > 209 {
-            
-            cell.continuationLabel.text = "全文を読む>"
-            
-        } else {
-            
-            cell.continuationLabel.text = ""
-            
-        }
         
         //likeButtonをセット
         cell.likeButton.tag = indexPath.row

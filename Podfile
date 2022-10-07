@@ -22,6 +22,7 @@ target 'owaraimemo' do
   pod 'Firebase/DynamicLinks'
   pod 'Firebase/Core'
   pod 'FirebaseStorageUI'
+  pod 'MXParallaxHeader'
 
 
 
