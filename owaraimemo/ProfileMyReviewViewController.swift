@@ -1,18 +1,23 @@
 //
+//  ProfileMyReviewViewController.swift
+//  owaraimemo
 //
+//  Created by 山本梨野 on 2022/10/08.
+//
+
 import UIKit
 import Firebase
 import FirebaseFirestore
 import FirebaseStorageUI
 
+//ナビゲーションバーのボタンの変数
 
-class MyReviewViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ProfileMyReviewViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    
+    var profileUserId :String = ""
     
     @IBOutlet weak var tableView: UITableView!
-        
-            
+    
     var comedianNameArray: [String] = []
     var comedianIdArray: [String] = []
     var reviewIdArray: [String] = []
@@ -20,11 +25,11 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
     var scoreArray: [Double] = []
     var commentArray: [String] = []
     
+    
 
     var reviewId :String = ""
         
     //Firestoreを使うための下準備
-    let currentUser = Auth.auth().currentUser
     let db = Firestore.firestore()
     
     //いいねボタン用の画像
@@ -45,89 +50,76 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
 
     override func viewWillAppear(_ animated: Bool) {
         
-        print("currentUser:\(String(describing: Auth.auth().currentUser?.uid))")
-                
-        if currentUser?.uid == nil {
-                        
-            //ログインしていない場合、ログイン推奨ページに遷移
-            let recLoginVC = storyboard?.instantiateViewController(withIdentifier: "RecLogin") as! RecommendLoginViewController
-            
-            self.navigationController?.pushViewController(recLoginVC, animated: true)
-
-
-            
-            
-            //ログ
-            AnalyticsUtil.sendAction(ActionEvent(screenName: .myReviewVC,
-                                                         actionType: .tap,
-                                                 actionLabel: .template(ActionLabelTemplate.myPageRecLoginPush)))
-
-        } else {
-            
-            //あとでみるに切り替えた状態から別タブに移動して戻ってきたときに、レビューを再度セットする処理
-            self.comedianNameArray = []
-            self.comedianIdArray = []
-            self.reviewIdArray = []
-            self.updatedArray = []
-            self.scoreArray = []
-            self.commentArray = []
-            self.tableView.reloadData()
-
-            
-            db.collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).order(by: "update_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
-                if let err = err {
-                            print("Error getting documents: \(err)")
-                            return
-                } else {
-            
-                    for document in querySnapshot!.documents {
-                        
-                        //自分のレビューデータの各fieldを配列に格納する
-                        
-                        self.reviewIdArray.append(document.documentID as! String)
-                        self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
-                        self.comedianIdArray.append(document.data()["comedian_id"] as! String)
-                        
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateStyle = .short
-                        dateFormatter.timeStyle = .short
-                        dateFormatter.locale = Locale(identifier: "ja_JP")
-                        dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
-                        let updated = document.data()["update_datetime"] as! Timestamp
-                        let updatedDate = updated.dateValue()
-                        let updatedDateTime = dateFormatter.string(from: updatedDate)
-                        self.updatedArray.append(updatedDateTime)
-                        
-                        self.scoreArray.append(document.data()["score"] as! Double)
-
-                        self.commentArray.append(document.data()["comment"] as! String)
-//                        self.myReviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
-                        
-                                            
-                    }
-                    self.tableView.reloadData()
-                }
-            }
-
-            
-            
+        print("profileUserId:\(profileUserId)")
         
-            self.tableView.delegate = self
-            self.tableView.dataSource = self
+                
+            
+        //あとでみるに切り替えた状態から別タブに移動して戻ってきたときに、レビューを再度セットする処理
+        self.comedianNameArray = []
+        self.comedianIdArray = []
+        self.reviewIdArray = []
+        self.updatedArray = []
+        self.scoreArray = []
+        self.commentArray = []
+        self.tableView.reloadData()
 
-            
-            
-                                    
-            
+        
+        db.collection("review").whereField("user_id", isEqualTo: self.profileUserId).order(by: "update_datetime", descending: true).whereField("private_flag", isEqualTo: false).getDocuments() { [self] (querySnapshot, err) in
+            if let err = err {
+                        print("Error getting documents: \(err)")
+                        return
+            } else {
+        
+                for document in querySnapshot!.documents {
+                    
+                    //自分のレビューデータの各fieldを配列に格納する
+                    
+                    self.reviewIdArray.append(document.documentID as! String)
+                    self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
+                    self.comedianIdArray.append(document.data()["comedian_id"] as! String)
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateStyle = .short
+                    dateFormatter.timeStyle = .short
+                    dateFormatter.locale = Locale(identifier: "ja_JP")
+                    dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
+                    let updated = document.data()["update_datetime"] as! Timestamp
+                    let updatedDate = updated.dateValue()
+                    let updatedDateTime = dateFormatter.string(from: updatedDate)
+                    self.updatedArray.append(updatedDateTime)
+                    
+                    self.scoreArray.append(document.data()["score"] as! Double)
 
-            //セルを指定
-            
-            let nib = UINib(nibName: "MyReviewTableViewCell", bundle: nil)
-            self.tableView.register(nib, forCellReuseIdentifier: "MyReviewCell")
-            
-
-                        
+                    self.commentArray.append(document.data()["comment"] as! String)
+//                        self.myReviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
+                    
+                                        
+                }
+                
+                print("profileReviewId:\(self.reviewIdArray)")
+                self.tableView.reloadData()
+            }
         }
+
+        
+        
+    
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+
+        
+        
+                                
+        
+
+        //セルを指定
+        
+        let nib = UINib(nibName: "MyReviewTableViewCell", bundle: nil)
+        self.tableView.register(nib, forCellReuseIdentifier: "MyReviewCell")
+        
+
+                    
+    
     }
                 
         
@@ -179,6 +171,7 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         cell.commentLabel.tintColor = UIColor.darkGray
         cell.commentLabel.textAlignment = NSTextAlignment.left
         
+
         
         //copyrightflagを取得して画像をセット
         db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: self.comedianIdArray[indexPath.row]).getDocuments() {(querySnapshot, err) in
@@ -197,8 +190,8 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
 //                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
                         
                         cell.comedianImageView.image = UIImage(named: "\(self.comedianIdArray[indexPath.row])")
-//                        cell.comedianImageView.contentMode = .scaleAspectFill
-//                        cell.comedianImageView.clipsToBounds = true
+                        cell.comedianImageView.contentMode = .scaleAspectFill
+                        cell.comedianImageView.clipsToBounds = true
 
                         
                     }
@@ -244,24 +237,15 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //セルタップでレビュー画面に遷移
         
         
-        let reviewVC = storyboard?.instantiateViewController(withIdentifier: "Review") as! ReviewViewController
-        let nav = UINavigationController(rootViewController: reviewVC)
+        //セルタップでレビュー全文に遷移
+        let allReviewVC = storyboard?.instantiateViewController(withIdentifier: "AllReview") as! AllReviewViewController
         
-        //comedian_idを渡す
-        reviewVC.comedianID = self.comedianIdArray[indexPath.row]
+        allReviewVC.reviewId = self.reviewIdArray[indexPath.row]
+        self.navigationController?.pushViewController(allReviewVC, animated: true)
         
-        reviewVC.comedianName = self.comedianNameArray[indexPath.row]
-        
-        self.present(nav, animated: true, completion: nil)
-        
-        //ログ
-        AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
-                                                     actionType: .tap,
-                                             actionLabel: .template(ActionLabelTemplate.reviewButtonTap)))
-
+        self.tableView.deselectRow(at: indexPath, animated: true)
         
         
 
@@ -300,7 +284,6 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         
         AllReviewVC.reviewId = tappedReviewId
         self.navigationController?.pushViewController(AllReviewVC, animated: true)
-        hidesBottomBarWhenPushed = true
         
         
     }
@@ -321,11 +304,9 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         followVC.reviewId = tappedReviewId
         followVC.userType = "likeReview"
         self.navigationController?.pushViewController(followVC, animated: true)
-        hidesBottomBarWhenPushed = true
         
         
     }
 
     
 }
-

@@ -17,7 +17,6 @@ class SettingViewController: UIViewController {
         
         //ナビゲーションバーのボタン設置
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(backButtonPressed))
-        self.tabBarController!.tabBar.isHidden = true
         
         
     }

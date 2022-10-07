@@ -181,7 +181,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
                     self.comment = document.data()["comment"] as! String
                     cell.commentLabel.text = self.comment
                     cell.commentLabel.attributedText = cell.commentLabel.text?.attributedString(lineSpace: 5)
-                    cell.commentLabel.font = cell.commentLabel.font.withSize(12)
+                    cell.commentLabel.font = cell.commentLabel.font.withSize(13)
                     cell.commentLabel.tintColor = UIColor.darkGray
                     cell.commentLabel.textAlignment = NSTextAlignment.left
                     
@@ -209,8 +209,8 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
 //                                cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
                                 
                                 cell.comedianImageView.image = UIImage(named: "\(self.comedianId)")
-                                cell.comedianImageView.contentMode = .scaleAspectFill
-                                cell.comedianImageView.clipsToBounds = true
+//                                cell.comedianImageView.contentMode = .scaleAspectFill
+//                                cell.comedianImageView.clipsToBounds = true
 
                                 
                             }

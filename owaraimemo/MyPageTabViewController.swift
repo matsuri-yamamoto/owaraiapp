@@ -179,8 +179,10 @@ class MyPageTabViewController: TabmanViewController {
     
     @objc func settingButtonPressed() {
         
-        performSegue(withIdentifier: "settingSegue", sender: nil)
+        let settingVC = storyboard?.instantiateViewController(withIdentifier: "Setting") as! SettingViewController
         
+        self.navigationController?.pushViewController(settingVC, animated: true)
+
     }
     
     @IBAction func tappedFollowingButton(_ sender: Any) {

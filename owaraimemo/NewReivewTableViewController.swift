@@ -134,7 +134,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
 
         cell.commentLabel.text = self.reviewCommentArray[indexPath.row]
         cell.commentLabel.attributedText = cell.commentLabel.text?.attributedString(lineSpace: 5)
-        cell.commentLabel.font = cell.commentLabel.font.withSize(12)
+        cell.commentLabel.font = cell.commentLabel.font.withSize(13)
         cell.commentLabel.tintColor = UIColor.darkGray
         cell.commentLabel.textAlignment = NSTextAlignment.left
         
