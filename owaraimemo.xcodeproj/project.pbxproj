@@ -69,6 +69,11 @@
 		63D7E54B27E9CE0100E99C75 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7E54A27E9CE0100E99C75 /* TabBarController.swift */; };
 		63D7E54D27EB1CBA00E99C75 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 63D7E54C27EB1CBA00E99C75 /* GoogleService-Info.plist */; };
 		63E81FA628F0C8D900EA113C /* ProfileMyReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E81FA528F0C8D900EA113C /* ProfileMyReviewViewController.swift */; };
+		63E81FA828F533BA00EA113C /* UpgradeNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E81FA728F533B900EA113C /* UpgradeNotice.swift */; };
+		63E81FAA28F5BB6600EA113C /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E81FA928F5BB6600EA113C /* OnboardingViewController.swift */; };
+		63E81FAC28F5BB9300EA113C /* OnboardingSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E81FAB28F5BB9300EA113C /* OnboardingSearchViewController.swift */; };
+		63E81FAE28F5BBCE00EA113C /* OnboardingReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E81FAD28F5BBCE00EA113C /* OnboardingReviewViewController.swift */; };
+		63E81FB128F5C0A200EA113C /* OnboardingCreateNewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E81FAF28F5C0A100EA113C /* OnboardingCreateNewViewController.swift */; };
 		63FB59962849EA8D00497210 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FB59952849EA8D00497210 /* TabViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -141,6 +146,11 @@
 		63D7E54A27E9CE0100E99C75 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		63D7E54C27EB1CBA00E99C75 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		63E81FA528F0C8D900EA113C /* ProfileMyReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMyReviewViewController.swift; sourceTree = "<group>"; };
+		63E81FA728F533B900EA113C /* UpgradeNotice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeNotice.swift; sourceTree = "<group>"; };
+		63E81FA928F5BB6600EA113C /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		63E81FAB28F5BB9300EA113C /* OnboardingSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSearchViewController.swift; sourceTree = "<group>"; };
+		63E81FAD28F5BBCE00EA113C /* OnboardingReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingReviewViewController.swift; sourceTree = "<group>"; };
+		63E81FB028F5C0A200EA113C /* ja-JP */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ja-JP"; path = "ja-JP.lproj/OnboardingCreateNewViewController.swift"; sourceTree = "<group>"; };
 		63FB59952849EA8D00497210 /* TabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
 		7812F7A987490B3A5CD2091A /* Pods-owaraimemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-owaraimemo.debug.xcconfig"; path = "Target Support Files/Pods-owaraimemo/Pods-owaraimemo.debug.xcconfig"; sourceTree = "<group>"; };
 		91BD7D492DEC08C24EC8D8EC /* Pods-owaraimemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-owaraimemo.release.xcconfig"; path = "Target Support Files/Pods-owaraimemo/Pods-owaraimemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -195,6 +205,10 @@
 				634F867B28A63C8300CAE6BA /* AnalyticsUserProperty.swift */,
 				6381D13227E7319A005BDBE2 /* SceneDelegate.swift */,
 				6381D13427E7319A005BDBE2 /* ViewController.swift */,
+				63E81FA928F5BB6600EA113C /* OnboardingViewController.swift */,
+				63E81FAB28F5BB9300EA113C /* OnboardingSearchViewController.swift */,
+				63E81FAD28F5BBCE00EA113C /* OnboardingReviewViewController.swift */,
+				63E81FAF28F5C0A100EA113C /* OnboardingCreateNewViewController.swift */,
 				638CD1EA27F29812002DCEFC /* StartViewController.swift */,
 				635AC59528CDABFD00C9D0E5 /* SignInWithAppleIDButton.swift */,
 				63CAA0BC28ACA3D600AA99E4 /* UserNameViewController.swift */,
@@ -248,6 +262,7 @@
 				639D9A90287558B400291D28 /* SearchCollectionReusableView.swift */,
 				63134BB328B706BD00B0926D /* PlaceTextView.swift */,
 				63134BB528B706D800B0926D /* PlaceTextView.xib */,
+				63E81FA728F533B900EA113C /* UpgradeNotice.swift */,
 				6381D13927E7319D005BDBE2 /* Assets.xcassets */,
 				6381D13B27E7319D005BDBE2 /* LaunchScreen.storyboard */,
 				6381D13E27E7319D005BDBE2 /* Info.plist */,
@@ -398,9 +413,11 @@
 				635B9BA4287BEF9300ABF9ED /* RecommendLoginViewController.swift in Sources */,
 				633FA35C28EA774A00A0E77C /* AllReviewViewController.swift in Sources */,
 				635AC59628CDABFD00C9D0E5 /* SignInWithAppleIDButton.swift in Sources */,
+				63E81FB128F5C0A200EA113C /* OnboardingCreateNewViewController.swift in Sources */,
 				6381D13527E7319A005BDBE2 /* ViewController.swift in Sources */,
 				633FA35528E6996B00A0E77C /* NewReivewTableViewController.swift in Sources */,
 				63CAA0BD28ACA3D600AA99E4 /* UserNameViewController.swift in Sources */,
+				63E81FAC28F5BB9300EA113C /* OnboardingSearchViewController.swift in Sources */,
 				6313CB9528EFA7A200E71BFB /* FollowUserTableViewCell.swift in Sources */,
 				6313CB9228EFA6F400E71BFB /* FollowUserViewController.swift in Sources */,
 				633FA35928E6A9EF00A0E77C /* NewReviewTableViewCell.swift in Sources */,
@@ -427,11 +444,14 @@
 				6313CB8E28ED629E00E71BFB /* NewReviewTabViewController.swift in Sources */,
 				6381D13127E7319A005BDBE2 /* AppDelegate.swift in Sources */,
 				63D7E54727E9949200E99C75 /* ReviewViewController.swift in Sources */,
+				63E81FAA28F5BB6600EA113C /* OnboardingViewController.swift in Sources */,
 				635FC56528618364000835C4 /* ForthTabViewController.swift in Sources */,
+				63E81FAE28F5BBCE00EA113C /* OnboardingReviewViewController.swift in Sources */,
 				638CD1EB27F29812002DCEFC /* StartViewController.swift in Sources */,
 				6301AE2A28B494E1001B03E5 /* InquiryViewController.swift in Sources */,
 				632F88D327FA8A7900350624 /* ComedianData.swift in Sources */,
 				633FA36228EC70E700A0E77C /* MyPageTabViewController.swift in Sources */,
+				63E81FA828F533BA00EA113C /* UpgradeNotice.swift in Sources */,
 				630964B9281EDBA3006F211B /* PrivacyPolicyViewController.swift in Sources */,
 				63D7E54527E9947300E99C75 /* MyReviewViewController.swift in Sources */,
 				63D7E54327E9942D00E99C75 /* SearchViewController.swift in Sources */,
@@ -461,6 +481,14 @@
 				635AC59A28CDB63E00C9D0E5 /* ja-JP */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		63E81FAF28F5C0A100EA113C /* OnboardingCreateNewViewController.swift */ = {
+			isa = PBXVariantGroup;
+			children = (
+				63E81FB028F5C0A200EA113C /* ja-JP */,
+			);
+			name = OnboardingCreateNewViewController.swift;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

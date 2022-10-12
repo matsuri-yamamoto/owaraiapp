@@ -115,6 +115,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewReviewCell", for: indexPath) as! NewReviewTableViewCell
         
+        cell.userNameButton.tag = indexPath.row
         cell.userNameButton.contentHorizontalAlignment = .left
         cell.userNameButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14.0)
         cell.userNameButton.setTitle("　" + self.userNameArray[indexPath.row], for: .normal)

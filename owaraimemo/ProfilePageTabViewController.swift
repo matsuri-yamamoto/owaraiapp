@@ -36,6 +36,8 @@ class ProfilePageTabViewController: TabmanViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        print("プロフィールページuserId:\(self.userId)")
+        
         //currentUserがフォロー中かどうか判定
         self.db.collection("follow").whereField("followed_user_id", isEqualTo: self.userId).whereField("following_user_id", isEqualTo: currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
             if let err = err {
