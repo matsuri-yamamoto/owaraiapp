@@ -29,11 +29,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Main.storyboardを指定
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         // storyboardのidentifierで名付けたVCをインスタンス化
-        let tabbarVC = storyBoard.instantiateViewController(identifier: "Tabbar")
-        // 上記をrootのコントローラとしてインスタンス化
-        let navVC = UINavigationController(rootViewController: tabbarVC)
+//        let tabbarVC = storyBoard.instantiateViewController(identifier: "Tabbar")
+//        // 上記をrootのコントローラとしてインスタンス化
+//        let navVC = UINavigationController(rootViewController: tabbarVC)
+//
+//        window.rootViewController = navVC
         
+        let onboardVC = storyBoard.instantiateViewController(identifier: "OnboardPage")
+        // 上記をrootのコントローラとしてインスタンス化
+        let navVC = UINavigationController(rootViewController: onboardVC)
+
         window.rootViewController = navVC
+
         
         //        } else {
         //

@@ -6,9 +6,46 @@ import Pageboy
 class NewReviewTabViewController: TabmanViewController {
 
     private var viewControllers = [UIViewController(), UIViewController()]
+    
+    //オンボーディング後の場合にレビューを保存するための項目
+    var afterOnboardFlag :String = ""
+    var displayId :String = ""
+    var comedianId :String = ""
+    var comedianName :String = ""
+    var score :Double = 0
+    var comment :String = ""
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        print("newreviewTab_flag:\(self.afterOnboardFlag)")
+
+        
+        if self.afterOnboardFlag == "true" {
+            
+            let newReviewVC = self.storyboard?.instantiateViewController(withIdentifier: "NewReview") as! NewReivewViewController
+            newReviewVC.afterOnboardFlag = "true"
+            newReviewVC.displayId = self.displayId
+            newReviewVC.comedianId = self.comedianId
+            newReviewVC.comedianName = self.comedianName
+            newReviewVC.score = self.score
+            newReviewVC.comment = self.comment
+            
+            print("newReviwTab_afterOnboardFlag:\(afterOnboardFlag)")
+            print("newReviwTab_displayId:\(displayId)")
+            print("newReviwTab_comedianId:\(comedianId)")
+            print("newReviwTab_comedianName:\(comedianName)")
+            print("newReviwTab_score:\(score)")
+            print("newReviwTab_comment:\(comment)")
+            
+            
+
+            
+        }
+
+        
 
         self.dataSource = self
         

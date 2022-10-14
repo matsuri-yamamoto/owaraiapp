@@ -234,6 +234,10 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                                             
                                             self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray3)
                                             
+                                            print("comedianNameArrayId:\(self.comedianNameArrayId)")
+                                            print("comedianCopyRightArray:\(self.comedianCopyRightArray)")
+
+                                            
                                             self.collectionView.reloadData()
                                             
                                         }
@@ -333,11 +337,14 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
             cell.comedianImageView.image = UIImage(named: "\(comedianNameArrayId[indexPath.row])")
             cell.comedianImageView.contentMode = .scaleAspectFill
             cell.comedianImageView.clipsToBounds = true
-            
+        
+                
 //            let imageRef = self.storage.child("comedian_image/\(comedianNameArrayId[indexPath.row]).jpg")
 //            cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
 //            cell.comedianImageView.contentMode = .scaleAspectFill
 //            cell.comedianImageView.clipsToBounds = true
+            
+//            print("画像のパス：comedian_image/\(comedianNameArrayId[indexPath.row]).jpg")
 
             
 

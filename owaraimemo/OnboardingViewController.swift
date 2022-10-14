@@ -8,22 +8,43 @@
 import UIKit
 
 class OnboardingViewController: UIViewController {
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
     }
     
+    @IBAction func tappedCreateNewButton(_ sender: Any) {
+        
+        let onboardingSearchVC = self.storyboard?.instantiateViewController(withIdentifier: "OnboardSearch") as! OnboardingSearchViewController
+        self.navigationController?.pushViewController(onboardingSearchVC, animated: true)
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        
     }
-    */
+    
+    @IBAction func tappedLoginButton(_ sender: Any) {
+        
+        let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "Login") as! LoginViewController
+        self.navigationController?.pushViewController(loginVC, animated: true)
+
+    }
+    
+    @IBAction func tappedTermButton(_ sender: Any) {
+        
+        let termVC = self.storyboard?.instantiateViewController(withIdentifier: "Term") as! TermViewController
+        self.navigationController?.pushViewController(termVC, animated: true)
+
+        
+    }
+    
+    @IBAction func tappedPpButton(_ sender: Any) {
+        let ppVC = self.storyboard?.instantiateViewController(withIdentifier: "PrivacyPolicy") as! PrivacyPolicyViewController
+        self.navigationController?.pushViewController(ppVC, animated: true)
+
+    }
+    
+    
+
 
 }
