@@ -14,46 +14,41 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         
         // ログイン判定
-        //        if Auth.auth().currentUser?.uid != nil {
+            if Auth.auth().currentUser?.uid != nil {
         
-        // ログインしている場合
-        let window = UIWindow(windowScene: scene as! UIWindowScene)
-        self.window = window
-        window.makeKeyAndVisible()
-        
-        // Main.storyboardを指定
-        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        // storyboardのidentifierで名付けたVCをインスタンス化
-//        let tabbarVC = storyBoard.instantiateViewController(identifier: "Tabbar")
-//        // 上記をrootのコントローラとしてインスタンス化
-//        let navVC = UINavigationController(rootViewController: tabbarVC)
-//
-//        window.rootViewController = navVC
-        
-        let onboardVC = storyBoard.instantiateViewController(identifier: "OnboardPage")
-        // 上記をrootのコントローラとしてインスタンス化
-        let navVC = UINavigationController(rootViewController: onboardVC)
+                let window = UIWindow(windowScene: scene as! UIWindowScene)
+                self.window = window
+                window.makeKeyAndVisible()
+                
+                let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+                
+                let tabbarVC = storyBoard.instantiateViewController(identifier: "Tabbar")
+                // 上記をrootのコントローラとしてインスタンス化
+                let navVC = UINavigationController(rootViewController: tabbarVC)
 
-        window.rootViewController = navVC
+                window.rootViewController = navVC
+        
 
         
-        //        } else {
-        //
-        //            // ログインしてない場合
-        //            let window = UIWindow(windowScene: scene as! UIWindowScene)
-        //            self.window = window
-        //            window.makeKeyAndVisible()
-        //
-        //            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        //            let startVC = storyBoard.instantiateViewController(identifier: "Start")
-        //            let navVC = UINavigationController(rootViewController: startVC)
-        //            window.rootViewController = navVC
-        //        }
+                } else {
+        
+                    // ログインしてない場合
+                    let window = UIWindow(windowScene: scene as! UIWindowScene)
+                    self.window = window
+                    window.makeKeyAndVisible()
+                    
+                    let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+
+                    let onboardVC = storyBoard.instantiateViewController(identifier: "OnboardPage")
+                    // 上記をrootのコントローラとしてインスタンス化
+                    let navVC = UINavigationController(rootViewController: onboardVC)
+
+                    window.rootViewController = navVC
+
+
+                }
         
         // ナビゲージョンアイテムの文字色
         UINavigationBar.appearance().tintColor = #colorLiteral(red: 0.2442787347, green: 0.2442787347, blue: 0.2442787347, alpha: 1)

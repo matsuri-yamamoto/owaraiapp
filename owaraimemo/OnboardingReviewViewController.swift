@@ -32,6 +32,10 @@ class OnboardingReviewViewController: UIViewController ,UITextViewDelegate, UISc
     var tag4: String = ""
     var tag5: String = ""
     
+    // インジゲーターの設定
+    var indicator = UIActivityIndicatorView()
+
+    
     
     let currentUser = Auth.auth().currentUser
 
@@ -80,6 +84,31 @@ class OnboardingReviewViewController: UIViewController ,UITextViewDelegate, UISc
                 }
             }
         }
+        
+        // 表示位置を設定（画面中央）
+        self.indicator.center = view.center
+        // インジケーターのスタイルを指定（白色＆大きいサイズ）
+        self.indicator.style = .large
+        // インジケーターの色を設定（青色）
+        self.indicator.color = UIColor.darkGray
+        // インジケーターを View に追加
+        view.addSubview(indicator)
+        
+        //ログを保存する
+        let onboardLogRef = Firestore.firestore().collection("onboard_log").document()
+        let onboardLogDic = [
+            "page": "review",
+            "action": "load",
+            "create_datetime": FieldValue.serverTimestamp(),
+            "update_datetime": FieldValue.serverTimestamp(),
+            "delete_flag": false,
+            "delete_datetime": nil,
+        ] as [String : Any]
+        
+        onboardLogRef.setData(onboardLogDic)
+
+
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -113,6 +142,7 @@ class OnboardingReviewViewController: UIViewController ,UITextViewDelegate, UISc
     }
     
     @IBAction func tappedSaveButton(_ sender: Any) {
+        
         
         
         if (self.sliderLabel.text == "0" || self.sliderLabel.text == "0.0") {
@@ -166,6 +196,9 @@ class OnboardingReviewViewController: UIViewController ,UITextViewDelegate, UISc
             
         } else {
             
+            self.indicator.startAnimating()
+
+            
             //値の置換
             let score :Double = Double(self.slider.value)
             let comment :String = String(self.textView.text)
@@ -180,10 +213,26 @@ class OnboardingReviewViewController: UIViewController ,UITextViewDelegate, UISc
 
 
             self.navigationController?.pushViewController(onboardingCreateNewVC, animated: true)
+            
+            self.indicator.stopAnimating()
 
         
 
         }
+        
+        //ログを保存する
+        let onboardLogRef = Firestore.firestore().collection("onboard_log").document()
+        let onboardLogDic = [
+            "page": "review",
+            "action": "saveTap",
+            "create_datetime": FieldValue.serverTimestamp(),
+            "update_datetime": FieldValue.serverTimestamp(),
+            "delete_flag": false,
+            "delete_datetime": nil,
+        ] as [String : Any]
+        
+        onboardLogRef.setData(onboardLogDic)
+
     }
     
     //viewをタップしたときにキーボードを閉じる

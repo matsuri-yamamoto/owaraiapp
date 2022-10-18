@@ -25,7 +25,9 @@ class OnboardingCreateNewViewController: UIViewController {
     
     let deleteDateTime :String? = nil
     
-    
+    // インジゲーターの設定
+    var indicator = UIActivityIndicatorView()
+
     
     @IBOutlet weak var userNameTextField: UITextField!
     @IBOutlet weak var displayIdTextField: UITextField!
@@ -47,12 +49,37 @@ class OnboardingCreateNewViewController: UIViewController {
         self.saveButton.layer.cornerRadius = 9
         self.saveButton.clipsToBounds = true
         
+        // 表示位置を設定（画面中央）
+        self.indicator.center = view.center
+        // インジケーターのスタイルを指定（白色＆大きいサイズ）
+        self.indicator.style = .large
+        // インジケーターの色を設定（青色）
+        self.indicator.color = UIColor.darkGray
+        // インジケーターを View に追加
+        view.addSubview(indicator)
+
+        //ログを保存する
+        let onboardLogRef = Firestore.firestore().collection("onboard_log").document()
+        let onboardLogDic = [
+            "page": "createNew",
+            "action": "load",
+            "create_datetime": FieldValue.serverTimestamp(),
+            "update_datetime": FieldValue.serverTimestamp(),
+            "delete_flag": false,
+            "delete_datetime": nil,
+        ] as [String : Any]
+        
+        onboardLogRef.setData(onboardLogDic)
+
         
         
     }
     
     
     @IBAction func tappedSaveButton(_ sender: Any) {
+        
+        self.indicator.startAnimating()
+
         
         //アカウント作成
         if let userName = userNameTextField.text, let address = mailAddressTextField.text, let password = passwordTextField.text, let displayId = displayIdTextField.text {
@@ -151,12 +178,41 @@ class OnboardingCreateNewViewController: UIViewController {
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                                     
                                     self.checkReview()
+                                    
+                                    //ログを保存する
+                                    let onboardLogRef = Firestore.firestore().collection("onboard_log").document()
+                                    let onboardLogDic = [
+                                        "page": "createNew",
+                                        "action": "tapSave",
+                                        "create_datetime": FieldValue.serverTimestamp(),
+                                        "update_datetime": FieldValue.serverTimestamp(),
+                                        "delete_flag": false,
+                                        "delete_datetime": nil,
+                                    ] as [String : Any]
+                                    
+                                    onboardLogRef.setData(onboardLogDic)
+
+                                    
                                 
                                 }
 
                             } else {
                                 //user_detail作成が完了している場合はすぐに次の処理を行う
                                 self.checkReview()
+                                
+                                //ログを保存する
+                                let onboardLogRef = Firestore.firestore().collection("onboard_log").document()
+                                let onboardLogDic = [
+                                    "page": "createNew",
+                                    "action": "tapSave",
+                                    "create_datetime": FieldValue.serverTimestamp(),
+                                    "update_datetime": FieldValue.serverTimestamp(),
+                                    "delete_flag": false,
+                                    "delete_datetime": nil,
+                                ] as [String : Any]
+                                
+                                onboardLogRef.setData(onboardLogDic)
+
                                 
                             }
                         }
@@ -182,14 +238,10 @@ class OnboardingCreateNewViewController: UIViewController {
                 if (querySnapshot?.documents.count)! > 0 {
                     
                     let tabBarVC = self.storyboard?.instantiateViewController(withIdentifier: "Tabbar") as! TabBarController
-                    tabBarVC.afterOnboardFlag = "true"
-                    tabBarVC.displayId = self.displayIdTextField.text!
-                    tabBarVC.comedianId = self.comedianId
-                    tabBarVC.comedianName = self.comedianName
-                    tabBarVC.score = self.score
-                    tabBarVC.comment = self.comment
-                    
                     self.navigationController?.pushViewController(tabBarVC, animated: true)
+                    
+                    self.indicator.stopAnimating()
+
                     
                     
                 } else {
@@ -197,14 +249,10 @@ class OnboardingCreateNewViewController: UIViewController {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         
                         let tabBarVC = self.storyboard?.instantiateViewController(withIdentifier: "Tabbar") as! TabBarController
-                        tabBarVC.afterOnboardFlag = "true"
-                        tabBarVC.displayId = self.displayIdTextField.text!
-                        tabBarVC.comedianId = self.comedianId
-                        tabBarVC.comedianName = self.comedianName
-                        tabBarVC.score = self.score
-                        tabBarVC.comment = self.comment
-                        
                         self.navigationController?.pushViewController(tabBarVC, animated: true)
+                        
+                        self.indicator.stopAnimating()
+
 
             
                     }
@@ -212,6 +260,7 @@ class OnboardingCreateNewViewController: UIViewController {
 
             }
         }
+        
         
     }
     

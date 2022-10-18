@@ -16,19 +16,6 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     let db = Firestore.firestore()
     let currentUser = Auth.auth().currentUser
     
-    //オンボーディング後の場合にレビューを保存するための項目
-    var afterOnboardFlag :String = ""
-    var displayId :String = ""
-    var comedianId :String = ""
-    var comedianName :String = ""
-    var score :Double = 0
-    var comment :String = ""
-    var tag1: String = ""
-    var tag2: String = ""
-    var tag3: String = ""
-    var tag4: String = ""
-    var tag5: String = ""
-    let deleteDateTime :String? = nil
 
     
     @IBOutlet weak var tableView: UITableView!
@@ -53,10 +40,30 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     //画像のパス
     let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
     
+    // インジゲーターの設定
+    var indicator = UIActivityIndicatorView()
+
     
     override func viewDidLoad() {
+        
+        // 表示位置を設定（画面中央）
+        self.indicator.center = view.center
+        // インジケーターのスタイルを指定（白色＆大きいサイズ）
+        self.indicator.style = .large
+        // インジケーターの色を設定（青色）
+        self.indicator.color = UIColor.darkGray
+        // インジケーターを View に追加
+        view.addSubview(indicator)
+        
+
+        
+        self.indicator.startAnimating()
+
+        
         super.viewDidLoad()
         self.title = "新着"
+        
+        
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -64,45 +71,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         let nib = UINib(nibName: "NewReviewTableViewCell", bundle: nil)
         self.tableView.register(nib, forCellReuseIdentifier: "NewReviewCell")
         
-        print("newreview_flag:\(self.afterOnboardFlag)")
         
-        if self.afterOnboardFlag == "true" {
-            
-            print("currentUser:\(String(describing: self.currentUser))")
-            
-            //レビューを保存する
-            let reviewRef = self.db.collection("review").document()
-            let reviewDic = [
-                "user_id": self.currentUser?.uid,
-                "display_id": self.displayId,
-                "user_name": self.currentUser?.displayName,
-                "comedian_id": self.comedianId,
-                "comedian_display_name": self.comedianName,
-                "score": self.score,
-                "comment": self.comment,
-                "tag_1": self.tag1,
-                "tag_2": self.tag2,
-                "tag_3": self.tag3,
-                "tag_4": self.tag4,
-                "tag_5": self.tag5,
-                "private_flag": false,
-                "relational_comedian_listname": "",
-                "create_datetime": FieldValue.serverTimestamp(),
-                "update_datetime": FieldValue.serverTimestamp(),
-                "delete_flag": false,
-                "delete_datetime": self.deleteDateTime,
-            ] as [String : Any]
-            reviewRef.setData(reviewDic)
-            
-            print("newReview_afterOnboardFlag:\(self.afterOnboardFlag)")
-            print("newReview_displayId:\(self.displayId)")
-            print("newReview_comedianId:\(self.comedianId)")
-            print("newReview_comedianName:\(self.comedianName)")
-            print("newReview_score:\(self.score)")
-            print("newReview_comment:\(self.comment)")
-            
-
-        }
 
         db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).limit(to: 30).getDocuments() { [self] (querySnapshot, err) in
             
@@ -150,7 +119,12 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
 
                 self.tableView.reloadData()
             }
+            
         }
+        
+        self.indicator.stopAnimating()
+
+        
     }
     
     
