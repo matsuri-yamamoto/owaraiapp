@@ -131,10 +131,29 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     //画像のパス
     let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
 
+    // インジゲーターの設定
+    var indicator = UIActivityIndicatorView()
+
+    
+    override func viewDidLoad() {
+        
+        super.viewDidLoad()
+        
+        // 表示位置を設定（画面中央）
+        self.indicator.center = view.center
+        // インジケーターのスタイルを指定（白色＆大きいサイズ）
+        self.indicator.style = .large
+        // インジケーターの色を設定（青色）
+        self.indicator.color = UIColor.darkGray
+        // インジケーターを View に追加
+        view.addSubview(indicator)
+
+    }
     
     
     override func viewWillAppear(_ animated: Bool) {
         
+        self.indicator.startAnimating()
         
         self.reviewIdArray = []
         self.reviewUserNameArray = []
@@ -857,8 +876,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             }
         }
         
+        self.indicator.stopAnimating()
+
         //pvログ
         AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .comedianDetailVC))
+        
         
     }
     
@@ -1196,7 +1218,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         
         
         //likereviewをセット
-        
+        cell.likeCountButton.tag = indexPath.row
         cell.likeCountButton.addTarget(self, action: #selector(tappedLikeCountButton(sender:)), for: .touchUpInside)
 
         
@@ -1513,7 +1535,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         let tappedReviewId = self.reviewIdArray[buttonTag]
         
         let button = sender
-        let cell = button.superview?.superview as! NewReviewTableViewCell
+        let cell = button.superview?.superview as! ComedianReviewTableViewCell
         
         //セルタップでレビュー全文に遷移
         let followVC = storyboard?.instantiateViewController(withIdentifier: "FollowUser") as! FollowUserViewController

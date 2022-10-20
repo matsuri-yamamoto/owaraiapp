@@ -5,7 +5,7 @@ import Pageboy
 
 class NewReviewTabViewController: TabmanViewController {
 
-    private var viewControllers = [UIViewController(), UIViewController()]
+    private var viewControllers = [UIViewController(), UIViewController(), UIViewController()]
     
 
 
@@ -50,11 +50,15 @@ class NewReviewTabViewController: TabmanViewController {
     private func setTabsControllers() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
-        let firstVC = storyboard.instantiateViewController(withIdentifier: "NewReview") as! NewReivewViewController
-        let secondVC = storyboard.instantiateViewController(withIdentifier: "Following") as! FollowingViewController
+        let firstVC = storyboard.instantiateViewController(withIdentifier: "Campaign") as! CampaignViewController
+        let secondVC = storyboard.instantiateViewController(withIdentifier: "NewReview") as! NewReivewViewController
+        let thirdVC = storyboard.instantiateViewController(withIdentifier: "Following") as! FollowingViewController
+        
         
         viewControllers[0] = firstVC
         viewControllers[1] = secondVC
+        viewControllers[2] = thirdVC
+
 
     }
 }
@@ -84,7 +88,7 @@ extension NewReviewTabViewController: PageboyViewControllerDataSource, TMBarData
 
     //タブバーの要件を決める
     func barItem(for bar: TMBar, at index: Int) -> TMBarItemable {
-        let title = ["新着", "フォロー中"]
+        let title = ["#オチオモ", "新着", "フォロー中"]
         return TMBarItem(title: title[index])
         
         

@@ -219,144 +219,165 @@ class ProfilePageTabViewController: TabmanViewController {
     
     @IBAction func tappedUserFollowButton(_ sender: Any) {
         
-        var currentUserDisplayId :String = ""
-        var currentUserName :String = ""
-        let deleteDateTime :String? = nil
+        
+        
+        if currentUser?.uid == nil {
+                        
+            //ログインしていない場合、ログイン推奨ページに遷移
+            let recLoginVC = storyboard?.instantiateViewController(withIdentifier: "RecLogin") as! RecommendLoginViewController
+            
+            self.navigationController?.pushViewController(recLoginVC, animated: true)
 
-        //currentUserのuserNmae等を取得
-        self.db.collection("user_detail").whereField("user_id", isEqualTo: currentUser?.uid).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-                return
 
-            } else {
-                for document in querySnapshot!.documents {
-                    
-                    currentUserDisplayId = document.data()["display_id"] as! String
-                    
-                }
-                
-                if self.followFlag == "true" {
-                    
-                    self.db.collection("follow").whereField("followed_user_id", isEqualTo: self.userId).whereField("following_user_id", isEqualTo: self.currentUser?.uid).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
-                        if let err = err {
-                            print("Error getting documents: \(err)")
-                            return
+            
+            
+            //ログ
+            AnalyticsUtil.sendAction(ActionEvent(screenName: .myReviewVC,
+                                                         actionType: .tap,
+                                                 actionLabel: .template(ActionLabelTemplate.myPageRecLoginPush)))
 
-                        } else {
-                            
-                            
-                            for document in querySnapshot!.documents {
+        } else {
+        
+        
+            var currentUserDisplayId :String = ""
+            var currentUserName :String = ""
+            let deleteDateTime :String? = nil
+
+            //currentUserのuserNmae等を取得
+            self.db.collection("user_detail").whereField("user_id", isEqualTo: currentUser?.uid).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    return
+
+                } else {
+                    for document in querySnapshot!.documents {
+                        
+                        currentUserDisplayId = document.data()["display_id"] as! String
+                        
+                    }
+                    
+                    if self.followFlag == "true" {
+                        
+                        self.db.collection("follow").whereField("followed_user_id", isEqualTo: self.userId).whereField("following_user_id", isEqualTo: self.currentUser?.uid).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
+                            if let err = err {
+                                print("Error getting documents: \(err)")
+                                return
+
+                            } else {
                                 
-                                self.followId = document.documentID
-                            }
-                            
-                            //既存のfollowデータのフラグをfalseにする
-                            let existfollowRef = Firestore.firestore().collection("follow").document(self.followId)
-                            existfollowRef.updateData([
-                                "following_user_name": self.currentUser?.displayName,
-                                "following_user_display_id": currentUserDisplayId,
-                                "followed_user_name": self.userName,
-                                "followed_user_display_id": self.displayId,
-                                "valid_flag": false,
-                                "update_datetime": FieldValue.serverTimestamp(),
-                            ]) { err in
-                                if let err = err {
+                                
+                                for document in querySnapshot!.documents {
                                     
-                                    print("Error updating document: \(err)")
-                                    
-                                } else {
-                                    
-                                    print("Document successfully updated")
-                                    
-                                    //ボタンの色とテキストを変える
-                                    self.userFollowButton.setTitle("フォロー", for: .normal)
-                                    self.userFollowButton.backgroundColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
-                                    self.userFollowButton.titleLabel?.tintColor = #colorLiteral(red: 0.9686005305, green: 0.9686005305, blue: 0.9686005305, alpha: 1)
-                                    
-                                    self.followFlag = "false"
+                                    self.followId = document.documentID
+                                }
+                                
+                                //既存のfollowデータのフラグをfalseにする
+                                let existfollowRef = Firestore.firestore().collection("follow").document(self.followId)
+                                existfollowRef.updateData([
+                                    "following_user_name": self.currentUser?.displayName,
+                                    "following_user_display_id": currentUserDisplayId,
+                                    "followed_user_name": self.userName,
+                                    "followed_user_display_id": self.displayId,
+                                    "valid_flag": false,
+                                    "update_datetime": FieldValue.serverTimestamp(),
+                                ]) { err in
+                                    if let err = err {
+                                        
+                                        print("Error updating document: \(err)")
+                                        
+                                    } else {
+                                        
+                                        print("Document successfully updated")
+                                        
+                                        //ボタンの色とテキストを変える
+                                        self.userFollowButton.setTitle("フォロー", for: .normal)
+                                        self.userFollowButton.backgroundColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
+                                        self.userFollowButton.titleLabel?.tintColor = #colorLiteral(red: 0.9686005305, green: 0.9686005305, blue: 0.9686005305, alpha: 1)
+                                        
+                                        self.followFlag = "false"
 
 
-                                    
+                                        
+                                    }
                                 }
                             }
                         }
+
                     }
-
-                }
-                
-                if self.followFlag == "false" {
                     
-                    //ボタンの色とテキストを変える
-                    self.userFollowButton.setTitle("フォロー中", for: .normal)
-                    self.userFollowButton.backgroundColor = #colorLiteral(red: 0.9686005305, green: 0.9686005305, blue: 0.9686005305, alpha: 1)
-                    self.userFollowButton.titleLabel?.tintColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
-                    self.userFollowButton.layer.borderColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
-                    self.userFollowButton.layer.borderWidth = 1.0
+                    if self.followFlag == "false" {
+                        
+                        //ボタンの色とテキストを変える
+                        self.userFollowButton.setTitle("フォロー中", for: .normal)
+                        self.userFollowButton.backgroundColor = #colorLiteral(red: 0.9686005305, green: 0.9686005305, blue: 0.9686005305, alpha: 1)
+                        self.userFollowButton.titleLabel?.tintColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
+                        self.userFollowButton.layer.borderColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
+                        self.userFollowButton.layer.borderWidth = 1.0
 
-                    self.followFlag = "true"
-                    
-                    //既存のfollowデータの有無を調べる
-                    //あればフラグをtrueにし、なければtrueでデータを作成する
-                    self.db.collection("follow").whereField("followed_user_id", isEqualTo: self.userId).whereField("following_user_id", isEqualTo: self.currentUser?.uid).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
-                        if let err = err {
-                            print("Error getting documents: \(err)")
-                            return
+                        self.followFlag = "true"
+                        
+                        //既存のfollowデータの有無を調べる
+                        //あればフラグをtrueにし、なければtrueでデータを作成する
+                        self.db.collection("follow").whereField("followed_user_id", isEqualTo: self.userId).whereField("following_user_id", isEqualTo: self.currentUser?.uid).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
+                            if let err = err {
+                                print("Error getting documents: \(err)")
+                                return
 
-                        } else {
-                            //データがない場合
-                            if querySnapshot?.documents.count == 0 {
-                                
-                                let followRef = Firestore.firestore().collection("follow").document()
-                                let followDic = [
-                                    "following_user_id": self.currentUser?.uid,
-                                    "following_user_name": self.currentUser?.displayName,
-                                    "following_user_display_id": currentUserDisplayId,
-                                    "followed_user_id": self.userId,
-                                    "followed_user_name": self.userName,
-                                    "followed_user_display_id": self.displayId,
-                                    "valid_flag": true,
-                                    "create_datetime": FieldValue.serverTimestamp(),
-                                    "update_datetime": FieldValue.serverTimestamp(),
-                                    "delete_flag": false,
-                                    "delete_datetime": deleteDateTime,
-                                ] as [String : Any]
-                                followRef.setData(followDic)
-
-                            }
-                            //データがある場合
-                            if (querySnapshot?.documents.count)! > 0 {
-                                
-                                for document in querySnapshot!.documents {
-                                    print("\(document.documentID) => \(document.data())")
-                                    let documentId = document.documentID
+                            } else {
+                                //データがない場合
+                                if querySnapshot?.documents.count == 0 {
                                     
-                                    //ドキュメントidがnilでない場合、レビューを書いたことがあるということなのでドキュメントを更新する
-                                    let existFollowRef = Firestore.firestore().collection("follow").document(documentId)
-                                    existFollowRef.updateData([
+                                    let followRef = Firestore.firestore().collection("follow").document()
+                                    let followDic = [
+                                        "following_user_id": self.currentUser?.uid,
                                         "following_user_name": self.currentUser?.displayName,
                                         "following_user_display_id": currentUserDisplayId,
+                                        "followed_user_id": self.userId,
                                         "followed_user_name": self.userName,
                                         "followed_user_display_id": self.displayId,
                                         "valid_flag": true,
+                                        "create_datetime": FieldValue.serverTimestamp(),
                                         "update_datetime": FieldValue.serverTimestamp(),
-                                    ]) { err in
-                                        if let err = err {
-                                            print("Error updating document: \(err)")
-                                        } else {
-                                            print("Document successfully updated")
-                                            self.dismiss(animated: true)
+                                        "delete_flag": false,
+                                        "delete_datetime": deleteDateTime,
+                                    ] as [String : Any]
+                                    followRef.setData(followDic)
+
+                                }
+                                //データがある場合
+                                if (querySnapshot?.documents.count)! > 0 {
+                                    
+                                    for document in querySnapshot!.documents {
+                                        print("\(document.documentID) => \(document.data())")
+                                        let documentId = document.documentID
+                                        
+                                        //ドキュメントidがnilでない場合、レビューを書いたことがあるということなのでドキュメントを更新する
+                                        let existFollowRef = Firestore.firestore().collection("follow").document(documentId)
+                                        existFollowRef.updateData([
+                                            "following_user_name": self.currentUser?.displayName,
+                                            "following_user_display_id": currentUserDisplayId,
+                                            "followed_user_name": self.userName,
+                                            "followed_user_display_id": self.displayId,
+                                            "valid_flag": true,
+                                            "update_datetime": FieldValue.serverTimestamp(),
+                                        ]) { err in
+                                            if let err = err {
+                                                print("Error updating document: \(err)")
+                                            } else {
+                                                print("Document successfully updated")
+                                                self.dismiss(animated: true)
+                                            }
                                         }
                                     }
+                                    
                                 }
                                 
                             }
-                            
                         }
+       
                     }
-   
+                    
                 }
-                
             }
         }
 

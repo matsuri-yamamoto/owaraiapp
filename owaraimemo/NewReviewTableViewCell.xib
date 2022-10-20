@@ -103,6 +103,14 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V7e-kf-Y8D">
+                        <rect key="frame" x="344" y="351" width="50" height="15"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <color key="backgroundColor" red="0.97854371230000003" green="0.97854371230000003" blue="0.97854371230000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 <constraints>
@@ -163,6 +171,7 @@
                 <outlet property="likeButton" destination="ioc-0L-KBd" id="FPy-fQ-lpn"/>
                 <outlet property="likeCountButton" destination="HDP-Me-N4o" id="7eh-Cv-JNt"/>
                 <outlet property="relationalComedianLabel" destination="iLW-UA-uf1" id="hht-An-dgq"/>
+                <outlet property="reviewCommentLink" destination="V7e-kf-Y8D" id="Xpj-Hy-ZAN"/>
                 <outlet property="scoreImageView" destination="SlZ-RL-mbC" id="som-4k-p1M"/>
                 <outlet property="scoreLabel" destination="6Xe-0m-rEX" id="rd2-hH-HGS"/>
                 <outlet property="userDisplayIdLabel" destination="cny-vg-ds7" id="VGt-6g-OeM"/>

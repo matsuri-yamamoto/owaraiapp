@@ -38,22 +38,28 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
     var reviewIdArray3: [String] = []
     var reviewIdArray4: [String] = []
     var reviewIdArray5: [String] = []
+
+    var reviewComedianIdArray: [String] = []
+    var reviewComedianIdArra1: [String] = []
+    var reviewComedianIdArray2: [String] = []
+    var reviewComedianIdArray3: [String] = []
+    var reviewComedianIdArray4: [String] = []
+    var reviewComedianIdArray5: [String] = []
     
-    var comedianIdArray: [String] = []
-    var comedianNameArray: [String] = []
-    var userIdArray: [String] = []
-    var userNameArray: [String] = []
-    var userDisplayIdArray: [String] = []
-    var reviewUpdateDatetimeArray: [String] = []
-    var reviewScoreArray: [String] = []
-    var reviewCommentArray: [String] = []
-    var reviewRelationalArray: [String] = []
+//    var comedianIdArray: [String] = []
+//    var comedianNameArray: [String] = []
+//    var userIdArray: [String] = []
+//    var userNameArray: [String] = []
+//    var userDisplayIdArray: [String] = []
+//    var reviewUpdateDatetimeArray: [String] = []
+//    var reviewScoreArray: [String] = []
+//    var reviewCommentArray: [String] = []
+//    var reviewRelationalArray: [String] = []
     
     var userId :String = ""
     var userName :String = ""
     var userDisplayId :String = ""
     var comedianName :String = ""
-    var comedianId :String = ""
     var updated :String = ""
     var score :String = ""
     var comment :String = ""
@@ -64,14 +70,51 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
 
     
     override func viewDidLoad() {
-        super.viewDidLoad()
         
+        super.viewDidLoad()
+
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
         
         let nib = UINib(nibName: "NewReviewTableViewCell", bundle: nil)
         self.tableView.register(nib, forCellReuseIdentifier: "NewReviewCell")
+        
+        dataRefresh()
+        
+        
+        self.tableView.refreshControl = UIRefreshControl()
+        self.tableView.refreshControl?.addTarget(self, action: #selector(dataRefresh), for: .valueChanged)
+
+        
+
+    }
+    
+    
+    @objc func dataRefresh() {
+        
+        self.followedUserArray = []
+        self.followedUserArray1 = []
+        self.followedUserArray2 = []
+        self.followedUserArray3 = []
+        self.followedUserArray4 = []
+        self.followedUserArray5 = []
+
+        self.reviewIdArray = []
+        self.reviewIdArray1 = []
+        self.reviewIdArray2 = []
+        self.reviewIdArray3 = []
+        self.reviewIdArray4 = []
+        self.reviewIdArray5 = []
+
+        
+        self.reviewComedianIdArray = []
+        self.reviewComedianIdArra1 = []
+        self.reviewComedianIdArray2 = []
+        self.reviewComedianIdArray3 = []
+        self.reviewComedianIdArray4 = []
+        self.reviewComedianIdArray5 = []
+
         
         //フォロー中のuser_idを特定する
         db.collection("follow").whereField("following_user_id", isEqualTo: currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() { (querySnapshot, err) in
@@ -88,7 +131,11 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                 }
                 
                 if (querySnapshot?.documents.count)! == 0 {
+                    
+
                 
+                    self.tableView.reloadData()
+                    self.tableView.refreshControl?.endRefreshing()
                     return
                     
                     
@@ -139,11 +186,19 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                 }
                 
             }
+            
+
+
         }
+        
     }
     
     
+    
+    
     func setReviewId() {
+        
+
         
         print("followedUserArray1:\(self.followedUserArray1)")
         
@@ -159,6 +214,9 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                     self.reviewIdArray1.append(document.documentID)
                     self.reviewIdArray = self.reviewIdArray1
                     print("reviewIdArray_1:\(self.reviewIdArray)")
+                    
+                    self.reviewComedianIdArra1.append(document.data()["comedian_id"] as! String)
+                    self.reviewComedianIdArray = self.reviewComedianIdArra1
                     
                 }
                 
@@ -177,6 +235,10 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                                 self.reviewIdArray2.append(document.documentID)
                                 self.reviewIdArray += self.reviewIdArray2
                                 
+                                self.reviewComedianIdArray2.append(document.data()["comedian_id"] as! String)
+                                self.reviewComedianIdArray += self.reviewComedianIdArray2
+
+                                
                             }
 
                             
@@ -193,6 +255,9 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                                             
                                             self.reviewIdArray3.append(document.documentID)
                                             self.reviewIdArray += self.reviewIdArray3
+                                            
+                                            self.reviewComedianIdArray3.append(document.data()["comedian_id"] as! String)
+                                            self.reviewComedianIdArray += self.reviewComedianIdArray3
 
                                         }
 
@@ -211,6 +276,8 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                                                         self.reviewIdArray4.append(document.documentID)
                                                         self.reviewIdArray += self.reviewIdArray4
 
+                                                        self.reviewComedianIdArray4.append(document.data()["comedian_id"] as! String)
+                                                        self.reviewComedianIdArray += self.reviewComedianIdArray4
 
                                                     }
 
@@ -228,6 +295,9 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                                                                     
                                                                     self.reviewIdArray5.append(document.documentID)
                                                                     self.reviewIdArray += self.reviewIdArray5
+                                                                    
+                                                                    self.reviewComedianIdArray5.append(document.data()["comedian_id"] as! String)
+                                                                    self.reviewComedianIdArray += self.reviewComedianIdArray5
 
 
                                                                     
@@ -257,10 +327,17 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                     
                 }
                 self.tableView.reloadData()
+
                 
             }
+            
+            self.tableView.delegate = self
+            self.tableView.dataSource = self
+            
+            self.tableView.refreshControl?.endRefreshing()
                         
         }
+
                 
     }
     
@@ -279,11 +356,9 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewReviewCell", for: indexPath) as! NewReviewTableViewCell
         
-        self.reviewId = self.reviewIdArray[indexPath.row]
-        print("following_reviewId:\(self.reviewId)")
 
         
-        db.collection("review").whereField(FieldPath.documentID(), isEqualTo: self.reviewId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).getDocuments() { (querySnapshot, err) in
+        db.collection("review").whereField(FieldPath.documentID(), isEqualTo: self.reviewIdArray[indexPath.row]).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).getDocuments() { (querySnapshot, err) in
             
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -293,7 +368,6 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                 for document in querySnapshot!.documents {
                     
                     self.userId = document.data()["user_id"] as! String
-                    self.comedianId = document.data()["comedian_id"] as! String
  
                     
                     self.userName = document.data()["user_name"] as! String
@@ -345,7 +419,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                 }
                                                 
                 //copyrightflagを取得して画像をセット
-                self.db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: self.comedianId).getDocuments() {(querySnapshot, err) in
+                self.db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: self.reviewComedianIdArray[indexPath.row]).getDocuments() {(querySnapshot, err) in
                     if let err = err {
                         print("Error getting documents: \(err)")
                         return
@@ -360,7 +434,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
 //                                let imageRef = self.storage.child("comedian_image/\(self.comedianId).jpg")
 //                                cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
                                 
-                                cell.comedianImageView.image = UIImage(named: "\(self.comedianId)")
+                                cell.comedianImageView.image = UIImage(named: "\(self.reviewComedianIdArray[indexPath.row])")
                                 cell.comedianImageView.contentMode = .scaleAspectFill
                                 cell.comedianImageView.clipsToBounds = true
 
@@ -400,10 +474,11 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                 cell.likeButton.addTarget(self, action: #selector(self.tappedLikeButton(sender:)), for: .touchUpInside)
 
                 //likereviewをセット
+                cell.likeCountButton.tag = indexPath.row
                 cell.likeCountButton.addTarget(self, action: #selector(self.tappedLikeCountButton(sender:)), for: .touchUpInside)
 
                 
-                self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
+                self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewIdArray[indexPath.row]).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
                     if let err = err {
                         print("Error getting documents: \(err)")
                         return
@@ -427,7 +502,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                             cell.likeCountButton.setTitle("\(querySnapshot!.documents.count)件のいいね！", for: .normal)
 
                             //自分のlike_frag==trueのレビュー有無でレビューボタンの色を変える
-                            self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_user_id", isEqualTo: self.currentUser?.uid as Any).whereField("like_flag", isEqualTo: true).getDocuments() { [self](querySnapshot, err) in
+                            self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewIdArray[indexPath.row]).whereField("like_user_id", isEqualTo: self.currentUser?.uid as Any).whereField("like_flag", isEqualTo: true).getDocuments() { [self](querySnapshot, err) in
                                 
                                 if let err = err {
                                     print("Error getting documents: \(err)")
@@ -698,7 +773,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
         
         
         let buttonTag = sender.tag
-        let tappedComedianId = self.comedianIdArray[buttonTag]
+        let tappedComedianId = self.reviewComedianIdArray[buttonTag]
         
         let button = sender
         let cell = button.superview?.superview as! NewReviewTableViewCell

@@ -16,7 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         // ログイン判定
-            if Auth.auth().currentUser?.uid != nil {
+//            if Auth.auth().currentUser?.uid != nil {
         
                 let window = UIWindow(windowScene: scene as! UIWindowScene)
                 self.window = window
@@ -32,23 +32,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
 
         
-                } else {
-        
-                    // ログインしてない場合
-                    let window = UIWindow(windowScene: scene as! UIWindowScene)
-                    self.window = window
-                    window.makeKeyAndVisible()
-                    
-                    let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-
-                    let onboardVC = storyBoard.instantiateViewController(identifier: "OnboardPage")
-                    // 上記をrootのコントローラとしてインスタンス化
-                    let navVC = UINavigationController(rootViewController: onboardVC)
-
-                    window.rootViewController = navVC
-
-
-                }
+//                } else {
+//
+//                    // ログインしてない場合
+//                    let window = UIWindow(windowScene: scene as! UIWindowScene)
+//                    self.window = window
+//                    window.makeKeyAndVisible()
+//
+//                    let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+//
+//                    let onboardVC = storyBoard.instantiateViewController(identifier: "OnboardPage")
+//                    // 上記をrootのコントローラとしてインスタンス化
+//                    let navVC = UINavigationController(rootViewController: onboardVC)
+//
+//                    window.rootViewController = navVC
+//
+//
+//                }
         
         // ナビゲージョンアイテムの文字色
         UINavigationBar.appearance().tintColor = #colorLiteral(red: 0.2442787347, green: 0.2442787347, blue: 0.2442787347, alpha: 1)

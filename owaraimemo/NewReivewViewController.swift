@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import FirebaseFirestore
+import Firebase
 import FirebaseAuth
 import FirebaseStorageUI
 
@@ -16,7 +16,6 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     let db = Firestore.firestore()
     let currentUser = Auth.auth().currentUser
     
-
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -31,6 +30,8 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     var reviewCommentArray: [String] = []
     var reviewRelationalArray: [String] = []
     
+    var reviewLinkArray: [String] = []
+    
     var reviewId :String = ""
     
     //いいねボタン用の画像
@@ -42,9 +43,11 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     
     // インジゲーターの設定
     var indicator = UIActivityIndicatorView()
-
+    
     
     override func viewDidLoad() {
+        
+        super.viewDidLoad()
         
         // 表示位置を設定（画面中央）
         self.indicator.center = view.center
@@ -55,15 +58,9 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         // インジケーターを View に追加
         view.addSubview(indicator)
         
-
-        
-        self.indicator.startAnimating()
-
-        
-        super.viewDidLoad()
         self.title = "新着"
         
-        
+        self.dataRefresh()
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -71,61 +68,202 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         let nib = UINib(nibName: "NewReviewTableViewCell", bundle: nil)
         self.tableView.register(nib, forCellReuseIdentifier: "NewReviewCell")
         
+        self.tableView.refreshControl = UIRefreshControl()
+        self.tableView.refreshControl?.addTarget(self, action: #selector(dataRefresh), for: .valueChanged)
+
         
 
-        db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).limit(to: 30).getDocuments() { [self] (querySnapshot, err) in
-            
+        
+    }
+    
+    
+    
+//    override func viewWillAppear(_ animated: Bool) {
+//
+//        let nib = UINib(nibName: "NewReviewTableViewCell", bundle: nil)
+//        self.tableView.register(nib, forCellReuseIdentifier: "NewReviewCell")
+//
+//
+//
+//
+//        self.reviewIdArray = []
+//        self.comedianIdArray = []
+//        self.comedianNameArray = []
+//        self.userIdArray = []
+//        self.userNameArray = []
+//        self.userDisplayIdArray = []
+//        self.reviewUpdateDatetimeArray = []
+//        self.reviewScoreArray = []
+//        self.reviewCommentArray = []
+//        self.reviewRelationalArray = []
+//
+//        self.reviewLinkArray = []
+//
+//        self.reviewId = ""
+//
+//        self.indicator.startAnimating()
+//
+//        self.db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
+//
+//            if let err = err {
+//                print("Error getting documents: \(err)")
+//                return
+//
+//            } else {
+//                for document in querySnapshot!.documents {
+//
+//                    self.reviewIdArray.append(document.documentID)
+//                    self.comedianIdArray.append(document.data()["comedian_id"] as! String)
+//                    self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
+//                    self.userIdArray.append(document.data()["user_id"] as! String)
+//                    self.userNameArray.append(document.data()["user_name"] as! String)
+//
+//                    self.userDisplayIdArray.append(document.data()["display_id"] as! String)
+//
+//                    let dateFormatter = DateFormatter()
+//                    dateFormatter.dateStyle = .short
+//                    dateFormatter.timeStyle = .short
+//                    dateFormatter.locale = Locale(identifier: "ja_JP")
+//
+//                    dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
+//
+//                    let updated = document.data()["update_datetime"] as! Timestamp
+//                    let updatedDate = updated.dateValue()
+//                    let updatedDateTime = dateFormatter.string(from: updatedDate)
+//                    self.reviewUpdateDatetimeArray.append(updatedDateTime)
+//
+//                    let reviewFloatScoreArray = document.data()["score"] as! Float
+//                    self.reviewScoreArray.append(String(reviewFloatScoreArray))
+//
+//                    self.reviewCommentArray.append(document.data()["comment"] as! String)
+//
+//                    self.reviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
+//                }
+//
+//                self.tableView.reloadData()
+//                print("reviewScoreArray:\(reviewScoreArray)")
+//
+////                self.tableView.refreshControl?.endRefreshing()
+//
+//                tableView.delegate = self
+//                tableView.dataSource = self
+//
+//
+//            }
+//        }
+//
+//        self.indicator.stopAnimating()
+//
+//    }
+    
+    
+    
+   @objc func dataRefresh() {
+
+       self.reviewIdArray = []
+       self.comedianIdArray = []
+       self.comedianNameArray = []
+       self.userIdArray = []
+       self.userNameArray = []
+       self.userDisplayIdArray = []
+       self.reviewUpdateDatetimeArray = []
+       self.reviewScoreArray = []
+       self.reviewCommentArray = []
+       self.reviewRelationalArray = []
+       
+       self.reviewLinkArray = []
+       
+       self.reviewId = ""
+
+
+        self.db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
+
             if let err = err {
                 print("Error getting documents: \(err)")
                 return
-                
+
             } else {
                 for document in querySnapshot!.documents {
-                    
-                    
+
+
                     self.reviewIdArray.append(document.documentID)
                     self.comedianIdArray.append(document.data()["comedian_id"] as! String)
                     self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
                     self.userIdArray.append(document.data()["user_id"] as! String)
                     self.userNameArray.append(document.data()["user_name"] as! String)
-                    
+
                     self.userDisplayIdArray.append(document.data()["display_id"] as! String)
-                    
+
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateStyle = .short
                     dateFormatter.timeStyle = .short
                     dateFormatter.locale = Locale(identifier: "ja_JP")
-                    
+
                     dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
-                    
-                    print("更新日時：\(document.data()["update_datetime"]!)")
-                    
+
                     let updated = document.data()["update_datetime"] as! Timestamp
                     let updatedDate = updated.dateValue()
                     let updatedDateTime = dateFormatter.string(from: updatedDate)
                     self.reviewUpdateDatetimeArray.append(updatedDateTime)
-                    
+
                     let reviewFloatScoreArray = document.data()["score"] as! Float
                     self.reviewScoreArray.append(String(reviewFloatScoreArray))
-                    
+
                     self.reviewCommentArray.append(document.data()["comment"] as! String)
-                    
+
                     self.reviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
-                    //reviewRelationalArrayで、nilの場合に空白がセットされているのか確認する
-                    print("reviewRelationalArray:\(self.reviewRelationalArray)")
-                    
-                    
                 }
 
                 self.tableView.reloadData()
+                print("reviewScoreArray:\(reviewScoreArray)")
+
+
+
+
+
             }
             
-        }
-        
-        self.indicator.stopAnimating()
+            tableView.delegate = self
+            tableView.dataSource = self
 
-        
+            self.tableView.refreshControl?.endRefreshing()
+
+
+        }
     }
+
+                
+                
+                
+                //                    }
+                
+                //                //コメントのリンク部分を配列にセット
+                //                for comment in reviewCommentArray {
+                //
+                //                    var link :String?
+                //                    link = getLinkTextList(text:comment).first
+                //
+                //                    print("link:\(link)")
+                //
+                //                    if (link != nil) {
+                //
+                //                        self.reviewLinkArray.append(link ?? "")
+                //
+                //                    } else {
+                //
+                //                        self.reviewLinkArray.append("")
+                //
+                //                    }
+                //                }
+                //
+                //                print("self.reviewLinkArray:\(self.reviewLinkArray)")
+                
+                
+                
+                
+                
+    
+    
     
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -144,9 +282,9 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        self.reviewId = self.reviewIdArray[indexPath.row]
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewReviewCell", for: indexPath) as! NewReviewTableViewCell
+        cell.tag = indexPath.row
         
         cell.userNameButton.tag = indexPath.row
         cell.userNameButton.contentHorizontalAlignment = .left
@@ -158,19 +296,35 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         
         cell.comedianNameButton.tag = indexPath.row
         cell.comedianNameButton.addTarget(self, action: #selector(tappedcomedianButton(sender:)), for: .touchUpInside)
-
+        
         cell.comedianNameButton.contentHorizontalAlignment = .left
         cell.comedianNameButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13.0)
         cell.comedianNameButton.setTitle("　" + self.comedianNameArray[indexPath.row], for: .normal)
-
+        
         cell.scoreLabel.text = self.reviewScoreArray[indexPath.row]
         cell.scoreImageView.image = UIImage(named: "score_\(self.reviewScoreArray[indexPath.row])")
-
+        
+        cell.likeCountButton.tag = indexPath.row
+        
+        cell.commentLabel.tag = indexPath.row
         cell.commentLabel.text = self.reviewCommentArray[indexPath.row]
+        
+        
         cell.commentLabel.attributedText = cell.commentLabel.text?.attributedString(lineSpace: 5)
         cell.commentLabel.font = cell.commentLabel.font.withSize(13)
         cell.commentLabel.tintColor = UIColor.darkGray
         cell.commentLabel.textAlignment = NSTextAlignment.left
+        
+        
+        //        //コメントのリンクをセット
+        //        cell.reviewCommentLink.tag = indexPath.row
+        //        cell.reviewCommentLink.text = self.reviewLinkArray[indexPath.row]
+        
+        
+        //        //タップ時の操作を付与する
+        //        cell.commentLabel.isUserInteractionEnabled = true
+        //        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapReviewLinkGesture))
+        //        cell.commentLabel.addGestureRecognizer(tapGestureRecognizer)
         
         
         
@@ -187,13 +341,13 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                     
                     if copyrightFlag == "true" {
                         
-//                        let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
-//                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+                        //                        let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
+                        //                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
                         
                         cell.comedianImageView.image = UIImage(named: "\(self.comedianIdArray[indexPath.row])")
-//                        cell.comedianImageView.contentMode = .scaleAspectFill
-//                        cell.comedianImageView.clipsToBounds = true
-
+                        //                        cell.comedianImageView.contentMode = .scaleAspectFill
+                        //                        cell.comedianImageView.clipsToBounds = true
+                        
                         
                     }
                     
@@ -228,13 +382,13 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         //likeButtonをセット
         cell.likeButton.tag = indexPath.row
         cell.likeButton.addTarget(self, action: #selector(tappedLikeButton(sender:)), for: .touchUpInside)
-
+        
         //likereviewをセット
         
         cell.likeCountButton.addTarget(self, action: #selector(tappedLikeCountButton(sender:)), for: .touchUpInside)
-
         
-        db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
+        
+        db.collection("like_review").whereField("review_id", isEqualTo: self.reviewIdArray[indexPath.row]).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
                 return
@@ -254,10 +408,10 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                     cell.likeCountButton.contentHorizontalAlignment = .left
                     cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
                     cell.likeCountButton.setTitle("\(querySnapshot!.documents.count)件のいいね！", for: .normal)
-
-                                        
+                    
+                    
                     //自分のlike_frag==trueのレビュー有無でレビューボタンの色を変える
-                    self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_user_id", isEqualTo: self.currentUser?.uid as Any).whereField("like_flag", isEqualTo: true).getDocuments() { [self](querySnapshot, err) in
+                    self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewIdArray[indexPath.row]).whereField("like_user_id", isEqualTo: self.currentUser?.uid as Any).whereField("like_flag", isEqualTo: true).getDocuments() { [self](querySnapshot, err) in
                         
                         if let err = err {
                             print("Error getting documents: \(err)")
@@ -318,9 +472,9 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
             
             //ログ
             AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
-                                                         actionType: .tap,
+                                                 actionType: .tap,
                                                  actionLabel: .template(ActionLabelTemplate.comedianLikeReviewReLoginPush)))
-
+            
         } else {
             
             //ボタン画像の切り替え
@@ -328,15 +482,15 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
             if cell.likeButton.imageView?.image == self.likeImage {
                 
                 cell.likeButton.setImage(self.unLikeImage, for: .normal)
-
+                
             }
             
             if cell.likeButton.imageView?.image == self.unLikeImage {
                 
                 cell.likeButton.setImage(self.likeImage, for: .normal)
-
+                
             }
-
+            
             //like_reviewにセットする項目
             var documentId :String?
             var likeFlag :Bool?
@@ -389,7 +543,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                     return
                     
                 } else {
-
+                    
                     
                     for document in querySnapshot!.documents{
                         
@@ -400,7 +554,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                         reviewUserDisplayId = document.data()["display_id"] as? String
                         reviewComment = document.data()["comment"] as? String
                         reviewScore = document.data()["score"] as? Float
-
+                        
                         
                         //すでに自分がいいねしたことがあるレビューかどうかをチェック
                         self.db.collection("like_review").whereField("review_id", isEqualTo: tappedReviewId).whereField("like_user_id", isEqualTo: self.currentUser?.uid as Any).getDocuments() {(querySnapshot, err) in
@@ -439,13 +593,13 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                                     
                                     //ログ
                                     AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
-                                                                                 actionType: .tap,
+                                                                         actionType: .tap,
                                                                          actionLabel: .template(ActionLabelTemplate.comedianLikeReviewTap)))
                                     
                                 } else {
                                     
                                     for document in querySnapshot!.documents {
-
+                                        
                                         documentId = document.documentID
                                         likeFlag = document.data()["like_flag"] as? Bool
                                         
@@ -473,7 +627,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                                         ])
                                         
                                     } else {
-
+                                        
                                         
                                         let existlikeReviewRef = Firestore.firestore().collection("like_review").document(documentId!)
                                         existlikeReviewRef.updateData([
@@ -506,18 +660,18 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                                             cell.likeCountButton.setTitle("いいね！はまだありません", for: .normal)
                                             
                                             cell.likeButton.setImage(self.unLikeImage, for: .normal)
-                                                                            
                                             
-
+                                            
+                                            
                                         } else {
                                             
                                             cell.likeCountButton.contentHorizontalAlignment = .left
                                             cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
                                             cell.likeCountButton.setTitle("\(querySnapshot!.documents.count)件のいいね！", for: .normal)
-
-
+                                            
+                                            
                                         }
-
+                                        
                                         
                                     }
                                 }
@@ -577,24 +731,65 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         let buttonTag = sender.tag
         let tappedUserId = self.userIdArray[buttonTag]
         let tappedUserName = self.userNameArray[buttonTag]
-
+        
         
         let button = sender
         let cell = button.superview?.superview as! NewReviewTableViewCell
-
-
+        
+        
         
         //セルタップでプロフィールに遷移
         let profileVC = storyboard?.instantiateViewController(withIdentifier: "ProfileTab") as! ProfilePageTabViewController
-
+        
         profileVC.userId = tappedUserId
         profileVC.userName = tappedUserName
-
+        
         
         
         self.navigationController?.pushViewController(profileVC, animated: true)
-
+        
         
     }
+    
+    //    @objc func tapReviewLinkGesture(sender: UILabel, gestureRecognizer: UITapGestureRecognizer) {
+    //
+    //        let tag = sender.tag
+    ////        let tappedCommentLabel = self.reviewCommentArray[tag]
+    //        let tappedLinkLavel = self.reviewLinkArray[tag]
+    //
+    //        let label = sender
+    //        let cell = label.superview?.superview as! NewReviewTableViewCell
+    //        cell.tag = tag
+    //
+    //
+    //        guard let text = cell.commentLabel.text else { return }
+    //        let touchPoint = gestureRecognizer.location(in: cell.commentLabel)
+    //        let textStorage = NSTextStorage(attributedString: NSAttributedString(string: tappedLinkLavel))
+    //        let layoutManager = NSLayoutManager()
+    //        textStorage.addLayoutManager(layoutManager)
+    //        let textContainer = NSTextContainer(size: cell.commentLabel.frame.size)
+    //        layoutManager.addTextContainer(textContainer)
+    //        textContainer.lineFragmentPadding = 0
+    //        let toRange = (text as NSString).range(of: tappedLinkLavel)
+    //        let glyphRange = layoutManager.glyphRange(forCharacterRange: toRange, actualCharacterRange: nil)
+    //        let glyphRect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
+    //        if glyphRect.contains(touchPoint) {
+    //            print("Tapped")
+    //        }
+    //    }
+    
+    
+    
+    //    //コメントからURLを識別する
+    //    func getLinkTextList(text: String) -> [String] {
+    //        guard let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) else {
+    //            return []
+    //        }
+    //        let enableLinkTuples = detector.matches(in: text, range: NSRange(location: 0, length: text.count))
+    //        return enableLinkTuples.map { checkingResult -> String in
+    //            return (text as NSString).substring(with: checkingResult.range)
+    //        }
+    //    }
+    
 }
- 
+

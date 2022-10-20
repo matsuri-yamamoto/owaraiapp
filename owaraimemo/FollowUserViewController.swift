@@ -56,6 +56,7 @@ class FollowUserViewController: UIViewController, UITableViewDelegate, UITableVi
             
         }
         
+        
     }
     
     
@@ -109,7 +110,7 @@ class FollowUserViewController: UIViewController, UITableViewDelegate, UITableVi
         //レビューをいいねしているユーザーを取得
         if self.userType == "likeReview" {
             
-            db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_flag", isEqualTo: true).order(by: "update_datetime", descending: true).whereField("delete_flag", isEqualTo: false).getDocuments() { (querySnapshot, err) in
+            db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { (querySnapshot, err) in
                 
                 if let err = err {
                     print("Error getting documents: \(err)")

@@ -33,8 +33,10 @@ class StockViewController: UIViewController, UICollectionViewDelegate, UICollect
     let currentUser = Auth.auth().currentUser
     let db = Firestore.firestore()
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidLoad() {
         
+        super.viewDidLoad()
+
         
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
@@ -54,6 +56,35 @@ class StockViewController: UIViewController, UICollectionViewDelegate, UICollect
         
         layout.itemSize = CGSize(width: cellSize, height: cellSize*1.35)
         collectionView.collectionViewLayout = layout
+        
+        dataRefresh()
+        
+        self.collectionView.refreshControl = UIRefreshControl()
+        self.collectionView.refreshControl?.addTarget(self, action: #selector(dataRefresh), for: .valueChanged)
+
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        //ReviewVCに渡す用のComedianDataを取得する(対象となる芸人はComedianNameArrayと同じだが、ComedianData型である必要があるため)
+        //毎回データ更新してくれるように、viewDidAppearの中に記述する
+        if comedianNameUniqueArray != [] {
+            
+
+        }
+    
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .myReviewVC))
+    }
+    
+    
+    @objc func dataRefresh() {
+        
+        self.comedianNameArray = []
+        self.comedianDataArray = []
+        self.comedianNameUniqueArray = []
+        self.comedianDataUniqueArray = []
+
         
         //ストックデータを配列にセットする
         db.collection("stock").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).whereField("valid_flag", isEqualTo: true).order(by: "create_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
@@ -84,25 +115,18 @@ class StockViewController: UIViewController, UICollectionViewDelegate, UICollect
                         var setData = Set<String>()
                         self.comedianDataUniqueArray = self.comedianDataArray.filter { setData.insert($0).inserted }
 //                        print("stockcomedianUniqueArray: \(self.comedianDataUniqueArray)")
-                        self.collectionView.reloadData()
                     }
+                
+                self.collectionView.reloadData()
+
             }
+            
+            self.collectionView.refreshControl?.endRefreshing()
+            
         }
+
         
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        //ReviewVCに渡す用のComedianDataを取得する(対象となる芸人はComedianNameArrayと同じだが、ComedianData型である必要があるため)
-        //毎回データ更新してくれるように、viewDidAppearの中に記述する
-        if comedianNameUniqueArray != [] {
-            
-
-        }
-    
-        //pvログ
-        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .myReviewVC))
-    }
-    
     
     
     // データの数（＝セルの数）を返すメソッド

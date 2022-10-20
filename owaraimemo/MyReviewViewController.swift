@@ -43,10 +43,37 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
 
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidLoad() {
         
+        super.viewDidLoad()
+
+        let nib = UINib(nibName: "MyReviewTableViewCell", bundle: nil)
+        self.tableView.register(nib, forCellReuseIdentifier: "MyReviewCell")
+
         print("currentUser:\(String(describing: Auth.auth().currentUser?.uid))")
                 
+        dataRefresh()
+        
+        self.tableView.refreshControl = UIRefreshControl()
+        self.tableView.refreshControl?.addTarget(self, action: #selector(dataRefresh), for: .valueChanged)
+
+    }
+                
+        
+    override func viewDidAppear(_ animated: Bool) {
+        //ReviewVCに渡す用のComedianDataを取得する(対象となる芸人はcomedianNameArrayと同じだが、ComedianData型である必要があるため)
+        //毎回データ更新してくれるように、viewDidAppearの中に記述する
+        if comedianNameArray != [] {
+            
+
+        }
+    
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .myReviewVC))
+    }
+    
+    
+    @objc func dataRefresh() {
         if currentUser?.uid == nil {
                         
             //ログインしていない場合、ログイン推奨ページに遷移
@@ -71,7 +98,6 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
             self.updatedArray = []
             self.scoreArray = []
             self.commentArray = []
-            self.tableView.reloadData()
 
             
             db.collection("review").whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).order(by: "update_datetime", descending: true).getDocuments() { [self] (querySnapshot, err) in
@@ -84,7 +110,7 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
                         
                         //自分のレビューデータの各fieldを配列に格納する
                         
-                        self.reviewIdArray.append(document.documentID as! String)
+                        self.reviewIdArray.append(document.documentID)
                         self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
                         self.comedianIdArray.append(document.data()["comedian_id"] as! String)
                         
@@ -109,40 +135,17 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
 
-            
-            
         
             self.tableView.delegate = self
             self.tableView.dataSource = self
-
             
-            
-                                    
-            
-
-            //セルを指定
-            
-            let nib = UINib(nibName: "MyReviewTableViewCell", bundle: nil)
-            self.tableView.register(nib, forCellReuseIdentifier: "MyReviewCell")
-            
+            self.tableView.refreshControl?.endRefreshing()
 
                         
         }
-    }
-                
         
-    override func viewDidAppear(_ animated: Bool) {
-        //ReviewVCに渡す用のComedianDataを取得する(対象となる芸人はcomedianNameArrayと同じだが、ComedianData型である必要があるため)
-        //毎回データ更新してくれるように、viewDidAppearの中に記述する
-        if comedianNameArray != [] {
-            
-
-        }
-    
-        //pvログ
-        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .myReviewVC))
+        
     }
-    
     
     
     

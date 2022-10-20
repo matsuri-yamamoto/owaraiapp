@@ -49,23 +49,32 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
     //画像のパス
     let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidLoad() {
         
-        super.viewWillAppear(animated)
-        
+        super.viewDidLoad()
+
+
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
         let nib = UINib(nibName: "NewReviewTableViewCell", bundle: nil)
         self.tableView.register(nib, forCellReuseIdentifier: "NewReviewCell")
         
-        self.setReviewId()
+        dataRefresh()
+        
+        self.tableView.refreshControl = UIRefreshControl()
+        self.tableView.refreshControl?.addTarget(self, action: #selector(dataRefresh), for: .valueChanged)
+
 
     }
     
     
-    func setReviewId() {
+    @objc func dataRefresh() {
         
+        self.reviewIdArray = []
+        self.userIdArray = []
+        self.userNameArray = []
+
         
         //自分がいいねしたreviewのidを参照する
         self.db.collection("like_review").whereField("like_user_id", isEqualTo: currentUser?.uid).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { (querySnapshot, err) in
@@ -92,6 +101,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
             
             defer {
                 self.tableView.reloadData()
+                self.tableView.refreshControl?.endRefreshing()
             }
 
         }
@@ -121,11 +131,10 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewReviewCell", for: indexPath) as! NewReviewTableViewCell
 
-        self.reviewId = self.reviewIdArray[indexPath.row]
-        print("likelist_reviewId:\(self.reviewId)")
+        print("likelist_reviewId:\(self.reviewIdArray[indexPath.row])")
 
         
-        db.collection("review").whereField(FieldPath.documentID(), isEqualTo: self.reviewId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).getDocuments() { (querySnapshot, err) in
+        db.collection("review").whereField(FieldPath.documentID(), isEqualTo: self.reviewIdArray[indexPath.row]).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).getDocuments() { (querySnapshot, err) in
             
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -248,10 +257,11 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.likeButton.addTarget(self, action: #selector(self.tappedLikeButton(sender:)), for: .touchUpInside)
 
                 //likereviewをセット
+                cell.likeCountButton.tag = indexPath.row
                 cell.likeCountButton.addTarget(self, action: #selector(self.tappedLikeCountButton(sender:)), for: .touchUpInside)
 
                 
-                self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
+                self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewIdArray[indexPath.row]).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
                     if let err = err {
                         print("Error getting documents: \(err)")
                         return
@@ -267,11 +277,13 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
 
                         } else {
                             
+                            print("いいねタブのいいね数：\(querySnapshot!.documents.count)")
+                            
                             cell.likeCountButton.contentHorizontalAlignment = .left
                             cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
                             cell.likeCountButton.setTitle("\(querySnapshot!.documents.count)件のいいね！", for: .normal)
                             //自分のlike_frag==trueのレビュー有無でレビューボタンの色を変える
-                            self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_user_id", isEqualTo: self.currentUser?.uid as Any).whereField("like_flag", isEqualTo: true).getDocuments() { [self](querySnapshot, err) in
+                            self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewIdArray[indexPath.row]).whereField("like_user_id", isEqualTo: self.currentUser?.uid as Any).whereField("like_flag", isEqualTo: true).getDocuments() { [self](querySnapshot, err) in
                                 
                                 if let err = err {
                                     print("Error getting documents: \(err)")

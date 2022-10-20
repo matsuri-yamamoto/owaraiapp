@@ -28,11 +28,19 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
     
     var displayId: String!
     
+    var campaignFlag :String = ""
+    var doingCampaign :String = ""
+    
+    let db = Firestore.firestore()
+    let currentUser = Auth.auth().currentUser
+    
     
     //comedianTextFieldに予測表示させる芸人の配列
     var comedianNameArray: [String] = []
     
     //渡されるデータを入れる変数
+    var comment: String = ""
+    
     var comedianName: String = ""
     var comedianID: String = ""
     var tag1: String = ""
@@ -43,12 +51,24 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
     
     var twitterShareFlag: Bool = false
     
-    let currentUser = Auth.auth().currentUser
+    // インジゲーターの設定
+    var indicator = UIActivityIndicatorView()
+
     
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        // 表示位置を設定（画面中央）
+        self.indicator.center = view.center
+        // インジケーターのスタイルを指定（白色＆大きいサイズ）
+        self.indicator.style = .large
+        // インジケーターの色を設定（青色）
+        self.indicator.color = UIColor.darkGray
+        // インジケーターを View に追加
+        view.addSubview(indicator)
+
         
         print("comedianName:\(comedianName)")
         
@@ -92,7 +112,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                         
                         let sliderDoubleValue = Double(self.slider.value)
                         self.sliderLabel.text = String(format: "%.1f", sliderDoubleValue)
-
+                        
                     }
                 }
             }
@@ -170,9 +190,14 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                 // 確定ボタンが押された時の処理をクロージャ実装する
                 (action: UIAlertAction!) -> Void in
                 
+                self.indicator.startAnimating()
+                
+                //textViewの値の置換とキャンペーンの判別
+                self.getCampaign()
+
                 //値の置換
                 let score:Double = Double(self.slider.value)
-                let textView:String = String(self.textView.text)
+                
                 
                 //渡されるデータの定義
                 let userId = Auth.auth().currentUser?.uid
@@ -193,7 +218,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                         for document in querySnapshot!.documents {
                             displayId = document.get("display_id") as? String
                             print("displayId:\(displayId)")
-
+                            
                             //user_id=currentUserかつcomedian_idが前画面から渡されたidであるreviewドキュメントを探す
                             //該当ドキュメントがあればdocumentidを取得し、なければ"doesNotExist"を入れる
                             
@@ -216,12 +241,13 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                             "comedian_id": self.comedianID,
                                             "comedian_display_name": self.comedianName,
                                             "score": score,
-                                            "comment": textView,
+                                            "comment": self.comment,
                                             "tag_1": self.tag1,
                                             "tag_2": self.tag2,
                                             "tag_3": self.tag3,
                                             "tag_4": self.tag4,
                                             "tag_5": self.tag5,
+                                            "campaign_flag": self.campaignFlag,
                                             "private_flag": false,
                                             "relational_comedian_listname": self.comedianTextField.text!,
                                             "create_datetime": FieldValue.serverTimestamp(),
@@ -244,7 +270,8 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                                 "display_id": displayId!,
                                                 "user_name": userName!,
                                                 "score": score,
-                                                "comment": textView,
+                                                "comment": self.comment,
+                                                "campaign_flag": self.campaignFlag,
                                                 "private_flag": false,
                                                 "relational_comedian_listname": self.comedianTextField.text!,
                                                 "update_datetime": FieldValue.serverTimestamp(),
@@ -271,22 +298,23 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                     
                     //ログ
                     AnalyticsUtil.sendAction(ActionEvent(screenName: .reviewVC,
-                                                                 actionType: .tap,
+                                                         actionType: .tap,
                                                          actionLabel: .template(ActionLabelTemplate.reviewSaveButtonTap_shareTwitter)))
-
+                    
                 }
                 
                 if self.twitterShareFlag == false {
                     
                     //ログ
                     AnalyticsUtil.sendAction(ActionEvent(screenName: .reviewVC,
-                                                                 actionType: .tap,
+                                                         actionType: .tap,
                                                          actionLabel: .template(ActionLabelTemplate.reviewSaveButtonTap_noTwitter)))
                     
                     return
                 }
                 
                 
+                self.indicator.stopAnimating()
                 
             })
             
@@ -297,7 +325,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                 //実際の処理
                 print("キャンセル")
                 return
-
+                
             })
             
             //UIAlertControllerにキャンセルボタンと確定ボタンをActionを追加
@@ -306,13 +334,18 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
             
             //実際にAlertを表示する
             present(alert, animated: true, completion: nil)
-                                                             
+            
             
         } else {
-        
+            
+            self.indicator.startAnimating()
+
+            
+            //textViewの値の置換とキャンペーンの判別
+            self.getCampaign()
+
             //値の置換
             let score:Double = Double(slider.value)
-            let textView:String = String(textView.text)
             
             //渡されるデータの定義
             let userId = Auth.auth().currentUser?.uid
@@ -333,7 +366,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                     for document in querySnapshot!.documents {
                         displayId = document.get("display_id") as? String
                         print("displayId:\(displayId)")
-
+                        
                         //user_id=currentUserかつcomedian_idが前画面から渡されたidであるreviewドキュメントを探す
                         //該当ドキュメントがあればdocumentidを取得し、なければ"doesNotExist"を入れる
                         
@@ -356,12 +389,13 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                         "comedian_id": self.comedianID,
                                         "comedian_display_name": self.comedianName,
                                         "score": score,
-                                        "comment": textView,
+                                        "comment": self.comment,
                                         "tag_1": self.tag1,
                                         "tag_2": self.tag2,
                                         "tag_3": self.tag3,
                                         "tag_4": self.tag4,
                                         "tag_5": self.tag5,
+                                        "campaign_flag": self.campaignFlag,
                                         "private_flag": false,
                                         "relational_comedian_listname": self.comedianTextField.text!,
                                         "create_datetime": FieldValue.serverTimestamp(),
@@ -384,7 +418,8 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                             "display_id": displayId!,
                                             "user_name": userName!,
                                             "score": score,
-                                            "comment": textView,
+                                            "comment": self.comment,
+                                            "campaign_flag": self.campaignFlag,
                                             "private_flag": false,
                                             "relational_comedian_listname": self.comedianTextField.text!,
                                             "update_datetime": FieldValue.serverTimestamp(),
@@ -411,19 +446,66 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                 
                 //ログ
                 AnalyticsUtil.sendAction(ActionEvent(screenName: .reviewVC,
-                                                             actionType: .tap,
+                                                     actionType: .tap,
                                                      actionLabel: .template(ActionLabelTemplate.reviewSaveButtonTap_shareTwitter)))
-
+                
             }
             
             if twitterShareFlag == false {
                 
                 //ログ
                 AnalyticsUtil.sendAction(ActionEvent(screenName: .reviewVC,
-                                                             actionType: .tap,
+                                                     actionType: .tap,
                                                      actionLabel: .template(ActionLabelTemplate.reviewSaveButtonTap_noTwitter)))
                 
                 return
+            }
+            self.indicator.stopAnimating()
+        }
+    }
+    
+    
+    //キャンペーンの取得
+    func getCampaign() {
+        
+        self.comment = String(self.textView.text)
+        
+        self.db.collection("campaign").whereField("valid_flag", isEqualTo: true).getDocuments() { (querySnapshot, err) in
+            
+            if let err = err {
+                
+                print("faild_getCampaign: \(err)")
+                return
+                
+                
+            } else {
+                //開催中のキャンペーンがある場合
+                if (querySnapshot?.documents.count)! > 0 {
+                    
+                    for document in querySnapshot!.documents {
+                        
+                        self.doingCampaign = document.data()["hashtag"] as! String
+                        
+                    }
+                    
+                    //開催中のキャンペーンハッシュタグをコメントが含んでいたら、campaignFlagに対象のハッシュタグをセットする
+                    if self.comment.contains("\(self.doingCampaign)") == true {
+                        
+                        self.campaignFlag = self.doingCampaign
+                        
+                    } else {
+                        
+                        self.campaignFlag = ""
+                        
+                    }
+                    
+                //開催中のキャンペーンがない場合、なにもしない
+                } else {
+                    
+                    return
+                    
+                }
+                
             }
         }
     }
@@ -442,10 +524,12 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                 // 確定ボタンが押された時の処理をクロージャ実装する
                 (action: UIAlertAction!) -> Void in
                 
+                //textViewの値の置換とキャンペーンの判別
+                self.getCampaign()
                 
                 //値の置換
                 let score:Double = Double(self.slider.value)
-                let textView:String = String(self.textView.text)
+                self.comment = String(self.textView.text)
                 
                 //渡されるデータの定義
                 let userId = Auth.auth().currentUser?.uid
@@ -476,7 +560,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                     for document in querySnapshot!.documents {
                                         documentID = document.documentID
                                     }
-                                                                
+                                    
                                     //ドキュメントidがnilの場合、レビューを書いたことがないということなので新しくレビューを作成する
                                     if documentID == nil {
                                         let reviewRef = Firestore.firestore().collection("review").document()
@@ -487,12 +571,13 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                             "comedian_id": self.comedianID,
                                             "comedian_display_name": self.comedianName,
                                             "score": score,
-                                            "comment": textView,
+                                            "comment": self.comment,
                                             "tag_1": self.tag1,
                                             "tag_2": self.tag2,
                                             "tag_3": self.tag3,
                                             "tag_4": self.tag4,
                                             "tag_5": self.tag5,
+                                            "campaign_flag": self.campaignFlag,
                                             "private_flag": true,
                                             "relational_comedian_listname": self.comedianTextField.text!,
                                             "create_datetime": FieldValue.serverTimestamp(),
@@ -515,7 +600,8 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                                 "display_id": displayId!,
                                                 "user_name": userName!,
                                                 "score": score,
-                                                "comment": textView,
+                                                "comment": self.comment,
+                                                "campaign_flag": self.campaignFlag,
                                                 "private_flag": true,
                                                 "relational_comedian_listname": self.comedianTextField.text!,
                                                 "update_datetime": FieldValue.serverTimestamp(),
@@ -543,7 +629,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                 //実際の処理
                 print("キャンセル")
                 return
-
+                
             })
             
             //UIAlertControllerにキャンセルボタンと確定ボタンをActionを追加
@@ -552,14 +638,16 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
             
             //実際にAlertを表示する
             present(alert, animated: true, completion: nil)
-
+            
             
         } else {
-        
-        
+            
+            //textViewの値の置換とキャンペーンの判別
+            self.getCampaign()
+
+            
             //値の置換
             let score:Double = Double(slider.value)
-            let textView:String = String(textView.text)
             
             //渡されるデータの定義
             let userId = Auth.auth().currentUser?.uid
@@ -590,7 +678,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                 for document in querySnapshot!.documents {
                                     documentID = document.documentID
                                 }
-                                                            
+                                
                                 //ドキュメントidがnilの場合、レビューを書いたことがないということなので新しくレビューを作成する
                                 if documentID == nil {
                                     let reviewRef = Firestore.firestore().collection("review").document()
@@ -601,12 +689,13 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                         "comedian_id": self.comedianID,
                                         "comedian_display_name": self.comedianName,
                                         "score": score,
-                                        "comment": textView,
+                                        "comment": self.comment,
                                         "tag_1": self.tag1,
                                         "tag_2": self.tag2,
                                         "tag_3": self.tag3,
                                         "tag_4": self.tag4,
                                         "tag_5": self.tag5,
+                                        "campaign_flag": self.campaignFlag,
                                         "private_flag": true,
                                         "relational_comedian_listname": self.comedianTextField.text!,
                                         "create_datetime": FieldValue.serverTimestamp(),
@@ -629,8 +718,9 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                             "display_id": displayId!,
                                             "user_name": userName!,
                                             "score": score,
-                                            "comment": textView,
+                                            "comment": self.comment,
                                             "private_flag": true,
+                                            "campaign_flag": self.campaignFlag,
                                             "relational_comedian_listname": self.comedianTextField.text!,
                                             "update_datetime": FieldValue.serverTimestamp(),
                                         ]) { err in
@@ -652,7 +742,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
         
         //ログ
         AnalyticsUtil.sendAction(ActionEvent(screenName: .reviewVC,
-                                                     actionType: .tap,
+                                             actionType: .tap,
                                              actionLabel: .template(ActionLabelTemplate.reviewPrivateSaveButtonTap)))
     }
     
@@ -689,7 +779,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
             self.tweetButton.titleLabel?.baselineAdjustment = .alignCenters
             
         }
-                
+        
         print("twitterShareFlag:\(twitterShareFlag)")
     }
     
@@ -713,7 +803,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                     let url = "https://urlzs.com/1MmQo"
                     
                     let hashTag = "#"
-
+                    
                     //芸人名のハッシュタグを作成
                     let comedianNameHashTag = hashTag + comedianName
                     

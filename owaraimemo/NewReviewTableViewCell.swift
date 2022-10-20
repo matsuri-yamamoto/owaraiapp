@@ -23,6 +23,7 @@ class NewReviewTableViewCell: UITableViewCell {
     @IBOutlet weak var relationalComedianLabel: UILabel!
     @IBOutlet weak var afterRelationalLabel: UILabel!
     
+    @IBOutlet weak var reviewCommentLink: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
