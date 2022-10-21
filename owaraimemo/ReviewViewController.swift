@@ -249,6 +249,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                             "tag_5": self.tag5,
                                             "campaign_flag": self.campaignFlag,
                                             "private_flag": false,
+                                            "twitter_share_flag": self.twitterShareFlag,
                                             "relational_comedian_listname": self.comedianTextField.text!,
                                             "create_datetime": FieldValue.serverTimestamp(),
                                             "update_datetime": FieldValue.serverTimestamp(),
@@ -264,25 +265,63 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                             print("\(document.documentID) => \(document.data())")
                                             documentID = document.documentID
                                             
+                                            
                                             //ドキュメントidがnilでない場合、レビューを書いたことがあるということなのでドキュメントを更新する
-                                            let existReviewRef = Firestore.firestore().collection("review").document(documentID!)
-                                            existReviewRef.updateData([
-                                                "display_id": displayId!,
-                                                "user_name": userName!,
-                                                "score": score,
-                                                "comment": self.comment,
-                                                "campaign_flag": self.campaignFlag,
-                                                "private_flag": false,
-                                                "relational_comedian_listname": self.comedianTextField.text!,
-                                                "update_datetime": FieldValue.serverTimestamp(),
-                                            ]) { err in
-                                                if let err = err {
-                                                    print("Error updating document: \(err)")
-                                                } else {
-                                                    print("Document successfully updated")
-                                                    self.dismiss(animated: true)
+
+                                            if self.twitterShareFlag == true {
+                                                
+                                                //twittersherflagがtrueだったら更新する
+
+                                                let existReviewRef = Firestore.firestore().collection("review").document(documentID!)
+                                                existReviewRef.updateData([
+                                                    "display_id": displayId!,
+                                                    "user_name": userName!,
+                                                    "score": score,
+                                                    "comment": self.comment,
+                                                    "campaign_flag": self.campaignFlag,
+                                                    "private_flag": false,
+                                                    "twitter_share_flag": self.twitterShareFlag,
+                                                    "relational_comedian_listname": self.comedianTextField.text!,
+                                                    "update_datetime": FieldValue.serverTimestamp(),
+                                                ]) { err in
+                                                    if let err = err {
+                                                        print("Error updating document: \(err)")
+                                                    } else {
+                                                        print("Document successfully updated")
+                                                        self.dismiss(animated: true)
+                                                    }
                                                 }
+                                                
+                                                
+                                                
+                                            } else {
+                                                
+                                                //twittersherflagがfalseだったら更新しない
+
+                                                let existReviewRef = Firestore.firestore().collection("review").document(documentID!)
+                                                existReviewRef.updateData([
+                                                    "display_id": displayId!,
+                                                    "user_name": userName!,
+                                                    "score": score,
+                                                    "comment": self.comment,
+                                                    "campaign_flag": self.campaignFlag,
+                                                    "private_flag": false,
+                                                    "relational_comedian_listname": self.comedianTextField.text!,
+                                                    "update_datetime": FieldValue.serverTimestamp(),
+                                                ]) { err in
+                                                    if let err = err {
+                                                        print("Error updating document: \(err)")
+                                                    } else {
+                                                        print("Document successfully updated")
+                                                        self.dismiss(animated: true)
+                                                    }
+                                                }
+                                                
+                                                
+                                                
                                             }
+                                            
+                                           
                                         }
                                     }
                                 }
@@ -397,6 +436,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                         "tag_5": self.tag5,
                                         "campaign_flag": self.campaignFlag,
                                         "private_flag": false,
+                                        "twitter_share_flag": self.twitterShareFlag,
                                         "relational_comedian_listname": self.comedianTextField.text!,
                                         "create_datetime": FieldValue.serverTimestamp(),
                                         "update_datetime": FieldValue.serverTimestamp(),
@@ -408,29 +448,60 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                     
                                 } else {
                                     //nilじゃなかったら、該当ドキュメントのidを持ってくる
+                                    //ドキュメントidがnilでない場合、レビューを書いたことがあるということなのでドキュメントを更新する
+
                                     for document in querySnapshot!.documents {
                                         print("\(document.documentID) => \(document.data())")
                                         documentID = document.documentID
                                         
-                                        //ドキュメントidがnilでない場合、レビューを書いたことがあるということなのでドキュメントを更新する
-                                        let existReviewRef = Firestore.firestore().collection("review").document(documentID!)
-                                        existReviewRef.updateData([
-                                            "display_id": displayId!,
-                                            "user_name": userName!,
-                                            "score": score,
-                                            "comment": self.comment,
-                                            "campaign_flag": self.campaignFlag,
-                                            "private_flag": false,
-                                            "relational_comedian_listname": self.comedianTextField.text!,
-                                            "update_datetime": FieldValue.serverTimestamp(),
-                                        ]) { err in
-                                            if let err = err {
-                                                print("Error updating document: \(err)")
-                                            } else {
-                                                print("Document successfully updated")
-                                                self.dismiss(animated: true)
+                                        if self.twitterShareFlag == true {
+                                            
+                                            let existReviewRef = Firestore.firestore().collection("review").document(documentID!)
+                                            existReviewRef.updateData([
+                                                "display_id": displayId!,
+                                                "user_name": userName!,
+                                                "score": score,
+                                                "comment": self.comment,
+                                                "campaign_flag": self.campaignFlag,
+                                                "private_flag": false,
+                                                "twitter_share_flag": self.twitterShareFlag,
+                                                "relational_comedian_listname": self.comedianTextField.text!,
+                                                "update_datetime": FieldValue.serverTimestamp(),
+                                            ]) { err in
+                                                if let err = err {
+                                                    print("Error updating document: \(err)")
+                                                } else {
+                                                    print("Document successfully updated")
+                                                    self.dismiss(animated: true)
+                                                }
                                             }
+                                            
+                                            
+                                        } else {
+                                            
+                                            //ドキュメントidがnilでない場合、レビューを書いたことがあるということなのでドキュメントを更新する
+                                            let existReviewRef = Firestore.firestore().collection("review").document(documentID!)
+                                            existReviewRef.updateData([
+                                                "display_id": displayId!,
+                                                "user_name": userName!,
+                                                "score": score,
+                                                "comment": self.comment,
+                                                "campaign_flag": self.campaignFlag,
+                                                "private_flag": false,
+                                                "relational_comedian_listname": self.comedianTextField.text!,
+                                                "update_datetime": FieldValue.serverTimestamp(),
+                                            ]) { err in
+                                                if let err = err {
+                                                    print("Error updating document: \(err)")
+                                                } else {
+                                                    print("Document successfully updated")
+                                                    self.dismiss(animated: true)
+                                                }
+                                            }
+                                            
                                         }
+                                        
+
                                     }
                                 }
                             }

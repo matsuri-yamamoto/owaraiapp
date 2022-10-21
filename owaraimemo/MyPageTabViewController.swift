@@ -33,11 +33,48 @@ class MyPageTabViewController: TabmanViewController {
     let currentUser = Auth.auth().currentUser
     let db = Firestore.firestore()
 
-    
-    
     override func viewWillAppear(_ animated: Bool) {
+        
+        //フォロー中のユーザー数をカウント
+        self.db.collection("follow").whereField("following_user_id", isEqualTo: currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+
+            } else {
+
+                let documentCount = querySnapshot?.documents.count
+
+                self.followingButton.setTitle("\(String(documentCount!)) フォロー中", for: .normal)
+                self.followedButton.contentHorizontalAlignment = .left
+                
+
+            }
+        }
+
+        //フォロワー数をカウント
+        self.db.collection("follow").whereField("followed_user_id", isEqualTo: currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+
+            } else {
+
+                let documentCount = querySnapshot?.documents.count
+
+                self.followedButton.setTitle("\(String(documentCount!)) フォロワー", for: .normal)
+                self.followedButton.contentHorizontalAlignment = .left
+
+            }
+        }
+        
+    }
+    
+    
+    override func viewDidLoad() {
 
 
+        super.viewDidLoad()
         
         if currentUser?.uid == nil {
                         
@@ -121,41 +158,7 @@ class MyPageTabViewController: TabmanViewController {
                 }
             }
 
-            //フォロー中のユーザー数をカウント
-            self.db.collection("follow").whereField("following_user_id", isEqualTo: currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                    return
 
-                } else {
-
-                    let documentCount = querySnapshot?.documents.count
-
-                    self.followingButton.setTitle("\(String(documentCount!)) フォロー中", for: .normal)
-                    self.followedButton.contentHorizontalAlignment = .left
-                    
-
-                }
-            }
-
-            //フォロワー数をカウント
-            self.db.collection("follow").whereField("followed_user_id", isEqualTo: currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                    return
-
-                } else {
-
-                    let documentCount = querySnapshot?.documents.count
-
-                    self.followedButton.setTitle("\(String(documentCount!)) フォロワー", for: .normal)
-                    self.followedButton.contentHorizontalAlignment = .left
-                    
-
-
-
-                }
-            }
             
         }
 
