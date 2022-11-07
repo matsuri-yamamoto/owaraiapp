@@ -448,8 +448,7 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
                                     
                                 } else {
                                     //nilじゃなかったら、該当ドキュメントのidを持ってくる
-                                    //ドキュメントidがnilでない場合、レビューを書いたことがあるということなのでドキュメントを更新する
-
+                                    
                                     for document in querySnapshot!.documents {
                                         print("\(document.documentID) => \(document.data())")
                                         documentID = document.documentID

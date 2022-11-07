@@ -2283,28 +2283,28 @@
             <objects>
                 <viewController storyboardIdentifier="RecLogin" id="Gwf-eS-mRe" customClass="RecommendLoginViewController" customModule="owaraimemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DpK-Vl-0wG">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ログイン推奨_背景" translatesAutoresizingMaskIntoConstraints="NO" id="deG-Qz-pkW">
-                                <rect key="frame" x="0.0" y="44" width="1290" height="623"/>
+                                <rect key="frame" x="0.0" y="0.0" width="1290" height="647"/>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ログイン推奨_装飾" translatesAutoresizingMaskIntoConstraints="NO" id="HfE-dc-A3d">
-                                <rect key="frame" x="122" y="224" width="1046" height="833"/>
+                                <rect key="frame" x="122" y="180" width="1046" height="833"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="1046" id="F9K-0D-uJ4"/>
                                     <constraint firstAttribute="height" constant="833" id="rAa-aJ-sfL"/>
                                 </constraints>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ログイン推奨_アカウント作成" translatesAutoresizingMaskIntoConstraints="NO" id="rJk-Tk-AY1">
-                                <rect key="frame" x="525" y="220" width="240" height="128"/>
+                                <rect key="frame" x="525" y="176" width="240" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="128" id="Kr1-qY-fNY"/>
                                     <constraint firstAttribute="width" constant="240" id="kuU-Ko-3KM"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="poI-pW-SCa">
-                                <rect key="frame" x="536" y="253" width="218" height="62"/>
+                                <rect key="frame" x="536" y="209" width="218" height="62"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="62" id="4Le-8h-eYf"/>
                                     <constraint firstAttribute="width" constant="218" id="arR-m0-8P3"/>
@@ -2320,14 +2320,14 @@
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ログイン推奨_ログイン" translatesAutoresizingMaskIntoConstraints="NO" id="qck-5u-hJJ">
-                                <rect key="frame" x="181" y="287" width="928" height="102"/>
+                                <rect key="frame" x="181" y="243" width="928" height="102"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="102" id="OxK-D2-6yG"/>
                                     <constraint firstAttribute="width" constant="928" id="vYi-s0-MdO"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUA-QT-COj">
-                                <rect key="frame" x="90" y="323" width="1106" height="35"/>
+                                <rect key="frame" x="90" y="279" width="1106" height="35"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
                                 <color key="tintColor" name="AccentColor"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -2339,14 +2339,14 @@
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ログイン推奨_利用規約" translatesAutoresizingMaskIntoConstraints="NO" id="3Be-oX-rEy">
-                                <rect key="frame" x="466.5" y="303" width="357" height="179"/>
+                                <rect key="frame" x="466.5" y="259" width="357" height="179"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="357" id="Z2Y-su-AwX"/>
                                     <constraint firstAttribute="height" constant="179" id="vgW-Tx-F98"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wbs-YB-YYG">
-                                <rect key="frame" x="94" y="373.5" width="54" height="28"/>
+                                <rect key="frame" x="94" y="329.5" width="54" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="54" id="kvK-IS-Xm7"/>
                                     <constraint firstAttribute="height" constant="27.670000000000002" id="y65-WS-qhH"/>
@@ -2361,7 +2361,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H7h-X2-BUb">
-                                <rect key="frame" x="163" y="373.5" width="1021" height="28"/>
+                                <rect key="frame" x="163" y="329.5" width="1021" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="159" id="bb9-Rl-vPt"/>
                                 </constraints>
@@ -2375,7 +2375,7 @@
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ログイン推奨_説明文" translatesAutoresizingMaskIntoConstraints="NO" id="Q77-v3-7CB">
-                                <rect key="frame" x="487.5" y="44" width="315" height="210"/>
+                                <rect key="frame" x="487.5" y="0.0" width="315" height="210"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="315" id="0KA-Dv-fIt"/>
                                     <constraint firstAttribute="height" constant="210" id="POw-QU-Bnq"/>
@@ -3028,7 +3028,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="jBT-6v-oUL"/>
+        <segue reference="h95-2o-fVz"/>
         <segue reference="SCI-DI-zJ4"/>
     </inferredMetricsTieBreakers>
     <resources>
