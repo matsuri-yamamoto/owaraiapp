@@ -13,6 +13,7 @@ class MyReviewTableViewCell: UITableViewCell {
     @IBOutlet weak var updatedLabel: UILabel!
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var scoreImageView: UIImageView!
+    @IBOutlet weak var referenceButton: UIButton!
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var comedianImageView: UIImageView!
     @IBOutlet weak var likeCountButton: UIButton!

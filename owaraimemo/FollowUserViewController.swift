@@ -29,8 +29,11 @@ class FollowUserViewController: UIViewController, UITableViewDelegate, UITableVi
 
     @IBOutlet weak var tableView: UITableView!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        
+        self.userIdArray = []
+        self.userNameArray = []
+        self.userDisplayIdArray = []
         
         print("userType:\(self.userType)")
         print("reviewId:\(self.reviewId)")
@@ -55,10 +58,8 @@ class FollowUserViewController: UIViewController, UITableViewDelegate, UITableVi
             
             
         }
-        
-        
     }
-    
+        
     
     func setUserList() {
         

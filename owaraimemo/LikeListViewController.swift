@@ -40,6 +40,9 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
     var score :String = ""
     var comment :String = ""
     var relational :String = ""
+    
+    var referenceUrl :String = ""
+    var referenceLink :String = ""
 
     
     //いいねボタン用の画像
@@ -71,10 +74,12 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc func dataRefresh() {
         
+        
         self.reviewIdArray = []
         self.userIdArray = []
         self.userNameArray = []
 
+        self.comedianId = ""
         
         //自分がいいねしたreviewのidを参照する
         self.db.collection("like_review").whereField("like_user_id", isEqualTo: currentUser?.uid).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { (querySnapshot, err) in
@@ -220,6 +225,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
                                 cell.comedianImageView.image = UIImage(named: "\(self.comedianId)")
 //                                cell.comedianImageView.contentMode = .scaleAspectFill
 //                                cell.comedianImageView.clipsToBounds = true
+                                cell.referenceButton.setTitle("", for: .normal)
 
                                 
                             }
@@ -227,8 +233,31 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
                             if copyrightFlag == "false" {
                                 
                                 cell.comedianImageView.image = UIImage(named: "noImage")
+                                cell.referenceButton.setTitle("", for: .normal)
                                 
                             }
+                            
+                            if copyrightFlag == "reference" {
+                                
+                                let comedianReference = document.data()["reference_name"] as! String
+                                
+                                cell.referenceButton.tag = indexPath.row
+
+                                
+                                //                        let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
+                                //                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+                                
+                                cell.comedianImageView.image = UIImage(named: "\(self.comedianId)")
+                                //                        cell.comedianImageView.contentMode = .scaleAspectFill
+                                //                        cell.comedianImageView.clipsToBounds = true
+                                
+                                cell.referenceButton.contentHorizontalAlignment = .left
+                                cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
+                                cell.referenceButton.setTitle(comedianReference, for: .normal)
+                                
+                            }
+
+                            
                         }
                     }
                 }
@@ -326,6 +355,39 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
         
         
     }
+    
+//    @objc func tappedReferenceButton(sender: UIButton) {
+//
+//        let buttonTag = sender.tag
+//        let tappedComedianId = self.comedianIdArray[buttonTag]
+//
+//        let button = sender
+//        let cell = button.superview?.superview as! NewReviewTableViewCell
+//
+//        //copyrightflagを取得してurlをセット
+//        db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: tappedComedianId).getDocuments() {(querySnapshot, err) in
+//            if let err = err {
+//                print("Error getting documents: \(err)")
+//                return
+//
+//            } else {
+//                for document in querySnapshot!.documents {
+//
+//                    self.referenceUrl = document.data()["reference_url"] as! String
+//
+//                }
+//
+//                let referenceVC = self.storyboard?.instantiateViewController(withIdentifier: "Reference") as! ReferenceViewController
+//
+//                let referenceUrl = URL(string: "\(self.referenceUrl)")
+//                referenceVC.url = referenceUrl
+//
+//                self.navigationController?.pushViewController(referenceVC, animated: true)
+//
+//            }
+//        }
+//    }
+
     
     @objc func tappedLikeButton(sender: UIButton) {
         

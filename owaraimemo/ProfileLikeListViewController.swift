@@ -66,7 +66,11 @@ class ProfileLikeListViewController: UIViewController, UITableViewDelegate, UITa
     
     func setReviewId() {
         
-        
+        self.comedianId = ""
+        self.reviewIdArray = []
+        self.userIdArray = []
+        self.userNameArray = []
+
         //自分がいいねしたreviewのidを参照する
         self.db.collection("like_review").whereField("like_user_id", isEqualTo: profileUserId).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).getDocuments() { (querySnapshot, err) in
             
@@ -85,13 +89,13 @@ class ProfileLikeListViewController: UIViewController, UITableViewDelegate, UITa
                 }
                 
                 print("self.reviewIdArray:\(self.reviewIdArray)")
-                
+                self.tableView.reloadData()
                 
             }
             
-            defer {
-                self.tableView.reloadData()
-            }
+//            defer {
+//
+//            }
 
         }
         
@@ -124,7 +128,7 @@ class ProfileLikeListViewController: UIViewController, UITableViewDelegate, UITa
         print("likelist_reviewId:\(self.reviewId)")
 
         
-        db.collection("review").whereField(FieldPath.documentID(), isEqualTo: self.reviewId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).getDocuments() { (querySnapshot, err) in
+        db.collection("review").whereField(FieldPath.documentID(), isEqualTo: self.reviewIdArray[indexPath.row]).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).getDocuments() { (querySnapshot, err) in
             
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -209,15 +213,37 @@ class ProfileLikeListViewController: UIViewController, UITableViewDelegate, UITa
                                 cell.comedianImageView.image = UIImage(named: "\(self.comedianId)")
                                 cell.comedianImageView.contentMode = .scaleAspectFill
                                 cell.comedianImageView.clipsToBounds = true
-
+                                
+                                cell.referenceButton.setTitle("", for: .normal)
                                 
                             }
                             
                             if copyrightFlag == "false" {
                                 
                                 cell.comedianImageView.image = UIImage(named: "noImage")
+                                cell.referenceButton.setTitle("", for: .normal)
                                 
                             }
+                            
+                            if copyrightFlag == "reference" {
+                                
+                                let comedianReference = document.data()["reference_name"] as! String
+                                cell.referenceButton.tag = indexPath.row
+
+                                
+                                //                        let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
+                                //                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+                                
+                                cell.comedianImageView.image = UIImage(named: "\(self.comedianId)")
+                                //                        cell.comedianImageView.contentMode = .scaleAspectFill
+                                //                        cell.comedianImageView.clipsToBounds = true
+                                
+                                cell.referenceButton.contentHorizontalAlignment = .left
+                                cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
+                                cell.referenceButton.setTitle(comedianReference, for: .normal)
+                                
+                            }
+
                         }
                     }
                 }
@@ -246,10 +272,11 @@ class ProfileLikeListViewController: UIViewController, UITableViewDelegate, UITa
                 cell.likeButton.addTarget(self, action: #selector(self.tappedLikeButton(sender:)), for: .touchUpInside)
 
                 //likereviewをセット
+                cell.likeCountButton.tag = indexPath.row
                 cell.likeCountButton.addTarget(self, action: #selector(self.tappedLikeCountButton(sender:)), for: .touchUpInside)
 
                 
-                self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
+                self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewIdArray[indexPath.row]).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
                     if let err = err {
                         print("Error getting documents: \(err)")
                         return
@@ -549,6 +576,8 @@ class ProfileLikeListViewController: UIViewController, UITableViewDelegate, UITa
         
         let button = sender
         let cell = button.superview?.superview as! NewReviewTableViewCell
+        
+        print("profile>tappedReviewId:\(tappedReviewId)")
         
         //セルタップでレビュー全文に遷移
         let followVC = storyboard?.instantiateViewController(withIdentifier: "FollowUser") as! FollowUserViewController

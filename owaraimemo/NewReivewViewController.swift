@@ -34,6 +34,8 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     
     var reviewId :String = ""
     
+    var referenceUrl :String = ""
+    
     //いいねボタン用の画像
     let likeImage = UIImage(systemName: "heart.fill")
     let unLikeImage = UIImage(systemName: "heart")
@@ -348,14 +350,40 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                         //                        cell.comedianImageView.contentMode = .scaleAspectFill
                         //                        cell.comedianImageView.clipsToBounds = true
                         
+                        cell.referenceButton.setTitle("", for: .normal)
+//                        cell.referenceButton.isEnabled = false
                         
                     }
                     
                     if copyrightFlag == "false" {
                         
                         cell.comedianImageView.image = UIImage(named: "noImage")
+                        cell.referenceButton.setTitle("", for: .normal)
+//                        cell.referenceButton.isEnabled = false
                         
                     }
+                    
+                    if copyrightFlag == "reference" {
+                        
+                        let comedianReference = document.data()["reference_name"] as! String
+                        cell.referenceButton.tag = indexPath.row
+
+                        
+                        //                        let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
+                        //                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+                        
+                        cell.comedianImageView.image = UIImage(named: "\(self.comedianIdArray[indexPath.row])")
+                        //                        cell.comedianImageView.contentMode = .scaleAspectFill
+                        //                        cell.comedianImageView.clipsToBounds = true
+                        
+                        cell.referenceButton.contentHorizontalAlignment = .left
+                        cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
+                        cell.referenceButton.setTitle(comedianReference, for: .normal)
+                        cell.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
+                        
+                    }
+
+                    
                 }
             }
         }
@@ -441,18 +469,51 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //セルタップでレビュー全文に遷移
-        let allReviewVC = storyboard?.instantiateViewController(withIdentifier: "AllReview") as! AllReviewViewController
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        //セルタップでレビュー全文に遷移
+//        let allReviewVC = storyboard?.instantiateViewController(withIdentifier: "AllReview") as! AllReviewViewController
+//
+//        allReviewVC.reviewId = self.reviewIdArray[indexPath.row]
+//        self.navigationController?.pushViewController(allReviewVC, animated: true)
+//
+//        self.tableView.deselectRow(at: indexPath, animated: true)
+//
+//
+//
+//    }
+    
+    @objc func tappedReferenceButton(sender: UIButton) {
         
-        allReviewVC.reviewId = self.reviewIdArray[indexPath.row]
-        self.navigationController?.pushViewController(allReviewVC, animated: true)
+        let buttonTag = sender.tag
+        let tappedComedianId = self.comedianIdArray[buttonTag]
         
-        self.tableView.deselectRow(at: indexPath, animated: true)
+        let button = sender
+        let cell = button.superview?.superview as! NewReviewTableViewCell
         
-        
-        
+        //copyrightflagを取得して画像をセット
+        db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: tappedComedianId).getDocuments() {(querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+                
+            } else {
+                for document in querySnapshot!.documents {
+                    
+                    self.referenceUrl = document.data()["reference_url"] as! String
+                    
+                }
+                
+                let referenceVC = self.storyboard?.instantiateViewController(withIdentifier: "Reference") as! ReferenceViewController
+                
+                let referenceUrl = URL(string: "\(self.referenceUrl)")
+                referenceVC.url = referenceUrl
+                
+                self.navigationController?.pushViewController(referenceVC, animated: true)
+                
+            }
+        }
     }
+    
     
     @objc func tappedLikeButton(sender: UIButton) {
         

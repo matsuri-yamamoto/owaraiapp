@@ -34,6 +34,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     @IBOutlet weak var comedyTypeLabel1: UILabel!
     @IBOutlet weak var comedyTypeLabel2: UILabel!
     @IBOutlet weak var comedianImageView: UIImageView!
+    @IBOutlet weak var referenceButton: UIButton!
     @IBOutlet weak var scoreImageView: UIImageView!
     @IBOutlet weak var averageScoreLabel: UILabel!
     
@@ -121,7 +122,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     //review件数のラベル(cellのクラスに渡す用)
     var likeCountLabelText :String = ""
     
-    
+    var referenceUrl :String = ""
+    var referenceName :String = ""
+
     var reviewId :String = ""
     
     //Firestoreを使うための下準備
@@ -438,8 +441,6 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     
                     print("comedianCopyRight:\(self.comedianCopyRight)")
                     
-
-                    
                     
                     var reviewCount :Int?
                     
@@ -641,9 +642,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     let nib = UINib(nibName: "ComedianReviewTableViewCell", bundle: nil)
                                     self.tableView.register(nib, forCellReuseIdentifier: "cell")
                                     
-                                    
+
                                 }
                                 
+                                self.referenceButton.setTitle("", for: .normal)
+
                                 
                             }
                             if self.comedianCopyRight == "false" {
@@ -689,6 +692,84 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                 let nib = UINib(nibName: "ComedianReviewTableViewCell", bundle: nil)
                                 self.tableView.register(nib, forCellReuseIdentifier: "cell")
                                 
+                                self.referenceButton.setTitle("", for: .normal)
+
+                                
+                            }
+                            
+                            if self.comedianCopyRight == "reference" {
+                                
+
+                                self.db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: self.comedianId).getDocuments() {(querySnapshot, err) in
+                                    
+                                    if let err = err {
+                                        print("Error getting documents: \(err)")
+                                        return
+                                        
+                                    } else {
+                                        for document in querySnapshot!.documents {
+                                            
+                                            self.referenceName = document.data()["reference_name"] as! String
+                                            self.referenceUrl = document.data()["reference_url"] as! String
+
+                                        }
+                                        
+                                        print("referenceName:\(self.referenceName)")
+                                        
+                                        self.referenceButton.contentHorizontalAlignment = .left
+                                        self.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
+                                        self.referenceButton.setTitle(self.referenceName, for: .normal)
+                                        self.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
+                                        
+                                    }
+                                }
+
+                                
+                                
+                                self.comedianImageView.image = UIImage(named: "\(self.comedianId)")
+                                self.comedianImageView.contentMode = .scaleAspectFill
+                                self.comedianImageView.clipsToBounds = true
+
+                                //レビューの件数に応じたcontentViewのheightになるように設定(レビュー1件あたりheight=300)
+                                print("self.reviewIdArray.count:\(reviewCount!)")
+                                
+                                self.contentViewHight.constant = CGFloat(250*reviewCount! + 395)
+                                
+                                print("contentViewHight.constant:\(self.contentViewHight.constant)")
+                                
+                                //contentViewの高さをscrollViewに反映させる
+                                self.scrollVIewHight.constant = CGFloat(self.contentViewHight.constant)
+                                
+                                
+                                //レビューの見出しをセットする
+                                let reviewLabel = UILabel(frame: CGRect(x: 0, y: 370, width: self.contentView.frame.width, height: 25))
+                                reviewLabel.text = "　みんなの感想"
+                                reviewLabel.font = UIFont.systemFont(ofSize: 12)
+                                reviewLabel.textColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
+                                reviewLabel.backgroundColor = #colorLiteral(red: 0.8564946339, green: 0.8564946339, blue: 0.8564946339, alpha: 1)
+                                
+                                self.contentView.addSubview(reviewLabel)
+                                
+                                
+                                //動画なしでレビューをセットする
+                                self.contentView.addSubview(self.tableView)
+                                self.tableView.backgroundColor = #colorLiteral(red: 0.9694761634, green: 0.9694761634, blue: 0.9694761634, alpha: 1)
+                                
+                                self.tableView.translatesAutoresizingMaskIntoConstraints = false
+                                self.tableView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 395.0).isActive = true
+                                self.tableView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor).isActive = true
+                                self.tableView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
+                                self.tableView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
+                                self.tableView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
+                                
+                                self.tableView.delegate = self
+                                self.tableView.dataSource = self
+                                
+                                // カスタムセルを登録する
+                                let nib = UINib(nibName: "ComedianReviewTableViewCell", bundle: nil)
+                                self.tableView.register(nib, forCellReuseIdentifier: "cell")
+                                
+                                
                             }
                             
                             if reviewCount! == 0 {
@@ -702,18 +783,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                 noReviewLabel.backgroundColor = #colorLiteral(red: 0.9694761634, green: 0.9694761634, blue: 0.9694761634, alpha: 1)
                                 
                                 self.tableView.addSubview(noReviewLabel)
-
-
-                                
                                 
                             }
                             
-                            
-                            
-                            
-                            
-                            
                         }
+                        
                     }
 
                     
@@ -873,8 +947,37 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                         self.mediaButton5.isHidden = true
                     }
                 }
+                
+                if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+                    && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+                    && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+                    && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+                    && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+                    && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+                    && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+                    && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+                    && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+                    && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+                    
+                    //レコード保存
+                    let pvRec = Firestore.firestore().collection("pv_comedian").document()
+                    let pvDic = [
+                        "user_id": Auth.auth().currentUser?.uid,
+                        "comedian_id": self.comedianId,
+                        "comedian_display_name": self.comedianDisplayName,
+                        "create_datetime": FieldValue.serverTimestamp(),
+                        "update_datetime": FieldValue.serverTimestamp(),
+                        "delete_flag": false,
+                        "delete_datetime": nil,
+                    ] as [String : Any?]
+                    pvRec.setData(pvDic as [String : Any])
+
+                    
+                }
+
             }
         }
+        
         
         self.indicator.stopAnimating()
 
@@ -894,6 +997,18 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
 //
 //    }
     
+    
+    @objc func tappedReferenceButton(sender: UIButton) {
+        
+        let referenceVC = self.storyboard?.instantiateViewController(withIdentifier: "Reference") as! ReferenceViewController
+        
+        let referenceUrl = URL(string: "\(self.referenceUrl)")
+        referenceVC.url = referenceUrl
+        
+        self.navigationController?.pushViewController(referenceVC, animated: true)
+                
+    }
+
     
     
     //各メディアボタンタップでmediaUrlArrayの該当indexのurlに遷移するメソッド
@@ -1018,6 +1133,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
 
             
         } else {
+            
+            
+            self.indicator.startAnimating()
+
+            
             //user_id=currentUserかつcomedian_id=comedianIdstockがなければtrueでレコード作り、画像を保存済みに更新する
             //あれば、flagを確認しtrueだったらfalseに、falseだったらtrueに更新する
             //flagがtrueだったら画像をデフォルトに、falseだったら保存済みの画像に更新する
@@ -1137,6 +1257,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
                                                      actionType: .tap,
                                              actionLabel: .template(ActionLabelTemplate.stockButtonTap)))
+        
+        self.indicator.stopAnimating()
+
 
     }
     

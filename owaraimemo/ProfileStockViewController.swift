@@ -27,6 +27,8 @@ class ProfileStockViewController: UIViewController, UICollectionViewDelegate, UI
     var comedianDataArray: [String] = []
     var comedianDataUniqueArray: [String] = []
 
+    var referenceUrl :String = ""
+
     
     var cellSize :CGFloat = 0
     
@@ -35,6 +37,11 @@ class ProfileStockViewController: UIViewController, UICollectionViewDelegate, UI
     
     override func viewWillAppear(_ animated: Bool) {
         
+        self.comedianNameArray = []
+        self.comedianDataArray = []
+        self.comedianNameUniqueArray = []
+        self.comedianDataUniqueArray = []
+
         
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
@@ -128,22 +135,62 @@ class ProfileStockViewController: UIViewController, UICollectionViewDelegate, UI
 
         //芸人画像を指定する
         
-        let image :UIImage? = UIImage(named: "\(comedianDataUniqueArray[indexPath.row])")
-        let noImage :UIImage! = UIImage(named: "noImage")
+        //copyrightflagを取得して画像をセット
+        db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: comedianDataUniqueArray[indexPath.row]).getDocuments() {(querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+                
+            } else {
+                for document in querySnapshot!.documents {
+                    
+                    let copyrightFlag = document.data()["copyright_flag"] as! String
+                    
+                    if copyrightFlag == "true" {
+                        
+//                        let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
+//                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+                        
+                        cell.comedianImageView.image = UIImage(named: "\(self.comedianDataUniqueArray[indexPath.row])")
+//                        cell.comedianImageView.contentMode = .scaleAspectFill
+//                        cell.comedianImageView.clipsToBounds = true
+                        cell.referenceButton.setTitle("", for: .normal)
 
-        //copyrightflagを加味できておらず、画像がAssetsにアップロードされ次第表示されてしまうので注意
-        if let validImage = image {
-            cell.comedianImageView.image = validImage
-            cell.comedianImageView.contentMode = .scaleAspectFill
-            cell.comedianImageView.clipsToBounds = true
-            
-        } else {
-            cell.comedianImageView.image = noImage
-            cell.comedianImageView.contentMode = .scaleAspectFill
-            cell.comedianImageView.clipsToBounds = true
+                        
+                    }
+                    
+                    if copyrightFlag == "false" {
+                        
+                        cell.comedianImageView.image = UIImage(named: "noImage")
+                        cell.referenceButton.setTitle("", for: .normal)
+                        
+                    }
+                    
+                    if copyrightFlag == "reference" {
+                        
+                        let comedianReference = document.data()["reference_name"] as! String
+                        cell.referenceButton.tag = indexPath.row
 
+                        
+                        //                        let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
+                        //                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+                        
+                        cell.comedianImageView.image = UIImage(named: "\(self.comedianDataUniqueArray[indexPath.row])")
+                        //                        cell.comedianImageView.contentMode = .scaleAspectFill
+                        //                        cell.comedianImageView.clipsToBounds = true
+                        
+                        cell.referenceButton.contentHorizontalAlignment = .left
+                        cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
+                        cell.referenceButton.setTitle(comedianReference, for: .normal)
+                        cell.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
+                        
+                    }
+
+                    
+                }
+            }
         }
-        
+
         //芸人名を設定する
         cell.comedianNameLabel.text = comedianNameUniqueArray[indexPath.row]
 
@@ -151,6 +198,37 @@ class ProfileStockViewController: UIViewController, UICollectionViewDelegate, UI
         return cell
     }
     
+    
+    @objc func tappedReferenceButton(sender: UIButton) {
+        
+        let buttonTag = sender.tag
+        let tappedComedianId = self.comedianDataUniqueArray[buttonTag]
+        
+        
+        //copyrightflagを取得して画像をセット
+        db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: tappedComedianId).getDocuments() {(querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+                
+            } else {
+                for document in querySnapshot!.documents {
+                    
+                    self.referenceUrl = document.data()["reference_url"] as! String
+                    
+                }
+                
+                let referenceVC = self.storyboard?.instantiateViewController(withIdentifier: "Reference") as! ReferenceViewController
+                
+                let referenceUrl = URL(string: "\(self.referenceUrl)")
+                referenceVC.url = referenceUrl
+                
+                self.navigationController?.pushViewController(referenceVC, animated: true)
+                
+            }
+        }
+    }
+
     
 
     // 各セルを選択した時に実行されるメソッド

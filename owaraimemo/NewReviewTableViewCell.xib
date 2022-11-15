@@ -111,6 +111,18 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z0t-Mn-2kw">
+                        <rect key="frame" x="27" y="153" width="163" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="Nnk-ZX-usy"/>
+                            <constraint firstAttribute="width" constant="163" id="O2k-GT-u24"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="11"/>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <state key="normal" title="text">
+                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </state>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" red="0.97854371230000003" green="0.97854371230000003" blue="0.97854371230000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 <constraints>
@@ -143,10 +155,12 @@
                     <constraint firstItem="HDP-Me-N4o" firstAttribute="bottom" secondItem="ioc-0L-KBd" secondAttribute="bottom" constant="5" id="bBW-VB-g2n"/>
                     <constraint firstItem="sMj-sf-9i2" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="26" id="cZp-bv-qDQ"/>
                     <constraint firstItem="PIU-fn-OMe" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="cma-aI-nOH"/>
+                    <constraint firstItem="Z0t-Mn-2kw" firstAttribute="top" secondItem="sMj-sf-9i2" secondAttribute="bottom" constant="2" id="cs3-5j-P1d"/>
                     <constraint firstAttribute="trailing" secondItem="kaP-lx-25O" secondAttribute="trailing" constant="20" id="foA-ur-4Ew"/>
                     <constraint firstItem="SlZ-RL-mbC" firstAttribute="top" secondItem="6Xe-0m-rEX" secondAttribute="top" constant="7" id="g37-3H-igM"/>
                     <constraint firstItem="6Xe-0m-rEX" firstAttribute="leading" secondItem="sMj-sf-9i2" secondAttribute="trailing" constant="13" id="g37-de-aCH"/>
                     <constraint firstItem="qRt-A4-FzJ" firstAttribute="top" secondItem="SlZ-RL-mbC" secondAttribute="bottom" constant="29" id="geR-PM-H2e"/>
+                    <constraint firstItem="Z0t-Mn-2kw" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="11" id="h7y-fV-BTK"/>
                     <constraint firstItem="HDP-Me-N4o" firstAttribute="leading" secondItem="ioc-0L-KBd" secondAttribute="trailing" constant="8" symbolic="YES" id="hIL-we-hp7"/>
                     <constraint firstAttribute="bottom" secondItem="6Xe-0m-rEX" secondAttribute="bottom" constant="265" id="he5-GZ-i9v"/>
                     <constraint firstAttribute="bottom" secondItem="zbs-cU-jZa" secondAttribute="bottom" constant="248" id="jIi-bL-Z9F"/>
@@ -170,6 +184,7 @@
                 <outlet property="commentLabel" destination="kaP-lx-25O" id="7od-99-B4L"/>
                 <outlet property="likeButton" destination="ioc-0L-KBd" id="FPy-fQ-lpn"/>
                 <outlet property="likeCountButton" destination="HDP-Me-N4o" id="7eh-Cv-JNt"/>
+                <outlet property="referenceButton" destination="Z0t-Mn-2kw" id="hJy-Z5-WX4"/>
                 <outlet property="relationalComedianLabel" destination="iLW-UA-uf1" id="hht-An-dgq"/>
                 <outlet property="reviewCommentLink" destination="V7e-kf-Y8D" id="Xpj-Hy-ZAN"/>
                 <outlet property="scoreImageView" destination="SlZ-RL-mbC" id="som-4k-p1M"/>

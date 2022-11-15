@@ -26,6 +26,7 @@ class ProfileMyReviewViewController: UIViewController, UITableViewDelegate, UITa
     var commentArray: [String] = []
     
     
+    var referenceUrl :String = ""
 
     var reviewId :String = ""
         
@@ -192,6 +193,8 @@ class ProfileMyReviewViewController: UIViewController, UITableViewDelegate, UITa
                         cell.comedianImageView.image = UIImage(named: "\(self.comedianIdArray[indexPath.row])")
                         cell.comedianImageView.contentMode = .scaleAspectFill
                         cell.comedianImageView.clipsToBounds = true
+                        
+                        cell.referenceButton.setTitle("", for: .normal)
 
                         
                     }
@@ -199,6 +202,27 @@ class ProfileMyReviewViewController: UIViewController, UITableViewDelegate, UITa
                     if copyrightFlag == "false" {
                         
                         cell.comedianImageView.image = UIImage(named: "noImage")
+                        cell.referenceButton.setTitle("", for: .normal)
+                        
+                    }
+                    
+                    if copyrightFlag == "reference" {
+                        
+                        let comedianReference = document.data()["reference_name"] as! String
+                        cell.referenceButton.tag = indexPath.row
+
+                        
+                        //                        let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
+                        //                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+                        
+                        cell.comedianImageView.image = UIImage(named: "\(self.comedianIdArray[indexPath.row])")
+                        //                        cell.comedianImageView.contentMode = .scaleAspectFill
+                        //                        cell.comedianImageView.clipsToBounds = true
+                        
+                        cell.referenceButton.contentHorizontalAlignment = .left
+                        cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
+                        cell.referenceButton.setTitle(comedianReference, for: .normal)
+                        cell.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
                         
                     }
                 }
@@ -269,6 +293,38 @@ class ProfileMyReviewViewController: UIViewController, UITableViewDelegate, UITa
         
         
     }
+    
+    @objc func tappedReferenceButton(sender: UIButton) {
+        
+        let buttonTag = sender.tag
+        let tappedComedianId = self.comedianIdArray[buttonTag]
+        
+        
+        //copyrightflagを取得して画像をセット
+        db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: tappedComedianId).getDocuments() {(querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+                
+            } else {
+                for document in querySnapshot!.documents {
+                    
+                    self.referenceUrl = document.data()["reference_url"] as! String
+                    
+                }
+                
+                let referenceVC = self.storyboard?.instantiateViewController(withIdentifier: "Reference") as! ReferenceViewController
+                
+                let referenceUrl = URL(string: "\(self.referenceUrl)")
+                referenceVC.url = referenceUrl
+                
+                self.navigationController?.pushViewController(referenceVC, animated: true)
+                
+            }
+        }
+    }
+
+    
     
     @objc func tappedContinuationButton(sender: UIButton) {
         

@@ -69,11 +69,23 @@
                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                     </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SVk-kz-Edy">
+                        <rect key="frame" x="27" y="99" width="130" height="11"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="11" id="opH-sq-4bT"/>
+                            <constraint firstAttribute="width" constant="130" id="sJ9-3p-MKe"/>
+                        </constraints>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <state key="normal" title="Button">
+                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </state>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" red="0.97854371230000003" green="0.97854371230000003" blue="0.97854371230000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="MvC-2L-6XI" secondAttribute="bottom" constant="286" id="3aI-7W-0Ht"/>
                     <constraint firstAttribute="trailing" secondItem="vhh-Yb-aBj" secondAttribute="trailing" constant="126" id="7eA-oC-0iK"/>
+                    <constraint firstItem="SVk-kz-Edy" firstAttribute="top" secondItem="CLY-9M-uia" secondAttribute="bottom" constant="2" id="9G7-Rp-qlv"/>
                     <constraint firstItem="vhh-Yb-aBj" firstAttribute="top" secondItem="MvC-2L-6XI" secondAttribute="bottom" constant="7" id="BeR-14-kKe"/>
                     <constraint firstItem="MvC-2L-6XI" firstAttribute="top" secondItem="5oe-JV-tkS" secondAttribute="bottom" id="D3L-0b-Ake"/>
                     <constraint firstItem="lEh-hR-7T1" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="17" id="DHE-bf-N7T"/>
@@ -99,6 +111,7 @@
                     <constraint firstItem="CLY-9M-uia" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="shq-vo-Dnh"/>
                     <constraint firstAttribute="bottom" secondItem="lEh-hR-7T1" secondAttribute="bottom" constant="29" id="uOz-Mu-cP6"/>
                     <constraint firstItem="X6p-gK-50j" firstAttribute="leading" secondItem="eJL-R7-j4d" secondAttribute="trailing" constant="5" id="ulC-83-BHg"/>
+                    <constraint firstItem="SVk-kz-Edy" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="11" id="xIo-57-UKP"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
@@ -107,6 +120,7 @@
                 <outlet property="comedianNameButton" destination="5oe-JV-tkS" id="dXp-lc-cNg"/>
                 <outlet property="commentLabel" destination="lEh-hR-7T1" id="XeU-qx-MNN"/>
                 <outlet property="likeCountButton" destination="X6p-gK-50j" id="gzy-LV-Llr"/>
+                <outlet property="referenceButton" destination="SVk-kz-Edy" id="svR-vT-qxE"/>
                 <outlet property="scoreImageView" destination="vhh-Yb-aBj" id="29U-tp-QGQ"/>
                 <outlet property="scoreLabel" destination="aax-wI-WIU" id="99E-Go-yjf"/>
                 <outlet property="updatedLabel" destination="MvC-2L-6XI" id="mSC-kK-8vz"/>

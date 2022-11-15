@@ -10,9 +10,9 @@ import UIKit
 class TabViewCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var comedianImageView: UIImageView!
+    @IBOutlet weak var referenceButton: UIButton!
     @IBOutlet weak var blankLabel: UILabel!
     @IBOutlet weak var comedianNameLabel: UILabel!
-    
     @IBOutlet weak var comedianImageViewHeight: NSLayoutConstraint!
     @IBOutlet weak var blankLabelWidth: NSLayoutConstraint!
     
