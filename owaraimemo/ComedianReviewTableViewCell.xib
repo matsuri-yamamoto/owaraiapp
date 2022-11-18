@@ -70,11 +70,21 @@
                         <state key="normal" title="Button"/>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iNw-EU-LEB">
-                        <rect key="frame" x="8" y="10" width="335" height="29"/>
+                        <rect key="frame" x="8" y="10" width="294" height="29"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="tintColor" red="0.1268742108" green="0.1268742108" blue="0.1268742108" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                         <state key="normal" title="Button"/>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kn4-Y1-VnJ">
+                        <rect key="frame" x="313" y="13.666666666666664" width="19" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="19" id="AnG-pI-kxE"/>
+                            <constraint firstAttribute="height" constant="22" id="VS2-NE-uvr"/>
+                        </constraints>
+                        <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <state key="normal" image="ellipsis" catalog="system"/>
                     </button>
                 </subviews>
                 <color key="backgroundColor" red="0.97016620330000003" green="0.97016620330000003" blue="0.97016620330000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -97,12 +107,14 @@
                     <constraint firstAttribute="bottom" secondItem="yMy-71-ljZ" secondAttribute="bottom" constant="205" id="b9I-wG-NSs"/>
                     <constraint firstItem="Oho-fw-alJ" firstAttribute="top" secondItem="yMy-71-ljZ" secondAttribute="bottom" constant="8" symbolic="YES" id="d1h-Z0-4Qh"/>
                     <constraint firstAttribute="trailing" secondItem="Onk-hl-xpe" secondAttribute="trailing" constant="338" id="eaX-qO-6xK"/>
-                    <constraint firstAttribute="trailing" secondItem="iNw-EU-LEB" secondAttribute="trailing" constant="9" id="edX-GD-hPN"/>
+                    <constraint firstAttribute="trailing" secondItem="iNw-EU-LEB" secondAttribute="trailing" constant="50" id="edX-GD-hPN"/>
                     <constraint firstItem="yMy-71-ljZ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="23" id="fF4-8h-4fV"/>
                     <constraint firstItem="kbl-IQ-SUo" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="24" id="fK0-GZ-mRB"/>
                     <constraint firstItem="kbl-IQ-SUo" firstAttribute="top" secondItem="doH-C8-GwG" secondAttribute="bottom" constant="4" id="g0J-e7-kYO"/>
                     <constraint firstItem="Oho-fw-alJ" firstAttribute="leading" secondItem="S00-uU-x1p" secondAttribute="trailing" constant="-16" id="hON-fF-4X0"/>
                     <constraint firstAttribute="trailing" secondItem="yMy-71-ljZ" secondAttribute="trailing" constant="9" id="hVL-bm-xXW"/>
+                    <constraint firstItem="kn4-Y1-VnJ" firstAttribute="centerY" secondItem="iNw-EU-LEB" secondAttribute="centerY" id="jdH-ea-j2c"/>
+                    <constraint firstAttribute="trailing" secondItem="kn4-Y1-VnJ" secondAttribute="trailing" constant="20" id="niC-3c-hTS"/>
                     <constraint firstAttribute="trailing" secondItem="S00-uU-x1p" secondAttribute="trailing" constant="230" id="pgi-ZM-XJR"/>
                     <constraint firstItem="kbl-IQ-SUo" firstAttribute="top" secondItem="doH-C8-GwG" secondAttribute="bottom" constant="4" id="s3D-7D-B0U"/>
                     <constraint firstItem="doH-C8-GwG" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="23" id="v6u-7E-qBw"/>
@@ -115,6 +127,7 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="alertButton" destination="kn4-Y1-VnJ" id="yV7-ZP-ZAJ"/>
                 <outlet property="commentLabel" destination="doH-C8-GwG" id="jze-40-Nmv"/>
                 <outlet property="createdLabel" destination="Oho-fw-alJ" id="TXW-NA-Ohv"/>
                 <outlet property="likeButton" destination="kbl-IQ-SUo" id="tIG-Bx-jMp"/>
@@ -128,6 +141,7 @@
         </tableViewCell>
     </objects>
     <resources>
+        <image name="ellipsis" catalog="system" width="128" height="37"/>
         <image name="heart" catalog="system" width="128" height="109"/>
         <systemColor name="systemPinkColor">
             <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

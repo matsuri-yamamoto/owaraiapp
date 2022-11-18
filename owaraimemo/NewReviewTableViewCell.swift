@@ -26,6 +26,8 @@ class NewReviewTableViewCell: UITableViewCell {
     
     @IBOutlet weak var reviewCommentLink: UILabel!
     
+    @IBOutlet weak var alertButton: UIButton!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -36,6 +38,6 @@ class NewReviewTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
+        
     
 }

@@ -123,18 +123,30 @@
                             <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </state>
                     </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bdc-1v-7R6">
+                        <rect key="frame" x="350" y="8.6666666666666643" width="19" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="19" id="Dqp-y5-s45"/>
+                            <constraint firstAttribute="height" constant="22" id="wZb-MC-G83"/>
+                        </constraints>
+                        <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <state key="normal" image="ellipsis" catalog="system"/>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" red="0.97854371230000003" green="0.97854371230000003" blue="0.97854371230000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 <constraints>
                     <constraint firstAttribute="trailingMargin" secondItem="SlZ-RL-mbC" secondAttribute="trailing" constant="95" id="1qE-cC-4Mz"/>
                     <constraint firstAttribute="bottom" secondItem="cny-vg-ds7" secondAttribute="bottom" constant="324" id="3BM-Kw-Q2N"/>
                     <constraint firstAttribute="bottom" secondItem="wvZ-Iu-1of" secondAttribute="bottom" constant="293" id="3tl-Ua-q2K"/>
+                    <constraint firstAttribute="trailing" secondItem="Bdc-1v-7R6" secondAttribute="trailing" constant="25" id="4CI-h3-SUY"/>
                     <constraint firstItem="cny-vg-ds7" firstAttribute="top" secondItem="PIU-fn-OMe" secondAttribute="bottom" id="9ir-Qz-hq8"/>
                     <constraint firstItem="sMj-sf-9i2" firstAttribute="top" secondItem="cny-vg-ds7" secondAttribute="bottom" constant="8" symbolic="YES" id="COB-cZ-rKw"/>
                     <constraint firstAttribute="trailingMargin" secondItem="qRt-A4-FzJ" secondAttribute="trailing" constant="13" id="DyB-NR-GJC"/>
                     <constraint firstItem="iLW-UA-uf1" firstAttribute="leading" secondItem="zbs-cU-jZa" secondAttribute="trailing" constant="18.329999999999998" id="FSq-dy-syV"/>
                     <constraint firstAttribute="bottom" secondItem="PIU-fn-OMe" secondAttribute="bottom" constant="343" id="GK3-QY-wVq"/>
                     <constraint firstAttribute="trailing" secondItem="PIU-fn-OMe" secondAttribute="trailing" id="M2x-t0-qnU"/>
+                    <constraint firstItem="Bdc-1v-7R6" firstAttribute="centerY" secondItem="PIU-fn-OMe" secondAttribute="centerY" id="M4q-DI-xSJ"/>
                     <constraint firstItem="HDP-Me-N4o" firstAttribute="top" secondItem="ioc-0L-KBd" secondAttribute="top" constant="-5" id="MR2-sJ-Y1n"/>
                     <constraint firstItem="kaP-lx-25O" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="NM8-CT-Jem"/>
                     <constraint firstAttribute="bottom" secondItem="qRt-A4-FzJ" secondAttribute="bottom" constant="234" id="Nba-aG-6vi"/>
@@ -178,6 +190,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="afterRelationalLabel" destination="qRt-A4-FzJ" id="I5Q-cH-BYj"/>
+                <outlet property="alertButton" destination="Bdc-1v-7R6" id="IMV-c3-NAB"/>
                 <outlet property="beforeRelationalLabel" destination="zbs-cU-jZa" id="3oS-EN-IQm"/>
                 <outlet property="comedianImageView" destination="sMj-sf-9i2" id="BQJ-iQ-473"/>
                 <outlet property="comedianNameButton" destination="wvZ-Iu-1of" id="gKe-2E-wMF"/>
@@ -196,6 +209,7 @@
         </tableViewCell>
     </objects>
     <resources>
+        <image name="ellipsis" catalog="system" width="128" height="37"/>
         <image name="heart" catalog="system" width="128" height="109"/>
         <systemColor name="systemPinkColor">
             <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

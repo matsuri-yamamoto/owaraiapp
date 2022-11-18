@@ -107,6 +107,10 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     //reviewをセットする配列(別画面から戻る場合などにレビュー×2が読み込まれてしまうので、一旦この配列に入れてあとでユニークにする)
     var reviewBeforeUniqueArray: [String] = []
 
+    //ブロックしている・されているユーザーの配列
+    var blockingUserArray: [String] = []
+    var blockedUserArray: [String] = []
+    
     //reviewのtableViewにセットする配列
     var reviewIdArray: [String] = []
     var reviewUserNameArray: [String] = []
@@ -248,39 +252,202 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                         self.scoreImageView.image = UIImage(named: "score_\(String(format: "%.1f", averageScore))")
                     }
                     
-                    
-                    //レビューを配列で取得(別画面から戻る場合などにレビュー×2が読み込まれてしまうので、一旦仮の配列に入れてあとでユニークにする)
-                    self.reviewBeforeUniqueArray.append(document.documentID)
-                    print("self.reviewBeforeUniqueArray:\(self.reviewBeforeUniqueArray)")
-                    
-                    
-                    //以下、reviewのtableViewにセットする配列
-                    //レビューをユニークにする
-                    var reviewId = Set<String>()
-                    self.reviewIdArray = self.reviewBeforeUniqueArray.filter { reviewId.insert($0).inserted }
-                    
-                    
-                    self.reviewUserIdArray.append(document.data()["user_id"] as! String)
-                    self.reviewUserNameArray.append(document.data()["user_name"] as! String)
-                    self.reviewDisplayIdArray.append(document.data()["display_id"] as! String)
-                    
-                    //一旦FSのtimestampでデータを呼ぶ
-                    let reviewCreatedDate = document.data()["create_datetime"] as! Timestamp
-                    //Swiftのdateに変換
-                    reviewCreatedDate.dateValue()
-                    self.reviewCreatedArray.append(dateFormatter.string(from: reviewCreatedDate.dateValue()))
-                    
-                    self.reviewScoreArray.append(String(document.data()["score"] as! Float))
-                    self.reviewCommentArray.append(document.data()["comment"] as! String)
-                    
-                    
+                    //自分がブロック中のユーザーを取得
+                    self.db.collection("block_user").whereField("blocking_user_id", isEqualTo: self.currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).limit(to: 10).getDocuments() { [self] (querySnapshot, err) in
+
+                        if let err = err {
+                            print("Error getting documents: \(err)")
+                            return
+
+                        } else {
+                            for document in querySnapshot!.documents {
+                                
+                                self.blockingUserArray.append(document.data()["blocked_user_id"] as! String)
+                                
+                            }
+                            
+                            //自分をブロックしているユーザーを取得
+                            self.db.collection("block_user").whereField("blocked_user_id", isEqualTo: self.currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).limit(to: 10).getDocuments() { [self] (querySnapshot, err) in
+
+                                if let err = err {
+                                    print("Error getting documents: \(err)")
+                                    return
+
+                                } else {
+                                    for document in querySnapshot!.documents {
+                                        
+                                        self.blockedUserArray.append(document.data()["blocking_user_id"] as! String)
+                                        
+                                    }
+                                    
+                                    //ブロックしているユーザーもブロックされているユーザーもいる場合
+                                    if self.blockingUserArray != [] && self.blockedUserArray != [] {
+                                        
+                                        self.db.collection("review").whereField("comedian_id", isEqualTo: self.comedianId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).whereField("user_id", notIn: self.blockingUserArray).whereField("user_id", notIn: self.blockedUserArray).order(by: "user_id", descending: true).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
+
+                                            if let err = err {
+                                                print("Error getting documents: \(err)")
+                                                return
+
+                                            } else {
+                                                for document in querySnapshot!.documents {
+                                                    
+                                                    //レビューを配列で取得(別画面から戻る場合などにレビュー×2が読み込まれてしまうので、一旦仮の配列に入れてあとでユニークにする)
+                                                    self.reviewBeforeUniqueArray.append(document.documentID)
+                                                    print("self.reviewBeforeUniqueArray:\(self.reviewBeforeUniqueArray)")
+                                                    
+                                                    
+                                                    //以下、reviewのtableViewにセットする配列
+                                                    //レビューをユニークにする
+                                                    var reviewId = Set<String>()
+                                                    self.reviewIdArray = self.reviewBeforeUniqueArray.filter { reviewId.insert($0).inserted }
+                                                    
+                                                    
+                                                    self.reviewUserIdArray.append(document.data()["user_id"] as! String)
+                                                    self.reviewUserNameArray.append(document.data()["user_name"] as! String)
+                                                    self.reviewDisplayIdArray.append(document.data()["display_id"] as! String)
+                                                    
+                                                    //一旦FSのtimestampでデータを呼ぶ
+                                                    let reviewCreatedDate = document.data()["create_datetime"] as! Timestamp
+                                                    //Swiftのdateに変換
+                                                    reviewCreatedDate.dateValue()
+                                                    self.reviewCreatedArray.append(dateFormatter.string(from: reviewCreatedDate.dateValue()))
+                                                    
+                                                    self.reviewScoreArray.append(String(document.data()["score"] as! Float))
+                                                    self.reviewCommentArray.append(document.data()["comment"] as! String)
+                                                }
+                                                self.tableView.reloadData()
+                                            }
+                                        }
+                                    }
+                                    
+                                    //ブロックしているユーザーはいるがブロックはされていない場合
+                                    if self.blockingUserArray != [] && self.blockedUserArray == [] {
+                                        
+                                        self.db.collection("review").whereField("comedian_id", isEqualTo: self.comedianId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).whereField("user_id", notIn: self.blockingUserArray).order(by: "user_id", descending: true).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
+
+                                            if let err = err {
+                                                print("Error getting documents: \(err)")
+                                                return
+
+                                            } else {
+                                                for document in querySnapshot!.documents {
+                                                    
+                                                    //レビューを配列で取得(別画面から戻る場合などにレビュー×2が読み込まれてしまうので、一旦仮の配列に入れてあとでユニークにする)
+                                                    self.reviewBeforeUniqueArray.append(document.documentID)
+                                                    print("self.reviewBeforeUniqueArray:\(self.reviewBeforeUniqueArray)")
+                                                    
+                                                    
+                                                    //以下、reviewのtableViewにセットする配列
+                                                    //レビューをユニークにする
+                                                    var reviewId = Set<String>()
+                                                    self.reviewIdArray = self.reviewBeforeUniqueArray.filter { reviewId.insert($0).inserted }
+                                                    
+                                                    
+                                                    self.reviewUserIdArray.append(document.data()["user_id"] as! String)
+                                                    self.reviewUserNameArray.append(document.data()["user_name"] as! String)
+                                                    self.reviewDisplayIdArray.append(document.data()["display_id"] as! String)
+                                                    
+                                                    //一旦FSのtimestampでデータを呼ぶ
+                                                    let reviewCreatedDate = document.data()["create_datetime"] as! Timestamp
+                                                    //Swiftのdateに変換
+                                                    reviewCreatedDate.dateValue()
+                                                    self.reviewCreatedArray.append(dateFormatter.string(from: reviewCreatedDate.dateValue()))
+                                                    
+                                                    self.reviewScoreArray.append(String(document.data()["score"] as! Float))
+                                                    self.reviewCommentArray.append(document.data()["comment"] as! String)
+                                                }
+                                                self.tableView.reloadData()
+                                            }
+                                        }
+                                    }
+                                    
+                                    //ブロックはしていないがブロックされている場合
+                                    if self.blockingUserArray == [] && self.blockedUserArray != [] {
+                                        
+                                        self.db.collection("review").whereField("comedian_id", isEqualTo: self.comedianId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).whereField("user_id", notIn: self.blockedUserArray).order(by: "user_id", descending: true).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
+
+                                            if let err = err {
+                                                print("Error getting documents: \(err)")
+                                                return
+
+                                            } else {
+                                                for document in querySnapshot!.documents {
+                                                    
+                                                    //レビューを配列で取得(別画面から戻る場合などにレビュー×2が読み込まれてしまうので、一旦仮の配列に入れてあとでユニークにする)
+                                                    self.reviewBeforeUniqueArray.append(document.documentID)
+                                                    print("self.reviewBeforeUniqueArray:\(self.reviewBeforeUniqueArray)")
+                                                    
+                                                    
+                                                    //以下、reviewのtableViewにセットする配列
+                                                    //レビューをユニークにする
+                                                    var reviewId = Set<String>()
+                                                    self.reviewIdArray = self.reviewBeforeUniqueArray.filter { reviewId.insert($0).inserted }
+                                                    
+                                                    
+                                                    self.reviewUserIdArray.append(document.data()["user_id"] as! String)
+                                                    self.reviewUserNameArray.append(document.data()["user_name"] as! String)
+                                                    self.reviewDisplayIdArray.append(document.data()["display_id"] as! String)
+                                                    
+                                                    //一旦FSのtimestampでデータを呼ぶ
+                                                    let reviewCreatedDate = document.data()["create_datetime"] as! Timestamp
+                                                    //Swiftのdateに変換
+                                                    reviewCreatedDate.dateValue()
+                                                    self.reviewCreatedArray.append(dateFormatter.string(from: reviewCreatedDate.dateValue()))
+                                                    
+                                                    self.reviewScoreArray.append(String(document.data()["score"] as! Float))
+                                                    self.reviewCommentArray.append(document.data()["comment"] as! String)
+                                                }
+                                                self.tableView.reloadData()
+                                            }
+                                        }
+                                    }
+                                    
+                                    //ブロックをしてもされてもいない場合
+                                    if self.blockingUserArray == [] && self.blockedUserArray == [] {
+                                        
+                                        self.db.collection("review").whereField("comedian_id", isEqualTo: self.comedianId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
+
+                                            if let err = err {
+                                                print("Error getting documents: \(err)")
+                                                return
+
+                                            } else {
+                                                for document in querySnapshot!.documents {
+                                                    
+                                                    //レビューを配列で取得(別画面から戻る場合などにレビュー×2が読み込まれてしまうので、一旦仮の配列に入れてあとでユニークにする)
+                                                    self.reviewBeforeUniqueArray.append(document.documentID)
+                                                    print("self.reviewBeforeUniqueArray:\(self.reviewBeforeUniqueArray)")
+                                                    
+                                                    
+                                                    //以下、reviewのtableViewにセットする配列
+                                                    //レビューをユニークにする
+                                                    var reviewId = Set<String>()
+                                                    self.reviewIdArray = self.reviewBeforeUniqueArray.filter { reviewId.insert($0).inserted }
+                                                    
+                                                    
+                                                    self.reviewUserIdArray.append(document.data()["user_id"] as! String)
+                                                    self.reviewUserNameArray.append(document.data()["user_name"] as! String)
+                                                    self.reviewDisplayIdArray.append(document.data()["display_id"] as! String)
+                                                    
+                                                    //一旦FSのtimestampでデータを呼ぶ
+                                                    let reviewCreatedDate = document.data()["create_datetime"] as! Timestamp
+                                                    //Swiftのdateに変換
+                                                    reviewCreatedDate.dateValue()
+                                                    self.reviewCreatedArray.append(dateFormatter.string(from: reviewCreatedDate.dateValue()))
+                                                    
+                                                    self.reviewScoreArray.append(String(document.data()["score"] as! Float))
+                                                    self.reviewCommentArray.append(document.data()["comment"] as! String)
+                                                }
+                                                self.tableView.reloadData()
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                
-                print("comedianVC_reviewIdArray:\(self.reviewIdArray)")
-                self.tableView.reloadData()
-
-
-                
             }
         }
         
@@ -1292,6 +1459,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         //reviewidを入れる変数
         self.reviewId = self.reviewIdArray[indexPath.row]
                 
+        //alertボタンをセット
+        cell.alertButton.addTarget(self, action: #selector(self.tappedAlertButton), for: .touchUpInside)
+
         
         //※プロフィール画像の仕様が決まったらここに追加する(reviewUserIdArryがあるのでそれを使う)
         //ユーザー名
@@ -1429,6 +1599,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
 
         
     }
+    
+    
     
     @objc func tappedLikeButton(sender: UIButton) {
         
@@ -1669,6 +1841,41 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         
         
     }
+    
+    //alertボタンタップ時
+    @objc func tappedAlertButton() {
+        
+        
+        //UIAlertControllerを用意する
+        let actionAlert = UIAlertController(title: "不適切なレビューの報告", message: "このレビューを報告しますか？", preferredStyle: UIAlertController.Style.actionSheet)
+        
+        //UIAlertControllerに報告のアクションを追加する
+        let kabigonAction = UIAlertAction(title: "報告する", style: UIAlertAction.Style.default, handler: {
+            (action: UIAlertAction!) in
+            
+            let inquiryVC = self.storyboard?.instantiateViewController(withIdentifier: "Inquiry") as! InquiryViewController
+            self.navigationController?.pushViewController(inquiryVC, animated: true)
+
+        })
+        actionAlert.addAction(kabigonAction)
+        
+        
+        //UIAlertControllerにキャンセルのアクションを追加する
+        let cancelAction = UIAlertAction(title: "キャンセル", style: UIAlertAction.Style.cancel, handler: {
+            (action: UIAlertAction!) in
+
+            return
+        })
+        actionAlert.addAction(cancelAction)
+        
+        //アクションを表示する
+        present(actionAlert, animated: true, completion: nil)
+
+
+        
+    }
+
+    
     
 }
 

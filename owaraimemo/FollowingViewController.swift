@@ -358,6 +358,9 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewReviewCell", for: indexPath) as! NewReviewTableViewCell
         
 
+        //alertボタンをセット
+        cell.alertButton.addTarget(self, action: #selector(self.tappedAlertButton), for: .touchUpInside)
+
         
         db.collection("review").whereField(FieldPath.documentID(), isEqualTo: self.reviewIdArray[indexPath.row]).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).getDocuments() { (querySnapshot, err) in
             
@@ -864,6 +867,39 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
         
         
     }
+    
+    @objc func tappedAlertButton() {
+        
+        
+        //UIAlertControllerを用意する
+        let actionAlert = UIAlertController(title: "不適切なレビューの報告", message: "このレビューを報告しますか？", preferredStyle: UIAlertController.Style.actionSheet)
+        
+        //UIAlertControllerに報告のアクションを追加する
+        let kabigonAction = UIAlertAction(title: "報告する", style: UIAlertAction.Style.default, handler: {
+            (action: UIAlertAction!) in
+            
+            let inquiryVC = self.storyboard?.instantiateViewController(withIdentifier: "Inquiry") as! InquiryViewController
+            self.navigationController?.pushViewController(inquiryVC, animated: true)
+
+        })
+        actionAlert.addAction(kabigonAction)
+        
+        
+        //UIAlertControllerにキャンセルのアクションを追加する
+        let cancelAction = UIAlertAction(title: "キャンセル", style: UIAlertAction.Style.cancel, handler: {
+            (action: UIAlertAction!) in
+
+            return
+        })
+        actionAlert.addAction(cancelAction)
+        
+        //アクションを表示する
+        present(actionAlert, animated: true, completion: nil)
+
+
+        
+    }
+
     
     //ユーザーネームタップでプロフィールページに遷移
     

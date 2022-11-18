@@ -21,6 +21,7 @@ class ComedianReviewTableViewCell: UITableViewCell {
     @IBOutlet weak var likeCountButton: UIButton!
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var continuationLabel: UILabel!
+    @IBOutlet weak var alertButton: UIButton!
     
     var comedianDetailVC = ComedianDetailViewController()
     
