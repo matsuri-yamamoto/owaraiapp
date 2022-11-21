@@ -1126,19 +1126,61 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
                     && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
                     
-                    //レコード保存
-                    let pvRec = Firestore.firestore().collection("pv_comedian").document()
-                    let pvDic = [
-                        "user_id": Auth.auth().currentUser?.uid,
-                        "comedian_id": self.comedianId,
-                        "comedian_display_name": self.comedianDisplayName,
-                        "create_datetime": FieldValue.serverTimestamp(),
-                        "update_datetime": FieldValue.serverTimestamp(),
-                        "delete_flag": false,
-                        "delete_datetime": nil,
-                    ] as [String : Any?]
-                    pvRec.setData(pvDic as [String : Any])
+                    
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateStyle = .short
+                    dateFormatter.timeStyle = .short
+                    dateFormatter.locale = Locale(identifier: "ja_JP")
+                    dateFormatter.dateFormat = "yyyy/MM/dd"
+                    let date = Date()
+                    let pvDate = dateFormatter.string(from: date)
+                    
+                    
+                    self.db.collection("pv_comedian").whereField("comedian_id", isEqualTo: self.comedianId).whereField("user_id", isEqualTo: Auth.auth().currentUser?.uid).whereField("pv_date", isEqualTo: pvDate).getDocuments() { [self](querySnapshot, err) in
+                        
+                        if let err = err {
+                            print("Error getting documents: \(err)")
+                            return
+                            
+                        } else {
+                            
+                            if (querySnapshot?.documents.count)! > 0 {
+                                
+                                return
+                                
+                            }
+                            
+                            if (querySnapshot?.documents.count) == 0 {
+                                
+                                //レコード保存
+                                let pvRec = Firestore.firestore().collection("pv_comedian").document()
+                                let pvDic = [
+                                    "user_id": Auth.auth().currentUser?.uid,
+                                    "comedian_id": self.comedianId,
+                                    "comedian_display_name": self.comedianDisplayName,
+                                    "pv_date": pvDate,
+                                    "create_datetime": FieldValue.serverTimestamp(),
+                                    "update_datetime": FieldValue.serverTimestamp(),
+                                    "delete_flag": false,
+                                    "delete_datetime": nil,
+                                ] as [String : Any?]
+                                pvRec.setData(pvDic as [String : Any]) { err in
+                                    if let err = err {
+                                        print("Error updating document: \(err)")
+                                    } else {
+                                        print("Document successfully updated")
+                                    }
+                                }
 
+                                
+                            }
+
+                            
+                            
+                        }
+                    }
+                    
                     
                 }
 

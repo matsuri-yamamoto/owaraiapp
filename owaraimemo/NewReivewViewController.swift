@@ -75,90 +75,44 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         
         self.tableView.refreshControl = UIRefreshControl()
         self.tableView.refreshControl?.addTarget(self, action: #selector(dataRefresh), for: .valueChanged)
+        self.tableView.refreshControl?.addTarget(self, action: #selector(createRefreshLog), for: .valueChanged)
 
 
         
     }
     
     
-    
-//    override func viewWillAppear(_ animated: Bool) {
-//
-//        let nib = UINib(nibName: "NewReviewTableViewCell", bundle: nil)
-//        self.tableView.register(nib, forCellReuseIdentifier: "NewReviewCell")
-//
-//
-//
-//
-//        self.reviewIdArray = []
-//        self.comedianIdArray = []
-//        self.comedianNameArray = []
-//        self.userIdArray = []
-//        self.userNameArray = []
-//        self.userDisplayIdArray = []
-//        self.reviewUpdateDatetimeArray = []
-//        self.reviewScoreArray = []
-//        self.reviewCommentArray = []
-//        self.reviewRelationalArray = []
-//
-//        self.reviewLinkArray = []
-//
-//        self.reviewId = ""
-//
-//        self.indicator.startAnimating()
-//
-//        self.db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
-//
-//            if let err = err {
-//                print("Error getting documents: \(err)")
-//                return
-//
-//            } else {
-//                for document in querySnapshot!.documents {
-//
-//                    self.reviewIdArray.append(document.documentID)
-//                    self.comedianIdArray.append(document.data()["comedian_id"] as! String)
-//                    self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
-//                    self.userIdArray.append(document.data()["user_id"] as! String)
-//                    self.userNameArray.append(document.data()["user_name"] as! String)
-//
-//                    self.userDisplayIdArray.append(document.data()["display_id"] as! String)
-//
-//                    let dateFormatter = DateFormatter()
-//                    dateFormatter.dateStyle = .short
-//                    dateFormatter.timeStyle = .short
-//                    dateFormatter.locale = Locale(identifier: "ja_JP")
-//
-//                    dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
-//
-//                    let updated = document.data()["update_datetime"] as! Timestamp
-//                    let updatedDate = updated.dateValue()
-//                    let updatedDateTime = dateFormatter.string(from: updatedDate)
-//                    self.reviewUpdateDatetimeArray.append(updatedDateTime)
-//
-//                    let reviewFloatScoreArray = document.data()["score"] as! Float
-//                    self.reviewScoreArray.append(String(reviewFloatScoreArray))
-//
-//                    self.reviewCommentArray.append(document.data()["comment"] as! String)
-//
-//                    self.reviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
-//                }
-//
-//                self.tableView.reloadData()
-//                print("reviewScoreArray:\(reviewScoreArray)")
-//
-////                self.tableView.refreshControl?.endRefreshing()
-//
-//                tableView.delegate = self
-//                tableView.dataSource = self
-//
-//
-//            }
-//        }
-//
-//        self.indicator.stopAnimating()
-//
-//    }
+    override func viewDidAppear(_ animated: Bool) {
+        
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            //pvログを取得
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "NewReview",
+                "action_type": "pv",
+                "tapped_comedian_id": "",
+                "tapped_user_id": "",
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+                        
+        }
+    }
+        
     
     
     
@@ -436,9 +390,45 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                        
                    }
                }
+                              
            }
        }
+       
+       
    }
+    
+    
+    @objc func createRefreshLog() {
+        
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            //pvログを取得
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "NewReview",
+                "action_type": "refresh",
+                "tapped_comedian_id": "",
+                "tapped_user_id": "",
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+                        
+        }
+        
+    }
                     
                 
                 
@@ -641,18 +631,18 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         return cell
     }
     
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        //セルタップでレビュー全文に遷移
-//        let allReviewVC = storyboard?.instantiateViewController(withIdentifier: "AllReview") as! AllReviewViewController
-//
-//        allReviewVC.reviewId = self.reviewIdArray[indexPath.row]
-//        self.navigationController?.pushViewController(allReviewVC, animated: true)
-//
-//        self.tableView.deselectRow(at: indexPath, animated: true)
-//
-//
-//
-//    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //セルタップでレビュー全文に遷移
+        let allReviewVC = storyboard?.instantiateViewController(withIdentifier: "AllReview") as! AllReviewViewController
+
+        allReviewVC.reviewId = self.reviewIdArray[indexPath.row]
+        self.navigationController?.pushViewController(allReviewVC, animated: true)
+
+        self.tableView.deselectRow(at: indexPath, animated: true)
+
+
+
+    }
     
     @objc func tappedReferenceButton(sender: UIButton) {
         
@@ -931,6 +921,34 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         comedianVC.comedianId = tappedComedianId
         self.navigationController?.pushViewController(comedianVC, animated: true)
         
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            //pvログを取得
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "NewReview",
+                "action_type": "tap_comedian",
+                "tapped_comedian_id": tappedComedianId,
+                "tapped_user_id": "",
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+                        
+        }
+        
         
     }
     
@@ -981,6 +999,34 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         
         self.navigationController?.pushViewController(profileVC, animated: true)
         
+        
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            //pvログを取得
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "NewReview",
+                "action_type": "tap_user",
+                "tapped_comedian_id": "",
+                "tapped_user_id": tappedUserId,
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+                        
+        }
         
     }
     

@@ -12,15 +12,14 @@ import FirebaseStorage
 
 class FirstTabViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
+    let currentUser = Auth.auth().currentUser
     
     @IBOutlet weak var collectionView: UICollectionView!
-    
-    
+    @IBOutlet weak var updateInfoLabel: UILabel!
     
     var comedianIdArray1: [String] = []
     var comedianIdArray2: [String] = []
     var comedianIdArray3: [String] = []
-    
     
     var comedianNameArrayId1: [String] = []
     var comedianNameArrayId2: [String] = []
@@ -37,6 +36,17 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     var comedianCopyRightArray2: [String] = []
     var comedianCopyRightArray3: [String] = []
     var comedianCopyRightArray: [String] = []
+    
+    var comedianReferenceNameArray1: [String] = []
+    var comedianReferenceNameArray2: [String] = []
+    var comedianReferenceNameArray3: [String] = []
+    var comedianReferenceNameArray: [String] = []
+    
+    var comedianReferenceUrlArray1: [String] = []
+    var comedianReferenceUrlArray2: [String] = []
+    var comedianReferenceUrlArray3: [String] = []
+    var comedianReferenceUrlArray: [String] = []
+
     
     var comedianReviewCountArray: [String] = []
     var comedianScoreArray: [String] = []
@@ -58,16 +68,14 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     let db = Firestore.firestore()
     //画像のパス
     let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
-
+    
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "みつかる"
         
         //fetchDataなどで分割した配列の各データを呼び、配列を結合する→cellItemAtにてindexPathでセットする
         
-        cellComedianNameData()
         //        cellScoreData()
         
         
@@ -76,23 +84,30 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         //セルを指定
         collectionView.register(UINib(nibName: "TabViewCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "TabViewCollectionViewCell")
+
         
         //セルのサイズを指定
         let layout = UICollectionViewFlowLayout()
         // 横方向のスペース調整
-        let horizontalSpace:CGFloat = 50
-        //デバイスの横幅を2分割した横幅　- セル間のスペース*1（セル間のスペースが1列あるため）
-        cellSize = (self.view.bounds.width - horizontalSpace*1)/2
+        let horizontalSpace:CGFloat = 20
+        //デバイスの横幅を3分割した横幅　- セル間のスペース*2（セル間のスペースが2列あるため）
+        cellSize = (self.view.bounds.width - horizontalSpace*2)/3
         
         print("firstTabcellSize:\(cellSize)")
         
         
-        
-        layout.itemSize = CGSize(width: cellSize, height: cellSize*1.35)
+        layout.itemSize = CGSize(width: cellSize, height: cellSize*1.45)
         collectionView.collectionViewLayout = layout
-        
+
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        cellComedianNameData()
+
+    }
+    
     
     override func viewDidAppear(_ animated: Bool) {
         
@@ -100,11 +115,74 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         //pvログ
         AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .firstTabVC))
         
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            //pvログを取得
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "FirstTab",
+                "action_type": "pv",
+                "tapped_comedian_id": "",
+                "tapped_user_id": "",
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+                        
+        }
+        
+        
     }
     
     
     
     func cellComedianNameData() {
+        
+        self.comedianIdArray1 = []
+        self.comedianIdArray2 = []
+        self.comedianIdArray3 = []
+        
+        self.comedianNameArrayId1 = []
+        self.comedianNameArrayId2 = []
+        self.comedianNameArrayId3 = []
+        self.comedianNameArrayId = []
+        
+        
+        self.comedianNameArray1 = []
+        self.comedianNameArray2 = []
+        self.comedianNameArray3 = []
+        self.comedianNameArray = []
+        
+        self.comedianCopyRightArray1 = []
+        self.comedianCopyRightArray2 = []
+        self.comedianCopyRightArray3 = []
+        self.comedianCopyRightArray = []
+        
+        self.comedianReferenceNameArray1 = []
+        self.comedianReferenceNameArray2 = []
+        self.comedianReferenceNameArray3 = []
+        self.comedianReferenceNameArray = []
+        
+        self.comedianReferenceUrlArray1 = []
+        self.comedianReferenceUrlArray2 = []
+        self.comedianReferenceUrlArray3 = []
+        self.comedianReferenceUrlArray = []
+
+        
+        self.comedianReviewCountArray = []
+        self.comedianScoreArray = []
         
         //Arrayにcomedian_idをセットする
         self.db.collection("first_tab_comedian_array").getDocuments() { (querySnapshot, err) in
@@ -128,8 +206,9 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                     
                     comedianIdArray3 = document.get("array3") as! [String]
                     self.comedianIdArray3.append(contentsOf: comedianIdArray3)
+                                        
                     
-                    
+                    self.updateInfoLabel.text = document.get("update_info") as! String
                     
                 }
                 
@@ -144,7 +223,6 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                     } else {
                         for document in querySnapshot!.documents {
                             
-                            //                    print("data:\(document.data())")
                             let comedianName = document.get("for_list_name") as! String
                             self.comedianNameArray1.append(comedianName)
                             
@@ -154,6 +232,11 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                             let comedianCopyRight = document.get("copyright_flag") as! String
                             self.comedianCopyRightArray1.append(comedianCopyRight)
                             
+                            let comedianReferenceName = document.get("reference_name") as! String
+                            self.comedianReferenceNameArray1.append(comedianReferenceName)
+                            
+                            let comedianReferenceUrl = document.get("reference_url") as! String
+                            self.comedianReferenceUrlArray1.append(comedianReferenceUrl)
                             
                         }
                         //※forinの外で処理しないと、データの数分の回数処理が行われてしまう
@@ -164,8 +247,8 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                         
                         self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray1)
                         
-                        
-                        
+                        self.comedianReferenceNameArray.append(contentsOf: self.comedianReferenceNameArray1)
+                        self.comedianReferenceUrlArray.append(contentsOf: self.comedianReferenceUrlArray1)
                         
                         //2つ目のArrayの芸人名をセットする
                         self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray2).whereField("delete_flag", isEqualTo: "false").getDocuments() { (querySnapshot, err) in
@@ -186,6 +269,12 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                                     let comedianCopyRight = document.get("copyright_flag") as! String
                                     self.comedianCopyRightArray2.append(comedianCopyRight)
                                     
+                                    let comedianReferenceName = document.get("reference_name") as! String
+                                    self.comedianReferenceNameArray2.append(comedianReferenceName)
+                                    
+                                    let comedianReferenceUrl = document.get("reference_url") as! String
+                                    self.comedianReferenceUrlArray2.append(comedianReferenceUrl)
+
                                     
                                     
                                 }
@@ -196,6 +285,9 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                                 
                                 self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray2)
                                 
+                                self.comedianReferenceNameArray.append(contentsOf: self.comedianReferenceNameArray2)
+                                self.comedianReferenceUrlArray.append(contentsOf: self.comedianReferenceUrlArray2)
+
                                 
                                 if self.comedianIdArray3 == [] {
                                     
@@ -224,6 +316,14 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                                                 let comedianCopyRight = document.get("copyright_flag") as! String
                                                 self.comedianCopyRightArray3.append(comedianCopyRight)
                                                 
+                                                let comedianReferenceName = document.get("reference_name") as! String
+                                                self.comedianReferenceNameArray3.append(comedianReferenceName)
+                                                
+                                                let comedianReferenceUrl = document.get("reference_url") as! String
+                                                self.comedianReferenceUrlArray3.append(comedianReferenceUrl)
+
+                                                
+                                                
                                                 
                                             }
                                             
@@ -233,7 +333,10 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                                             self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId3)
                                             
                                             self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray3)
-                                            
+
+                                            self.comedianReferenceNameArray.append(contentsOf: self.comedianReferenceNameArray3)
+                                            self.comedianReferenceUrlArray.append(contentsOf: self.comedianReferenceUrlArray3)
+
                                             print("comedianNameArrayId:\(self.comedianNameArrayId)")
                                             print("comedianCopyRightArray:\(self.comedianCopyRightArray)")
 
@@ -345,28 +448,37 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
 //            cell.comedianImageView.clipsToBounds = true
             
 //            print("画像のパス：comedian_image/\(comedianNameArrayId[indexPath.row]).jpg")
-
-            
-
-            
             
         }
         
         if comedianCopyrightFlag == "false" {
             
-            comedianImageView.image = UIImage(named: "noImage")
+            cell.comedianImageView.image = UIImage(named: "noImage")
             cell.comedianImageView.contentMode = .scaleAspectFill
             cell.comedianImageView.clipsToBounds = true
             
             
         }
         
+        if comedianCopyrightFlag == "reference" {
         
-        
+            cell.referenceButton.tag = indexPath.row
+            
+            cell.comedianImageView.image = UIImage(named: "\(self.comedianNameArrayId[indexPath.row])")
+            cell.comedianImageView.contentMode = .scaleAspectFill
+            cell.comedianImageView.clipsToBounds = true
+            
+            cell.referenceButton.contentHorizontalAlignment = .left
+            cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
+            cell.referenceButton.setTitle(self.comedianReferenceNameArray[indexPath.row], for: .normal)
+            cell.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
+            
+            
+        }
         
         print("cellcomedianNameArray:\(comedianNameArray)")
         
-        cell.comedianNameLabel.text = comedianNameArray[indexPath.row]
+        cell.comedianNameLabel.text = " " + comedianNameArray[indexPath.row]
         
         //レビュー数とレビューのツボった度の平均を設定する
         //        comedianReviewLabel = cell.contentView.viewWithTag(3) as! UILabel
@@ -397,10 +509,27 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         //            }
         //        }
         
+        
+        cell.rankingLabel.text = String(indexPath.row + 1)
+        
         return cell
         
     }
     
+    @objc func tappedReferenceButton(sender: UIButton) {
+        
+        let buttonTag = sender.tag
+        let tappedReferenceUrl = self.comedianReferenceUrlArray[buttonTag]
+        
+        let referenceVC = self.storyboard?.instantiateViewController(withIdentifier: "Reference") as! ReferenceViewController
+        
+        let referenceUrl = URL(string: "\(tappedReferenceUrl)")
+        referenceVC.url = referenceUrl
+        
+        self.navigationController?.pushViewController(referenceVC, animated: true)
+                
+    }
+
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
@@ -413,6 +542,35 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         AnalyticsUtil.sendAction(ActionEvent(screenName: .firstTabVC,
                                              actionType: .tap,
                                              actionLabel: .template(ActionLabelTemplate.cellTap)))
+        
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            //pvログを取得
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "FirstTab",
+                "action_type": "tap_comedian",
+                "tapped_comedian_id": self.comedianId,
+                "tapped_user_id": "",
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+                        
+        }
+
         
         
     }

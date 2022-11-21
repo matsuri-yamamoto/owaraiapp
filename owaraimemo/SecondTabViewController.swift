@@ -1,9 +1,3 @@
-//
-//  FirstTabViewController.swift
-//  owaraimemo
-//
-//  Created by 山本梨野 on 2022/06/21.
-//
 
 import UIKit
 import Firebase
@@ -16,9 +10,8 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    //    var comedianIdArray1: [String] = ["シマウマフック_1","惹女香花_1","ビッグボンバーズ_1","ひかるぶんどき_1","ムラムラタムラ_1","ふねしぼり_1"]
-    //    var comedianIdArray2: [String] = ["リボンズ_1","牛女_1","鳥山明・暗_1","ハニカムズ_1","まんたナイスミドル_1","シンクロニシティ_1"]
-    //    var comedianIdArray3: [String] = []
+    
+    let currentUser = Auth.auth().currentUser
     
     var comedianIdArray1: [String] = []
     var comedianIdArray2: [String] = []
@@ -40,6 +33,17 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
     var comedianCopyRightArray2: [String] = []
     var comedianCopyRightArray3: [String] = []
     var comedianCopyRightArray: [String] = []
+    
+    var comedianReferenceNameArray1: [String] = []
+    var comedianReferenceNameArray2: [String] = []
+    var comedianReferenceNameArray3: [String] = []
+    var comedianReferenceNameArray: [String] = []
+    
+    var comedianReferenceUrlArray1: [String] = []
+    var comedianReferenceUrlArray2: [String] = []
+    var comedianReferenceUrlArray3: [String] = []
+    var comedianReferenceUrlArray: [String] = []
+
     
     var comedianReviewCountArray: [String] = []
     var comedianScoreArray: [String] = []
@@ -63,10 +67,8 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
     let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
 
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "みつかる"
         
         //fetchDataなどで分割した配列の各データを呼び、配列を結合する→cellItemAtにてindexPathでセットする
         
@@ -83,15 +85,15 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
         //セルのサイズを指定
         let layout = UICollectionViewFlowLayout()
         // 横方向のスペース調整
-        let horizontalSpace:CGFloat = 50
-        //デバイスの横幅を2分割した横幅　- セル間のスペース*1（セル間のスペースが1列あるため）
-        cellSize = (self.view.bounds.width - horizontalSpace*1)/2
+        let horizontalSpace:CGFloat = 20
+        //デバイスの横幅を3分割した横幅　- セル間のスペース*1（セル間のスペースが1列あるため）
+        cellSize = (self.view.bounds.width - horizontalSpace*2)/3
+
+        print("firstTabcellSize:\(cellSize)")
         
-        print("secondTabcellSize:\(cellSize)")
         
         
-        
-        layout.itemSize = CGSize(width: cellSize, height: cellSize*1.35)
+        layout.itemSize = CGSize(width: cellSize, height: cellSize*1.45)
         collectionView.collectionViewLayout = layout
         
         
@@ -102,6 +104,34 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
         
         //pvログ
         AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .secondTabVC))
+        
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            //pvログを取得
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "SecondTab",
+                "action_type": "pv",
+                "tapped_comedian_id": "",
+                "tapped_user_id": "",
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+                        
+        }
         
     }
     
@@ -147,7 +177,6 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
                     } else {
                         for document in querySnapshot!.documents {
                             
-                            //                    print("data:\(document.data())")
                             let comedianName = document.get("for_list_name") as! String
                             self.comedianNameArray1.append(comedianName)
                             
@@ -157,6 +186,11 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
                             let comedianCopyRight = document.get("copyright_flag") as! String
                             self.comedianCopyRightArray1.append(comedianCopyRight)
                             
+                            let comedianReferenceName = document.get("reference_name") as! String
+                            self.comedianReferenceNameArray1.append(comedianReferenceName)
+                            
+                            let comedianReferenceUrl = document.get("reference_url") as! String
+                            self.comedianReferenceUrlArray1.append(comedianReferenceUrl)
                             
                         }
                         //※forinの外で処理しないと、データの数分の回数処理が行われてしまう
@@ -167,8 +201,8 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
                         
                         self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray1)
                         
-                        
-                        
+                        self.comedianReferenceNameArray.append(contentsOf: self.comedianReferenceNameArray1)
+                        self.comedianReferenceUrlArray.append(contentsOf: self.comedianReferenceUrlArray1)
                         
                         //2つ目のArrayの芸人名をセットする
                         self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray2).whereField("delete_flag", isEqualTo: "false").getDocuments() { (querySnapshot, err) in
@@ -189,6 +223,12 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
                                     let comedianCopyRight = document.get("copyright_flag") as! String
                                     self.comedianCopyRightArray2.append(comedianCopyRight)
                                     
+                                    let comedianReferenceName = document.get("reference_name") as! String
+                                    self.comedianReferenceNameArray2.append(comedianReferenceName)
+                                    
+                                    let comedianReferenceUrl = document.get("reference_url") as! String
+                                    self.comedianReferenceUrlArray2.append(comedianReferenceUrl)
+
                                     
                                     
                                 }
@@ -199,6 +239,9 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
                                 
                                 self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray2)
                                 
+                                self.comedianReferenceNameArray.append(contentsOf: self.comedianReferenceNameArray2)
+                                self.comedianReferenceUrlArray.append(contentsOf: self.comedianReferenceUrlArray2)
+
                                 
                                 if self.comedianIdArray3 == [] {
                                     
@@ -227,6 +270,14 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
                                                 let comedianCopyRight = document.get("copyright_flag") as! String
                                                 self.comedianCopyRightArray3.append(comedianCopyRight)
                                                 
+                                                let comedianReferenceName = document.get("reference_name") as! String
+                                                self.comedianReferenceNameArray3.append(comedianReferenceName)
+                                                
+                                                let comedianReferenceUrl = document.get("reference_url") as! String
+                                                self.comedianReferenceUrlArray3.append(comedianReferenceUrl)
+
+                                                
+                                                
                                                 
                                             }
                                             
@@ -236,6 +287,13 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
                                             self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId3)
                                             
                                             self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray3)
+
+                                            self.comedianReferenceNameArray.append(contentsOf: self.comedianReferenceNameArray3)
+                                            self.comedianReferenceUrlArray.append(contentsOf: self.comedianReferenceUrlArray3)
+
+                                            print("comedianNameArrayId:\(self.comedianNameArrayId)")
+                                            print("comedianCopyRightArray:\(self.comedianCopyRightArray)")
+
                                             
                                             self.collectionView.reloadData()
                                             
@@ -328,6 +386,8 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
         //storyboard上のセルを生成　storyboardのIdentifierで付けたものをここで設定する
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TabViewCollectionViewCell", for: indexPath) as! TabViewCollectionViewCell
         
+        cell.rankingLabel.isHidden = true
+        
         //芸人画像を指定する
         let comedianCopyrightFlag = comedianCopyRightArray[indexPath.row]
         
@@ -336,31 +396,46 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
             cell.comedianImageView.image = UIImage(named: "\(comedianNameArrayId[indexPath.row])")
             cell.comedianImageView.contentMode = .scaleAspectFill
             cell.comedianImageView.clipsToBounds = true
-            
+        
+                
 //            let imageRef = self.storage.child("comedian_image/\(comedianNameArrayId[indexPath.row]).jpg")
 //            cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
 //            cell.comedianImageView.contentMode = .scaleAspectFill
 //            cell.comedianImageView.clipsToBounds = true
             
+//            print("画像のパス：comedian_image/\(comedianNameArrayId[indexPath.row]).jpg")
             
         }
         
         if comedianCopyrightFlag == "false" {
             
-            comedianImageView.image = UIImage(named: "noImage")
+            cell.comedianImageView.image = UIImage(named: "noImage")
             cell.comedianImageView.contentMode = .scaleAspectFill
             cell.comedianImageView.clipsToBounds = true
             
             
         }
         
+        if comedianCopyrightFlag == "reference" {
         
-        
+            cell.referenceButton.tag = indexPath.row
+            
+            cell.comedianImageView.image = UIImage(named: "\(self.comedianNameArrayId[indexPath.row])")
+            cell.comedianImageView.contentMode = .scaleAspectFill
+            cell.comedianImageView.clipsToBounds = true
+            
+            cell.referenceButton.contentHorizontalAlignment = .left
+            cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
+            cell.referenceButton.setTitle(self.comedianReferenceNameArray[indexPath.row], for: .normal)
+            cell.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
+            
+            
+        }
         
         print("cellcomedianNameArray:\(comedianNameArray)")
         
-        cell.comedianNameLabel.text = comedianNameArray[indexPath.row]
-        
+        cell.comedianNameLabel.text = " " + comedianNameArray[indexPath.row]
+
         //レビュー数とレビューのツボった度の平均を設定する
         //        comedianReviewLabel = cell.contentView.viewWithTag(3) as! UILabel
         //        comedianScoreLabel = cell.contentView.viewWithTag(5) as! UILabel
@@ -394,6 +469,20 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
         
     }
     
+    @objc func tappedReferenceButton(sender: UIButton) {
+        
+        let buttonTag = sender.tag
+        let tappedReferenceUrl = self.comedianReferenceUrlArray[buttonTag]
+        
+        let referenceVC = self.storyboard?.instantiateViewController(withIdentifier: "Reference") as! ReferenceViewController
+        
+        let referenceUrl = URL(string: "\(tappedReferenceUrl)")
+        referenceVC.url = referenceUrl
+        
+        self.navigationController?.pushViewController(referenceVC, animated: true)
+                
+    }
+
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
@@ -406,6 +495,35 @@ class SecondTabViewController: UIViewController, UICollectionViewDelegate, UICol
         AnalyticsUtil.sendAction(ActionEvent(screenName: .secondTabVC,
                                              actionType: .tap,
                                              actionLabel: .template(ActionLabelTemplate.cellTap)))
+        
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            //pvログを取得
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "SecondTab",
+                "action_type": "tap_comedian",
+                "tapped_comedian_id": self.comedianId,
+                "tapped_user_id": "",
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+                        
+        }
+
         
         
     }

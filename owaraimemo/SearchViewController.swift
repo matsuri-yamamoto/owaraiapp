@@ -81,6 +81,34 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         //pvログ
         AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .searchVC))
+        
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            //pvログを取得
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "Search",
+                "action_type": "pv",
+                "tapped_comedian_id": "",
+                "tapped_user_id": "",
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+                        
+        }
     }
 
     // データの数（＝セルの数）を返すメソッド
@@ -136,8 +164,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                         for document in querySnapshot!.documents {
                             print("\(document.documentID) => \(document.data())")
                             
-                            
-                            
                             self.searchResultData = document.documentID
                             
                             
@@ -153,6 +179,34 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                         self.navigationController?.pushViewController(comedianVC, animated: true)
                         tableView.deselectRow(at: indexPath, animated: true)
                     }
+                
+                if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+                    && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+                    && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+                    && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+                    && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+                    && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+                    && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+                    && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+                    && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+                    && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+                    
+                    //pvログを取得
+                    let logRef = Firestore.firestore().collection("logs").document()
+                    let logDic = [
+                        "action_user_id": self.currentUser?.uid,
+                        "page": "Search",
+                        "action_type": "tap_comedian",
+                        "tapped_comedian_id": self.comedianId,
+                        "tapped_user_id": "",
+                        "create_datetime": FieldValue.serverTimestamp(),
+                        "update_datetime": FieldValue.serverTimestamp(),
+                        "delete_flag": false,
+                        "delete_datetime": nil,
+                    ] as [String : Any]
+                    logRef.setData(logDic)
+                                
+                }
             }
         }
         
@@ -160,7 +214,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         AnalyticsUtil.sendAction(ActionEvent(screenName: .searchVC,
                                                      actionType: .tap,
                                              actionLabel: .template(ActionLabelTemplate.searchedCellTap)))
-
+        
         
     }
         
@@ -172,7 +226,9 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                                                      actionType: .tap,
                                              actionLabel: .template(ActionLabelTemplate.searchBarTap)))
         
+        
         if searchController.searchBar.text != "" {
+            
             
             self.comedianDataArray = []
             self.searchResultNameArray = []

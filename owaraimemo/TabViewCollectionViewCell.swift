@@ -9,57 +9,19 @@ import UIKit
 
 class TabViewCollectionViewCell: UICollectionViewCell {
     
+    @IBOutlet weak var rankingLabel: UILabel!
     @IBOutlet weak var comedianImageView: UIImageView!
     @IBOutlet weak var referenceButton: UIButton!
     @IBOutlet weak var blankLabel: UILabel!
     @IBOutlet weak var comedianNameLabel: UILabel!
-    @IBOutlet weak var comedianImageViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var blankLabelWidth: NSLayoutConstraint!
+//    @IBOutlet weak var comedianImageViewHeight: NSLayoutConstraint!
+//    @IBOutlet weak var blankLabelWidth: NSLayoutConstraint!
     
     var cellSize: CGFloat = 0.0
     
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        print("スクリーンサイズ:\(UIScreen.main.nativeBounds.height)")
-        
-        
-        if UIScreen.main.nativeBounds.height <= 1334 {
-            //iPhone8など
-            
-            self.comedianImageViewHeight.constant = CGFloat(self.frame.height*0.8)
-            self.blankLabelWidth.constant = CGFloat(self.frame.width*0.03)
-
-            
-        } else if UIScreen.main.nativeBounds.height <= 2208 {
-            //iPhone8Plusなど
-            
-            self.comedianImageViewHeight.constant = CGFloat(self.frame.height*0.9)
-            self.blankLabelWidth.constant = CGFloat(self.frame.width*0.03)
-
-            
-        } else if UIScreen.main.nativeBounds.height <= 2436 {
-            //iPhoneX、iPhone13miniなど
-            
-            self.comedianImageViewHeight.constant = CGFloat(self.frame.height*0.8)
-            self.blankLabelWidth.constant = CGFloat(self.frame.width*0.05)
-            
-        } else if UIScreen.main.nativeBounds.height <= 2556 {
-            //iPhone12,iPhone12Proなど(2532)
-            //iPhone14Pro(2556)
-
-            self.comedianImageViewHeight.constant = CGFloat(self.frame.height*0.85)
-            self.blankLabelWidth.constant = CGFloat(self.frame.width*0.05)
-            
-            
-        } else {
-            //iPhone11ProMax,iPhone12ProMaxなど
-            
-            self.comedianImageViewHeight.constant = CGFloat(self.frame.height*0.95)
-            self.blankLabelWidth.constant = CGFloat(self.frame.width*0.05)
-            
-        }
         
         
     }

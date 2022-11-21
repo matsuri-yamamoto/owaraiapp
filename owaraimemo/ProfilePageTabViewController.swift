@@ -532,7 +532,6 @@ class ProfilePageTabViewController: TabmanViewController {
                                                     print("Error updating document: \(err)")
                                                 } else {
                                                     print("Document successfully updated")
-                                                    self.dismiss(animated: true)
                                                 }
                                             }
                                         }
@@ -681,7 +680,6 @@ class ProfilePageTabViewController: TabmanViewController {
                                             print("Error updating document: \(err)")
                                         } else {
                                             print("Document successfully updated")
-                                            self.dismiss(animated: true)
                                         }
                                     }
                                 }
@@ -718,7 +716,6 @@ class ProfilePageTabViewController: TabmanViewController {
                                             print("Error updating document: \(err)")
                                         } else {
                                             print("Document successfully updated")
-                                            self.dismiss(animated: true)
                                         }
                                     }
                                 }
