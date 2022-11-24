@@ -867,35 +867,48 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                             if self.comedianCopyRight == "reference" {
                                 
 
-                                self.db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: self.comedianId).getDocuments() {(querySnapshot, err) in
+                                let comedianImage: UIImage? = UIImage(named: "\(self.comedianId)")
+                                
+                                //画像がAssetsにあれば画像と引用元を表示し、なければ引用元なしのnoImageをセット
+                                if let validImage = comedianImage {
                                     
-                                    if let err = err {
-                                        print("Error getting documents: \(err)")
-                                        return
+                                    self.db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: self.comedianId).getDocuments() {(querySnapshot, err) in
                                         
-                                    } else {
-                                        for document in querySnapshot!.documents {
+                                        if let err = err {
+                                            print("Error getting documents: \(err)")
+                                            return
                                             
-                                            self.referenceName = document.data()["reference_name"] as! String
-                                            self.referenceUrl = document.data()["reference_url"] as! String
+                                        } else {
+                                            for document in querySnapshot!.documents {
+                                                
+                                                self.referenceName = document.data()["reference_name"] as! String
+                                                self.referenceUrl = document.data()["reference_url"] as! String
 
+                                            }
+                                            
+                                            print("referenceName:\(self.referenceName)")
+                                            
+                                            self.referenceButton.contentHorizontalAlignment = .left
+                                            self.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
+                                            self.referenceButton.setTitle(self.referenceName, for: .normal)
+                                            self.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
+                                            
                                         }
-                                        
-                                        print("referenceName:\(self.referenceName)")
-                                        
-                                        self.referenceButton.contentHorizontalAlignment = .left
-                                        self.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
-                                        self.referenceButton.setTitle(self.referenceName, for: .normal)
-                                        self.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
-                                        
                                     }
-                                }
+                                    
+                                    self.comedianImageView.image = comedianImage
+                                    self.comedianImageView.contentMode = .scaleAspectFill
+                                    self.comedianImageView.clipsToBounds = true
 
+                                    
+                                } else {
+                                    
+                                    //画像がない場合
+                                    
+                                    self.comedianImageView.image = UIImage(named: "noImage")
+                                    
+                                }
                                 
-                                
-                                self.comedianImageView.image = UIImage(named: "\(self.comedianId)")
-                                self.comedianImageView.contentMode = .scaleAspectFill
-                                self.comedianImageView.clipsToBounds = true
 
                                 //レビューの件数に応じたcontentViewのheightになるように設定(レビュー1件あたりheight=300)
                                 print("self.reviewIdArray.count:\(reviewCount!)")
@@ -956,12 +969,6 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                         }
                         
                     }
-
-                    
-                    
-
-                    
-                    
                     //mediaArrayを作る
                     //append関数はnilを許容できない
                     //Stringでメディアの種類(UIImageのname)を入れて198行目からの画像をセットするところでUIImageを設定
@@ -1172,18 +1179,10 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                         print("Document successfully updated")
                                     }
                                 }
-
-                                
                             }
-
-                            
-                            
                         }
                     }
-                    
-                    
                 }
-
             }
         }
         
@@ -1208,14 +1207,10 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
     
     @objc func tappedReferenceButton(sender: UIButton) {
-        
-        let referenceVC = self.storyboard?.instantiateViewController(withIdentifier: "Reference") as! ReferenceViewController
-        
+
         let referenceUrl = URL(string: "\(self.referenceUrl)")
-        referenceVC.url = referenceUrl
+        UIApplication.shared.open(referenceUrl!)
         
-        self.navigationController?.pushViewController(referenceVC, animated: true)
-                
     }
 
     

@@ -518,22 +518,35 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                             }
                             
                             if copyrightFlag == "reference" {
-                                
-                                let comedianReference = document.data()["reference_name"] as! String
-                                cell.referenceButton.tag = indexPath.row
 
                                 
-                                //                        let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
-                                //                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+                                let comedianImage: UIImage? = UIImage(named: "\(self.reviewComedianIdArray[indexPath.row])")
+                                //画像がAssetsにあれば画像と引用元を表示し、なければ引用元なしのnoImageをセット
+                                if let validImage = comedianImage {
+
+                                    let comedianReference = document.data()["reference_name"] as! String
+                                    cell.referenceButton.tag = indexPath.row
+                                    self.referenceUrl = document.data()["reference_url"] as! String
+
+                                    cell.referenceButton.contentHorizontalAlignment = .left
+                                    cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
+                                    cell.referenceButton.setTitle(comedianReference, for: .normal)
+                                    cell.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
+                                    
+                                    cell.comedianImageView.image = comedianImage
+                                    cell.comedianImageView.contentMode = .scaleAspectFill
+                                    cell.comedianImageView.clipsToBounds = true
+
+
+                                } else {
+                                    
+                                    //画像がない場合
+                                    
+                                    cell.comedianImageView.image = UIImage(named: "noImage")
+                                    cell.referenceButton.setTitle("", for: .normal)
+                                    
+                                }
                                 
-                                cell.comedianImageView.image = UIImage(named: "\(self.reviewComedianIdArray[indexPath.row])")
-                                //                        cell.comedianImageView.contentMode = .scaleAspectFill
-                                //                        cell.comedianImageView.clipsToBounds = true
-                                
-                                cell.referenceButton.contentHorizontalAlignment = .left
-                                cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
-                                cell.referenceButton.setTitle(comedianReference, for: .normal)
-                                cell.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
                                 
                             }
 
@@ -658,13 +671,9 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                     self.referenceUrl = document.data()["reference_url"] as! String
                     
                 }
-                
-                let referenceVC = self.storyboard?.instantiateViewController(withIdentifier: "Reference") as! ReferenceViewController
-                
+                                
                 let referenceUrl = URL(string: "\(self.referenceUrl)")
-                referenceVC.url = referenceUrl
-                
-                self.navigationController?.pushViewController(referenceVC, animated: true)
+                UIApplication.shared.open(referenceUrl!)
                 
             }
         }

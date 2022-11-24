@@ -74,7 +74,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidAppear(_ animated: Bool) {
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
-//            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
             && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
@@ -271,21 +271,32 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
                             
                             if copyrightFlag == "reference" {
                                 
-                                let comedianReference = document.data()["reference_name"] as! String
-                                
-                                cell.referenceButton.tag = indexPath.row
+                                let comedianImage: UIImage? = UIImage(named: "\(self.comedianId)")
+                                //画像がAssetsにあれば画像と引用元を表示し、なければ引用元なしのnoImageをセット
+                                if let validImage = comedianImage {
 
-                                
-                                //                        let imageRef = self.storage.child("comedian_image/\(self.comedianIdArray[indexPath.row]).jpg")
-                                //                        cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
-                                
-                                cell.comedianImageView.image = UIImage(named: "\(self.comedianId)")
-                                //                        cell.comedianImageView.contentMode = .scaleAspectFill
-                                //                        cell.comedianImageView.clipsToBounds = true
-                                
-                                cell.referenceButton.contentHorizontalAlignment = .left
-                                cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
-                                cell.referenceButton.setTitle(comedianReference, for: .normal)
+                                    let comedianReference = document.data()["reference_name"] as! String
+                                    cell.referenceButton.tag = indexPath.row
+                                    self.referenceUrl = document.data()["reference_url"] as! String
+
+                                    cell.referenceButton.contentHorizontalAlignment = .left
+                                    cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
+                                    cell.referenceButton.setTitle(comedianReference, for: .normal)
+//                                    cell.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
+                                    
+                                    cell.comedianImageView.image = comedianImage
+                                    cell.comedianImageView.contentMode = .scaleAspectFill
+                                    cell.comedianImageView.clipsToBounds = true
+
+
+                                } else {
+                                    
+                                    //画像がない場合
+                                    
+                                    cell.comedianImageView.image = UIImage(named: "noImage")
+                                    cell.referenceButton.setTitle("", for: .normal)
+
+                                }
                                 
                             }
 
@@ -693,7 +704,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
         self.navigationController?.pushViewController(profileVC, animated: true)
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
-//            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
             && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"

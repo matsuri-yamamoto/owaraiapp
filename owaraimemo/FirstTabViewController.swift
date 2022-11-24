@@ -463,15 +463,29 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         if comedianCopyrightFlag == "reference" {
         
             cell.referenceButton.tag = indexPath.row
+            let comedianImage: UIImage? = UIImage(named: "\(self.comedianNameArrayId[indexPath.row])")
             
-            cell.comedianImageView.image = UIImage(named: "\(self.comedianNameArrayId[indexPath.row])")
-            cell.comedianImageView.contentMode = .scaleAspectFill
-            cell.comedianImageView.clipsToBounds = true
-            
-            cell.referenceButton.contentHorizontalAlignment = .left
-            cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
-            cell.referenceButton.setTitle(self.comedianReferenceNameArray[indexPath.row], for: .normal)
-            cell.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
+            //画像がAssetsにあれば画像と引用元を表示し、なければ引用元なしのnoImageをセット
+            if let validImage = comedianImage {
+                
+                cell.comedianImageView.image = comedianImage
+                cell.comedianImageView.contentMode = .scaleAspectFill
+                cell.comedianImageView.clipsToBounds = true
+                
+                cell.referenceButton.contentHorizontalAlignment = .left
+                cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
+                cell.referenceButton.setTitle(self.comedianReferenceNameArray[indexPath.row], for: .normal)
+                cell.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
+
+                
+            } else {
+                
+                //画像がない場合
+                
+                cell.comedianImageView.image = UIImage(named: "noImage")
+                cell.referenceButton.setTitle("", for: .normal)
+                
+            }
             
             
         }
@@ -521,13 +535,9 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         let buttonTag = sender.tag
         let tappedReferenceUrl = self.comedianReferenceUrlArray[buttonTag]
         
-        let referenceVC = self.storyboard?.instantiateViewController(withIdentifier: "Reference") as! ReferenceViewController
-        
         let referenceUrl = URL(string: "\(tappedReferenceUrl)")
-        referenceVC.url = referenceUrl
-        
-        self.navigationController?.pushViewController(referenceVC, animated: true)
-                
+        UIApplication.shared.open(referenceUrl!)
+
     }
 
     

@@ -17,7 +17,6 @@ class NewReviewTabViewController: TabmanViewController {
         self.navigationItem.hidesBackButton = true
         self.title = "ホーム"
         
-        UpgradeNotice.shared.fire()
 //        let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
 //        print("appVersiton:\(String(describing: appVersion))")
         

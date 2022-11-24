@@ -34,6 +34,7 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         navigationController?.navigationBar.isHidden = true
         self.navigationItem.hidesBackButton = true
 
+
     }
     
 
