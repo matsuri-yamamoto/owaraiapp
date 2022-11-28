@@ -11,7 +11,7 @@ import Pageboy
 
 class TabViewController: TabmanViewController {
 
-    private var viewControllers = [UIViewController(), UIViewController(), UIViewController()]
+    private var viewControllers = [UIViewController(), UIViewController()]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,12 +55,12 @@ class TabViewController: TabmanViewController {
         
         let firstVC = storyboard.instantiateViewController(withIdentifier: "FirstTab") as! FirstTabViewController
         let secondVC = storyboard.instantiateViewController(withIdentifier: "SecondTab") as! SecondTabViewController
-        let thirdVC = storyboard.instantiateViewController(withIdentifier: "ThirdTab") as! ThirdTabViewController
+//        let thirdVC = storyboard.instantiateViewController(withIdentifier: "ThirdTab") as! ThirdTabViewController
 //        let forthVC = storyboard.instantiateViewController(withIdentifier: "ForthTab") as! ForthTabViewController
         
         viewControllers[0] = firstVC
         viewControllers[1] = secondVC
-        viewControllers[2] = thirdVC
+//        viewControllers[2] = thirdVC
 //        viewControllers[3] = forthVC
 
     }
@@ -91,7 +91,7 @@ extension TabViewController: PageboyViewControllerDataSource, TMBarDataSource {
 
     //タブバーの要件を決める
     func barItem(for bar: TMBar, at index: Int) -> TMBarItemable {
-        let title = ["トレンド", "東京注目", "大阪注目"]
+        let title = ["みんなが見てる", "ネタ新着"]
         return TMBarItem(title: title[index])
         
         

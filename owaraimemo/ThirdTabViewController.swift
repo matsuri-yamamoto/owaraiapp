@@ -9,12 +9,9 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    let currentUser = Auth.auth().currentUser
-
     var comedianIdArray1: [String] = []
     var comedianIdArray2: [String] = []
     var comedianIdArray3: [String] = []
-    
     
     var comedianNameArrayId1: [String] = []
     var comedianNameArrayId2: [String] = []
@@ -26,22 +23,6 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     var comedianNameArray2: [String] = []
     var comedianNameArray3: [String] = []
     var comedianNameArray: [String] = []
-    
-    var comedianCopyRightArray1: [String] = []
-    var comedianCopyRightArray2: [String] = []
-    var comedianCopyRightArray3: [String] = []
-    var comedianCopyRightArray: [String] = []
-    
-    var comedianReferenceNameArray1: [String] = []
-    var comedianReferenceNameArray2: [String] = []
-    var comedianReferenceNameArray3: [String] = []
-    var comedianReferenceNameArray: [String] = []
-    
-    var comedianReferenceUrlArray1: [String] = []
-    var comedianReferenceUrlArray2: [String] = []
-    var comedianReferenceUrlArray3: [String] = []
-    var comedianReferenceUrlArray: [String] = []
-
     
     var comedianReviewCountArray: [String] = []
     var comedianScoreArray: [String] = []
@@ -58,20 +39,33 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     //ログのための変数
     var comedianId :String = ""
-
     
+    let currentUser = Auth.auth().currentUser
     let db = Firestore.firestore()
+    
     //画像のパス
     let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
-
+    
+    // インジゲーターの設定
+//    var indicator = UIActivityIndicatorView()
+    
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+//        // 表示位置を設定（画面中央）
+//        self.indicator.center = view.center
+//        // インジケーターのスタイルを指定（白色＆大きいサイズ）
+//        self.indicator.style = .large
+//        // インジケーターの色を設定（青色）
+//        self.indicator.color = UIColor.darkGray
+//        // インジケーターを View に追加
+//        view.addSubview(indicator)
+
         //fetchDataなどで分割した配列の各データを呼び、配列を結合する→cellItemAtにてindexPathでセットする
         
-        cellComedianNameData()
         //        cellScoreData()
         
         
@@ -80,64 +74,93 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         //セルを指定
         collectionView.register(UINib(nibName: "TabViewCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "TabViewCollectionViewCell")
+
         
         //セルのサイズを指定
         let layout = UICollectionViewFlowLayout()
         // 横方向のスペース調整
         let horizontalSpace:CGFloat = 20
-        //デバイスの横幅を3分割した横幅　- セル間のスペース*1（セル間のスペースが1列あるため）
+        //デバイスの横幅を3分割した横幅　- セル間のスペース*2（セル間のスペースが2列あるため）
         cellSize = (self.view.bounds.width - horizontalSpace*2)/3
-
-        print("firstTabcellSize:\(cellSize)")
         
+        print("thirdTabcellSize:\(cellSize)")
         
         
         layout.itemSize = CGSize(width: cellSize, height: cellSize*1.45)
         collectionView.collectionViewLayout = layout
         
 
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        
-        
-        //pvログ
-        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .thirdTabVC))
-        
-        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
-            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
-            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
-            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
-            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
-            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
-            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
-            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
-            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
-            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
-            
-            //pvログを取得
-            let logRef = Firestore.firestore().collection("logs").document()
-            let logDic = [
-                "action_user_id": self.currentUser?.uid,
-                "page": "ThirdTab",
-                "action_type": "pv",
-                "tapped_comedian_id": "",
-                "tapped_user_id": "",
-                "create_datetime": FieldValue.serverTimestamp(),
-                "update_datetime": FieldValue.serverTimestamp(),
-                "delete_flag": false,
-                "delete_datetime": nil,
-            ] as [String : Any]
-            logRef.setData(logDic)
-                        
-        }
+        self.collectionView.refreshControl = UIRefreshControl()
+        self.collectionView.refreshControl?.addTarget(self, action: #selector(cellComedianNameData), for: .valueChanged)
 
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+        cellComedianNameData()
+
+    }
+    
+
     
     
-    func cellComedianNameData() {
+//    override func viewDidAppear(_ animated: Bool) {
+//
+//
+//        //pvログ
+//        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .thirdTabVC))
+//
+//        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+//            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+//            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+//            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+//            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+//            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+//            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+//            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+//            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+//            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+//
+//            //pvログを取得
+//            let logRef = Firestore.firestore().collection("logs").document()
+//            let logDic = [
+//                "action_user_id": self.currentUser?.uid,
+//                "page": "thirdTab",
+//                "action_type": "pv",
+//                "tapped_comedian_id": "",
+//                "tapped_user_id": "",
+//                "create_datetime": FieldValue.serverTimestamp(),
+//                "update_datetime": FieldValue.serverTimestamp(),
+//                "delete_flag": false,
+//                "delete_datetime": nil,
+//            ] as [String : Any]
+//            logRef.setData(logDic)
+//
+//        }
+//    }
+    
+    @objc func cellComedianNameData() {
+        
+        self.comedianIdArray1 = []
+        self.comedianIdArray2 = []
+        self.comedianIdArray3 = []
+        
+        self.comedianNameArrayId1 = []
+        self.comedianNameArrayId2 = []
+        self.comedianNameArrayId3 = []
+        self.comedianNameArrayId = []
+        
+        
+        self.comedianNameArray1 = []
+        self.comedianNameArray2 = []
+        self.comedianNameArray3 = []
+        self.comedianNameArray = []
+        
+
+        
+        self.comedianReviewCountArray = []
+        self.comedianScoreArray = []
         
         //Arrayにcomedian_idをセットする
         self.db.collection("third_tab_comedian_array").getDocuments() { (querySnapshot, err) in
@@ -161,7 +184,7 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                     
                     comedianIdArray3 = document.get("array3") as! [String]
                     self.comedianIdArray3.append(contentsOf: comedianIdArray3)
-                    
+                                        
                     
                     
                 }
@@ -182,27 +205,13 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                             
                             let comedianId = document.documentID
                             self.comedianNameArrayId1.append(comedianId)
-                            
-                            let comedianCopyRight = document.get("copyright_flag") as! String
-                            self.comedianCopyRightArray1.append(comedianCopyRight)
-                            
-                            let comedianReferenceName = document.get("reference_name") as! String
-                            self.comedianReferenceNameArray1.append(comedianReferenceName)
-                            
-                            let comedianReferenceUrl = document.get("reference_url") as! String
-                            self.comedianReferenceUrlArray1.append(comedianReferenceUrl)
-                            
+                                                        
                         }
                         //※forinの外で処理しないと、データの数分の回数処理が行われてしまう
                         print("comedianNameArray1(初回):\(self.comedianNameArray1)")
                         self.comedianNameArray.append(contentsOf: self.comedianNameArray1)
                         print("comedianNameArray(初回):\(self.comedianNameArray)")
                         self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId1)
-                        
-                        self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray1)
-                        
-                        self.comedianReferenceNameArray.append(contentsOf: self.comedianReferenceNameArray1)
-                        self.comedianReferenceUrlArray.append(contentsOf: self.comedianReferenceUrlArray1)
                         
                         //2つ目のArrayの芸人名をセットする
                         self.db.collection("comedian").whereField(FieldPath.documentID(), in: self.comedianIdArray2).whereField("delete_flag", isEqualTo: "false").getDocuments() { (querySnapshot, err) in
@@ -220,32 +229,17 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                                     let comedianId = document.documentID
                                     self.comedianNameArrayId2.append(comedianId)
                                     
-                                    let comedianCopyRight = document.get("copyright_flag") as! String
-                                    self.comedianCopyRightArray2.append(comedianCopyRight)
-                                    
-                                    let comedianReferenceName = document.get("reference_name") as! String
-                                    self.comedianReferenceNameArray2.append(comedianReferenceName)
-                                    
-                                    let comedianReferenceUrl = document.get("reference_url") as! String
-                                    self.comedianReferenceUrlArray2.append(comedianReferenceUrl)
-
-                                    
-                                    
                                 }
                                 
                                 self.comedianNameArray.append(contentsOf: self.comedianNameArray2)
                                 print("comedianNameArray2(初回):\(self.comedianNameArray2)")
                                 self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId2)
-                                
-                                self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray2)
-                                
-                                self.comedianReferenceNameArray.append(contentsOf: self.comedianReferenceNameArray2)
-                                self.comedianReferenceUrlArray.append(contentsOf: self.comedianReferenceUrlArray2)
-
-                                
+                                                                
                                 if self.comedianIdArray3 == [] {
                                     
                                     self.collectionView.reloadData()
+//                                    self.collectionView.refreshControl?.endRefreshing()
+
                                     
                                     
                                 } else {
@@ -267,37 +261,16 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                                                 let comedianId = document.documentID
                                                 self.comedianNameArrayId3.append(comedianId)
                                                 
-                                                let comedianCopyRight = document.get("copyright_flag") as! String
-                                                self.comedianCopyRightArray3.append(comedianCopyRight)
-                                                
-                                                let comedianReferenceName = document.get("reference_name") as! String
-                                                self.comedianReferenceNameArray3.append(comedianReferenceName)
-                                                
-                                                let comedianReferenceUrl = document.get("reference_url") as! String
-                                                self.comedianReferenceUrlArray3.append(comedianReferenceUrl)
-
-                                                
-                                                
-                                                
                                             }
                                             
                                             print("comedianNameArray3(初回):\(self.comedianNameArray3)")
                                             self.comedianNameArray.append(contentsOf: self.comedianNameArray3)
                                             print("comedianNameArray(2回目):\(self.comedianNameArray)")
                                             self.comedianNameArrayId.append(contentsOf: self.comedianNameArrayId3)
-                                            
-                                            self.comedianCopyRightArray.append(contentsOf: self.comedianCopyRightArray3)
-
-                                            self.comedianReferenceNameArray.append(contentsOf: self.comedianReferenceNameArray3)
-                                            self.comedianReferenceUrlArray.append(contentsOf: self.comedianReferenceUrlArray3)
-
-                                            print("comedianNameArrayId:\(self.comedianNameArrayId)")
-                                            print("comedianCopyRightArray:\(self.comedianCopyRightArray)")
-
-                                            
-                                            self.collectionView.reloadData()
-                                            
+                                                                                        
                                         }
+                                        self.collectionView.reloadData()
+//                                        self.collectionView.refreshControl?.endRefreshing()
                                     }
                                 }
                             }
@@ -387,68 +360,85 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TabViewCollectionViewCell", for: indexPath) as! TabViewCollectionViewCell
         
         cell.rankingLabel.isHidden = true
-        
-        //芸人画像を指定する
-        let comedianCopyrightFlag = comedianCopyRightArray[indexPath.row]
-        
-        if comedianCopyrightFlag == "true" {
-            
-            cell.comedianImageView.image = UIImage(named: "\(comedianNameArrayId[indexPath.row])")
-            cell.comedianImageView.contentMode = .scaleAspectFill
-            cell.comedianImageView.clipsToBounds = true
-        
-                
-//            let imageRef = self.storage.child("comedian_image/\(comedianNameArrayId[indexPath.row]).jpg")
-//            cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
-//            cell.comedianImageView.contentMode = .scaleAspectFill
-//            cell.comedianImageView.clipsToBounds = true
-            
-//            print("画像のパス：comedian_image/\(comedianNameArrayId[indexPath.row]).jpg")
-            
-        }
-        
-        if comedianCopyrightFlag == "false" {
-            
-            cell.comedianImageView.image = UIImage(named: "noImage")
-            cell.comedianImageView.contentMode = .scaleAspectFill
-            cell.comedianImageView.clipsToBounds = true
-            
-            
-        }
-        
-        if comedianCopyrightFlag == "reference" {
 
-            cell.referenceButton.tag = indexPath.row
-            let comedianImage: UIImage? = UIImage(named: "\(self.comedianNameArrayId[indexPath.row])")
-            
-            //画像がAssetsにあれば画像と引用元を表示し、なければ引用元なしのnoImageをセット
-            if let validImage = comedianImage {
-                
-                cell.comedianImageView.image = comedianImage
-                cell.comedianImageView.contentMode = .scaleAspectFill
-                cell.comedianImageView.clipsToBounds = true
-                
-                cell.referenceButton.contentHorizontalAlignment = .left
-                cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
-                cell.referenceButton.setTitle(self.comedianReferenceNameArray[indexPath.row], for: .normal)
-                cell.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
-
+        //copyrightflagを取得して画像をセット
+        db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: self.comedianNameArrayId[indexPath.row]).getDocuments() {(querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
                 
             } else {
-                
-                //画像がない場合
-                
-                cell.comedianImageView.image = UIImage(named: "noImage")
-                cell.referenceButton.setTitle("", for: .normal)
+                for document in querySnapshot!.documents {
+                    
+                    let copyrightFlag = document.data()["copyright_flag"] as! String
+                    
+                    if copyrightFlag == "true" {
+                        
+                        cell.comedianImageView.image = UIImage(named: "\(self.comedianNameArrayId[indexPath.row])")
+                        cell.comedianImageView.contentMode = .scaleAspectFill
+                        cell.comedianImageView.clipsToBounds = true
+                        cell.referenceButton.setTitle("", for: .normal)
 
+                            
+            //            let imageRef = self.storage.child("comedian_image/\(comedianNameArrayId[indexPath.row]).jpg")
+            //            cell.comedianImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+            //            cell.comedianImageView.contentMode = .scaleAspectFill
+            //            cell.comedianImageView.clipsToBounds = true
+                        
+            //            print("画像のパス：comedian_image/\(comedianNameArrayId[indexPath.row]).jpg")
+                        
+                    }
+                    
+                    if copyrightFlag == "false" {
+                        
+                        cell.comedianImageView.image = UIImage(named: "noImage")
+                        cell.comedianImageView.contentMode = .scaleAspectFill
+                        cell.comedianImageView.clipsToBounds = true
+                        cell.referenceButton.setTitle("", for: .normal)
+
+                        
+                    }
+                    
+                    if copyrightFlag == "reference" {
+                    
+                        let comedianImage: UIImage? = UIImage(named: "\(self.comedianNameArrayId[indexPath.row])")
+                        print("reference_comedian:\(self.comedianNameArrayId[indexPath.row])")
+                        print("reference_cell:\(indexPath.row)")
+                        
+                        //画像がAssetsにあれば画像と引用元を表示し、なければ引用元なしのnoImageをセット
+                        if let validImage = comedianImage {
+                            
+                            let comedianReference = document.data()["reference_name"] as! String
+                            let referenceUrl = document.data()["reference_url"] as! String
+
+                            
+                            cell.referenceButton.tag = indexPath.row
+
+                            
+                            cell.comedianImageView.image = comedianImage
+                            cell.comedianImageView.contentMode = .scaleAspectFill
+                            cell.comedianImageView.clipsToBounds = true
+                            
+                            cell.referenceButton.contentHorizontalAlignment = .left
+                            cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
+                            cell.referenceButton.setTitle(comedianReference, for: .normal)
+                            cell.referenceButton.addTarget(self, action: #selector(self.tappedReferenceButton(sender:)), for: .touchUpInside)
+
+                            
+                        } else {
+                            
+                            //画像がない場合
+                            
+                            cell.comedianImageView.image = UIImage(named: "noImage")
+                            cell.referenceButton.setTitle("", for: .normal)
+                            
+                        }
+                    }
+                }
             }
-            
         }
-        
-        print("cellcomedianNameArray:\(comedianNameArray)")
-        
         cell.comedianNameLabel.text = " " + comedianNameArray[indexPath.row]
-
+        
         //レビュー数とレビューのツボった度の平均を設定する
         //        comedianReviewLabel = cell.contentView.viewWithTag(3) as! UILabel
         //        comedianScoreLabel = cell.contentView.viewWithTag(5) as! UILabel
@@ -478,6 +468,8 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         //            }
         //        }
         
+        
+        
         return cell
         
     }
@@ -485,11 +477,24 @@ class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     @objc func tappedReferenceButton(sender: UIButton) {
         
         let buttonTag = sender.tag
-        let tappedReferenceUrl = self.comedianReferenceUrlArray[buttonTag]
-        
-        let referenceUrl = URL(string: "\(tappedReferenceUrl)")
-        UIApplication.shared.open(referenceUrl!)
+        let tappedComedianId = self.comedianNameArrayId[buttonTag]
 
+        
+        //copyrightflagを取得して画像をセット
+        db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: tappedComedianId).getDocuments() {(querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+                
+            } else {
+                for document in querySnapshot!.documents {
+                    
+                    let referenceUrl = URL(string: "\( document.data()["reference_url"] as! String)")
+                    UIApplication.shared.open(referenceUrl!)
+
+                }
+            }
+        }
     }
 
     
