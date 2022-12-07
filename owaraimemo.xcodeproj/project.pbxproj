@@ -11,6 +11,10 @@
 		6301AE2A28B494E1001B03E5 /* InquiryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6301AE2928B494E1001B03E5 /* InquiryViewController.swift */; };
 		630964B7281EDB32006F211B /* TermViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630964B6281EDB32006F211B /* TermViewController.swift */; };
 		630964B9281EDBA3006F211B /* PrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630964B8281EDBA3006F211B /* PrivacyPolicyViewController.swift */; };
+		6309D5FC2939C7E000BBE3EE /* MyCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6309D5FB2939C7E000BBE3EE /* MyCalendarViewController.swift */; };
+		6309D5FF293DAB2600BBE3EE /* MyCalendarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6309D5FD293DAB2600BBE3EE /* MyCalendarTableViewCell.swift */; };
+		6309D600293DAB2600BBE3EE /* MyCalendarTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6309D5FE293DAB2600BBE3EE /* MyCalendarTableViewCell.xib */; };
+		6309D60229403BA800BBE3EE /* WKWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6309D60129403BA800BBE3EE /* WKWebViewController.swift */; };
 		630FAE6D2880F66600A3E0F9 /* ComedianReviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630FAE6B2880F66600A3E0F9 /* ComedianReviewTableViewCell.swift */; };
 		630FAE6E2880F66600A3E0F9 /* ComedianReviewTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 630FAE6C2880F66600A3E0F9 /* ComedianReviewTableViewCell.xib */; };
 		63134BB428B706BD00B0926D /* PlaceTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63134BB328B706BD00B0926D /* PlaceTextView.swift */; };
@@ -84,6 +88,10 @@
 		6301AE2928B494E1001B03E5 /* InquiryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquiryViewController.swift; sourceTree = "<group>"; };
 		630964B6281EDB32006F211B /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
 		630964B8281EDBA3006F211B /* PrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyViewController.swift; sourceTree = "<group>"; };
+		6309D5FB2939C7E000BBE3EE /* MyCalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCalendarViewController.swift; sourceTree = "<group>"; };
+		6309D5FD293DAB2600BBE3EE /* MyCalendarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCalendarTableViewCell.swift; sourceTree = "<group>"; };
+		6309D5FE293DAB2600BBE3EE /* MyCalendarTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyCalendarTableViewCell.xib; sourceTree = "<group>"; };
+		6309D60129403BA800BBE3EE /* WKWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WKWebViewController.swift; sourceTree = "<group>"; };
 		630FAE6B2880F66600A3E0F9 /* ComedianReviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianReviewTableViewCell.swift; sourceTree = "<group>"; };
 		630FAE6C2880F66600A3E0F9 /* ComedianReviewTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ComedianReviewTableViewCell.xib; sourceTree = "<group>"; };
 		63134BB328B706BD00B0926D /* PlaceTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceTextView.swift; sourceTree = "<group>"; };
@@ -241,6 +249,10 @@
 				6313CB9128EFA6F400E71BFB /* FollowUserViewController.swift */,
 				6313CB9328EFA7A200E71BFB /* FollowUserTableViewCell.swift */,
 				6313CB9428EFA7A200E71BFB /* FollowUserTableViewCell.xib */,
+				6309D5FB2939C7E000BBE3EE /* MyCalendarViewController.swift */,
+				6309D5FD293DAB2600BBE3EE /* MyCalendarTableViewCell.swift */,
+				6309D5FE293DAB2600BBE3EE /* MyCalendarTableViewCell.xib */,
+				6309D60129403BA800BBE3EE /* WKWebViewController.swift */,
 				63D7E54427E9947300E99C75 /* MyReviewViewController.swift */,
 				633FA35D28EBF33500A0E77C /* MyReviewTableViewCell.swift */,
 				633FA35E28EBF33500A0E77C /* MyReviewTableViewCell.xib */,
@@ -353,6 +365,7 @@
 				633FA36028EBF33500A0E77C /* MyReviewTableViewCell.xib in Resources */,
 				632F88D727FABF9500350624 /* ComedianTableViewCell.xib in Resources */,
 				6381D13A27E7319D005BDBE2 /* Assets.xcassets in Resources */,
+				6309D600293DAB2600BBE3EE /* MyCalendarTableViewCell.xib in Resources */,
 				6381D13827E7319A005BDBE2 /* Main.storyboard in Resources */,
 				63D7E54D27EB1CBA00E99C75 /* GoogleService-Info.plist in Resources */,
 				633FA35A28E6A9EF00A0E77C /* NewReviewTableViewCell.xib in Resources */,
@@ -422,6 +435,7 @@
 				6381D13527E7319A005BDBE2 /* ViewController.swift in Sources */,
 				633FA35528E6996B00A0E77C /* NewReivewViewController.swift in Sources */,
 				63CAA0BD28ACA3D600AA99E4 /* UserNameViewController.swift in Sources */,
+				6309D60229403BA800BBE3EE /* WKWebViewController.swift in Sources */,
 				63E81FAC28F5BB9300EA113C /* OnboardingSearchViewController.swift in Sources */,
 				6313CB9528EFA7A200E71BFB /* FollowUserTableViewCell.swift in Sources */,
 				6313CB9228EFA6F400E71BFB /* FollowUserViewController.swift in Sources */,
@@ -439,6 +453,7 @@
 				6313CB9828EFB3AD00E71BFB /* ProfilePageTabViewController.swift in Sources */,
 				639ACA3028483E7E005E7BE3 /* ComedianDetailViewController.swift in Sources */,
 				633FA36428EC8AAD00A0E77C /* StockViewController.swift in Sources */,
+				6309D5FC2939C7E000BBE3EE /* MyCalendarViewController.swift in Sources */,
 				639D9A91287558B400291D28 /* SearchCollectionReusableView.swift in Sources */,
 				634F867A28A637B700CAE6BA /* AnalyticsUtil.swift in Sources */,
 				635FC56128618336000835C4 /* SecondTabViewController.swift in Sources */,
@@ -453,6 +468,7 @@
 				63D7E54727E9949200E99C75 /* ReviewViewController.swift in Sources */,
 				63E81FAA28F5BB6600EA113C /* OnboardingViewController.swift in Sources */,
 				635FC56528618364000835C4 /* ForthTabViewController.swift in Sources */,
+				6309D5FF293DAB2600BBE3EE /* MyCalendarTableViewCell.swift in Sources */,
 				63E81FAE28F5BBCE00EA113C /* OnboardingReviewViewController.swift in Sources */,
 				638CD1EB27F29812002DCEFC /* StartViewController.swift in Sources */,
 				63799BF728F796E3000EB575 /* OnboardingCreateNewViewController.swift in Sources */,

@@ -20,7 +20,7 @@ class MyPageTabViewController: TabmanViewController {
     @IBOutlet weak var profileView: UIView!
     
 
-    private var viewControllers = [UIViewController(), UIViewController(), UIViewController()]
+    private var viewControllers = [UIViewController(), UIViewController(), UIViewController(), UIViewController()]
     
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var userDisplayIdLabel: UILabel!
@@ -167,13 +167,17 @@ class MyPageTabViewController: TabmanViewController {
     private func setTabsControllers() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
-        let firstVC = storyboard.instantiateViewController(withIdentifier: "MyReview") as! MyReviewViewController
-        let secondVC = storyboard.instantiateViewController(withIdentifier: "Stock") as! StockViewController
-        let thirdVC = storyboard.instantiateViewController(withIdentifier: "LikeList") as! LikeListViewController
+        let firstVC = storyboard.instantiateViewController(withIdentifier: "MyCalendar") as! MyCalendarViewController
+
+        let secondVC = storyboard.instantiateViewController(withIdentifier: "MyReview") as! MyReviewViewController
+        let thirdVC = storyboard.instantiateViewController(withIdentifier: "Stock") as! StockViewController
+        let forthVC = storyboard.instantiateViewController(withIdentifier: "LikeList") as! LikeListViewController
         
         viewControllers[0] = firstVC
         viewControllers[1] = secondVC
         viewControllers[2] = thirdVC
+        viewControllers[3] = forthVC
+
 
     }
     
@@ -231,20 +235,20 @@ extension MyPageTabViewController: PageboyViewControllerDataSource, TMBarDataSou
 
     //タブバーの要件を決める
     func barItem(for bar: TMBar, at index: Int) -> TMBarItemable {
-        let title = ["レビュー", "あとでみる", "いいね"]
+        let title = ["カレンダー", "レビュー", "あとでみる", "いいね"]
         
-        var image1 = UIImage()
-        var image2 = UIImage()
-        var image3 = UIImage()
-        
-        image1 = UIImage(systemName: "pencil.tip.crop.circle")!
-        image2 = UIImage(systemName: "paperclip.circle")!
-        image3 = UIImage(systemName: "heart.fill")!
-        
-        let image = [image1, image2, image3]
+//        var image1 = UIImage()
+//        var image2 = UIImage()
+//        var image3 = UIImage()
+//
+//        image1 = UIImage(systemName: "pencil.tip.crop.circle")!
+//        image2 = UIImage(systemName: "paperclip.circle")!
+//        image3 = UIImage(systemName: "heart.fill")!
+//
+//        let image = [image1, image2, image3]
 
         
-        return TMBarItem(title: title[index], image: image[index])
+        return TMBarItem(title: title[index])
         
         
         

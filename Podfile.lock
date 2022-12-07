@@ -694,6 +694,7 @@ PODS:
     - SDWebImage (~> 5.6)
   - FirebaseUI/Storage (12.3.0):
     - FirebaseStorageUI (~> 12.0)
+  - FSCalendar (2.8.4)
   - GoogleAppMeasurement (9.6.0):
     - GoogleAppMeasurement/AdIdSupport (= 9.6.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
@@ -826,6 +827,7 @@ DEPENDENCIES:
   - FirebaseAuth
   - FirebaseStorageUI
   - FirebaseUI/Storage
+  - FSCalendar
   - IQKeyboardManagerSwift
   - KeychainAccess
   - MultiAutoCompleteTextSwift
@@ -855,6 +857,7 @@ SPEC REPOS:
     - FirebaseStorageInternal
     - FirebaseStorageUI
     - FirebaseUI
+    - FSCalendar
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
@@ -895,6 +898,7 @@ SPEC CHECKSUMS:
   FirebaseStorageInternal: 81d8a597324ccd06c41a43c5700bc1185a2fc328
   FirebaseStorageUI: e395358d689cd64b967b2402939ee0f503de63b5
   FirebaseUI: e9a2dd42f5b593cd8b6e64c11d30ded38f30e48c
+  FSCalendar: 2d1d0d9398f12d439f55c1fe0f01525b151b8260
   GoogleAppMeasurement: 6de2b1a69e4326eb82ee05d138f6a5cb7311bcb1
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
   GoogleUtilities: 1d20a6ad97ef46f67bbdec158ce00563a671ebb7
@@ -916,6 +920,6 @@ SPEC CHECKSUMS:
   TabPageViewController: 8bd4104909754416b35a98f3b72a5b674ab20dd5
   youtube-ios-player-helper: e9b97535e816db3152179d84d999bc1807ecd689
 
-PODFILE CHECKSUM: 2bbc95cb69b8476e0d3fab040ad22b1207e3790f
+PODFILE CHECKSUM: c917005941693feff53b73cd863dd29bb04113f8
 
 COCOAPODS: 1.11.2
