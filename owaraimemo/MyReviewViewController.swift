@@ -312,7 +312,8 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //セルタップでレビュー画面に遷移
         
-        
+        self.tableView.deselectRow(at: indexPath, animated: true)
+
         let reviewVC = storyboard?.instantiateViewController(withIdentifier: "Review") as! ReviewViewController
         let nav = UINavigationController(rootViewController: reviewVC)
         
@@ -327,9 +328,6 @@ class MyReviewViewController: UIViewController, UITableViewDelegate, UITableView
         AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
                                                      actionType: .tap,
                                              actionLabel: .template(ActionLabelTemplate.reviewButtonTap)))
-
-        
-        
 
     }
     

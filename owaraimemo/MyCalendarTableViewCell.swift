@@ -15,6 +15,9 @@ class MyCalendarTableViewCell: UITableViewCell {
     @IBOutlet weak var castLabel: UILabel!
     @IBOutlet weak var eventStartLabel: UILabel!
     @IBOutlet weak var placeLabel: UILabel!
+    @IBOutlet weak var eventImageView: UIImageView!
+    @IBOutlet weak var eventReferenceLabel: UILabel!
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -16,6 +16,18 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     let db = Firestore.firestore()
     let currentUser = Auth.auth().currentUser
     
+    var actionDate :String = ""
+    
+    @IBOutlet weak var popupButton: UIButton!
+    @IBOutlet weak var popupButtonOption: UIButton!
+    @IBOutlet weak var popupCloseButton: UIButton!
+    @IBOutlet weak var promotionButton: UIButton!
+    
+    
+    var promoImageUrl :String = ""
+    var promoMainUrl :String = ""
+    var promoOptionalUrl :String = ""
+
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -54,7 +66,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         
         super.viewDidLoad()
         
-
+        
         // 表示位置を設定（画面中央）
         self.indicator.center = view.center
         // インジケーターのスタイルを指定（白色＆大きいサイズ）
@@ -77,24 +89,117 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         self.tableView.refreshControl = UIRefreshControl()
         self.tableView.refreshControl?.addTarget(self, action: #selector(dataRefresh), for: .valueChanged)
         self.tableView.refreshControl?.addTarget(self, action: #selector(createRefreshLog), for: .valueChanged)
-
-
+        
+        self.setPromotion()
+        
         
     }
-//
-//    override func viewWillAppear(_ animated: Bool) {
-//
-//        UpgradeNotice.shared.fire()
-//        print("upgradeNotice")
-//
-//    }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         
         UpgradeNotice.shared.fire()
         print("upgradeNotice")
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .short
+        dateFormatter.locale = Locale(identifier: "ja_JP")
+        dateFormatter.dateFormat = "yyyy/MM/dd"
+        let date = Date()
+        self.actionDate = dateFormatter.string(from: date)
+        
+        print("actionDate:\(self.actionDate)")
+        
 
+        
+        if self.currentUser?.uid == nil {
+            
+            let popupImage = UIImage(named: "いぬ様_単独ライブ_フライヤー.jpg")
+            self.popupButton.imageView?.contentMode = .scaleAspectFit
+            self.popupButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+            self.popupButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+            
+            self.popupButton.setImage(popupImage, for: .normal)
+            
+            let popupOptionImage = UIImage(named: "いぬ様単独_ポップアップ用ボタン.png")
+            self.popupButtonOption.imageView?.contentMode = .scaleAspectFill
+            self.popupButtonOption.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+            self.popupButtonOption.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+            
+            self.popupButtonOption.setImage(popupOptionImage, for: .normal)
+            
+            let closeImage = UIImage(named: "いぬ様単独_ポップアップ用クローズボタン2.png")
+            self.popupCloseButton.imageView?.contentMode = .scaleAspectFit
+            self.popupCloseButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+            self.popupCloseButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+            
+            self.popupCloseButton.setImage(closeImage, for: .normal)
+
+            self.pageViewLog()
+            
+        } else {
+            
+            
+            self.db.collection("logs").whereField("action_user_id", isEqualTo: self.currentUser?.uid).whereField("delete_flag", isEqualTo: false).whereField("action_date", isEqualTo: self.actionDate).getDocuments() { [self] (querySnapshot, err) in
+                
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    return
+                    
+                } else {
+                    
+                    if (querySnapshot?.documents.count)! > 0 {
+                        
+                        self.popupButton.isHidden = true
+                        self.popupButton.isEnabled = true
+                        
+                        self.popupButtonOption.isHidden = true
+                        self.popupButtonOption.isEnabled = true
+                        
+                        self.popupCloseButton.isHidden = true
+                        self.popupCloseButton.isEnabled = true
+
+
+                        
+                    } else {
+                        
+                        let popupImage = UIImage(named: "いぬ様_単独ライブ_フライヤー.jpg")
+                        self.popupButton.imageView?.contentMode = .scaleAspectFit
+                        self.popupButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+                        self.popupButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+                        
+                        self.popupButton.setImage(popupImage, for: .normal)
+                        
+                        let popupOptionImage = UIImage(named: "いぬ様単独_ポップアップ用ボタン.png")
+                        self.popupButtonOption.imageView?.contentMode = .scaleAspectFill
+                        self.popupButtonOption.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+                        self.popupButtonOption.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+                        
+                        self.popupButtonOption.setImage(popupOptionImage, for: .normal)
+
+                        let closeImage = UIImage(named: "いぬ様単独_ポップアップ用クローズボタン2.png")
+                        self.popupCloseButton.imageView?.contentMode = .scaleAspectFit
+                        self.popupCloseButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+                        self.popupCloseButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+                        
+                        self.popupCloseButton.setImage(closeImage, for: .normal)
+                        
+                    }
+                    
+                    self.pageViewLog()
+                    
+                }
+            }
+            
+            
+        }
+            
+        
+    }
+    
+    
+    func pageViewLog() {
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
@@ -115,299 +220,376 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                 "action_type": "pv",
                 "tapped_comedian_id": "",
                 "tapped_user_id": "",
+                "action_date": self.actionDate,
                 "create_datetime": FieldValue.serverTimestamp(),
                 "update_datetime": FieldValue.serverTimestamp(),
                 "delete_flag": false,
                 "delete_datetime": nil,
             ] as [String : Any]
             logRef.setData(logDic)
-                        
+            
         }
-    }
+
         
+    }
     
     
+    func setPromotion() {
+        
+        let bannerImage = UIImage(named: "いぬ様単独_バナー (1).png")
+        self.promotionButton.setImage(bannerImage, for: .normal)
+        
+        self.promotionButton.imageView?.contentMode = .scaleAspectFit
+        self.promotionButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+        self.promotionButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+        
+        self.db.collection("promotion").whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() { [self] (querySnapshot, err) in
+            
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+                
+            } else {
+                
+//                self.promotionButton.translatesAutoresizingMaskIntoConstraints = false
+//                self.promotionButton.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+//                self.promotionButton.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+//                self.promotionButton.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+//                self.promotionButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+
+                
+                
+                if querySnapshot?.documents.count == 0 {
+                    
+                    
+//                    self.promotionButton.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 0)
+//                    self.promotionButton.isEnabled = true
+//                    self.view.addSubview(self.promotionButton)
+                    
+//                    self.tableView.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: view.frame.size.height)
+//                    self.view.addSubview(self.tableView)
+//
+                    
+                    
+                }
+                
+                if (querySnapshot?.documents.count)! > 0 {
+                    
+//                    let promoButtonHeight = self.view.frame.size.height/4
+                    
+//                    self.promotionButton.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: promoButtonHeight)
+//
+//                    print("self.view.frame.size.width:\(self.view.frame.size.width)")
+//                    print("self.view.frame.size.height/4:\(self.view.frame.size.height/4)")
+//                    self.view.addSubview(self.promotionButton)
+                    
+
+//                    self.tableView.frame = CGRect(x: 0, y: 90, width: self.view.frame.size.width, height: view.frame.size.height - 90)
+//                    self.view.addSubview(self.tableView)
+                    
+                    for document in querySnapshot!.documents {
+                        
+//                        self.promoImageUrl = document.data()["timeline_image_url"] as! String
+                        
+//                        self.promoImageView.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: promoButtonHeight)
+//                        self.promoImageView.image = image
+
+
+                        self.promoMainUrl = document.data()["main_tapped_url"] as! String
+                        self.promoOptionalUrl = document.data()["optional_tapped_url"] as! String
+
+                        
+                    }
+                    
+                }
+                
+            }
+        }
+        
+        
+    }
     
-   @objc func dataRefresh() {
-
-       self.blockingUserArray = []
-       self.blockedUserArray = []
-
-       
-       self.reviewIdArray = []
-       self.comedianIdArray = []
-       self.comedianNameArray = []
-       self.userIdArray = []
-       self.userNameArray = []
-       self.userDisplayIdArray = []
-       self.reviewUpdateDatetimeArray = []
-       self.reviewScoreArray = []
-       self.reviewCommentArray = []
-       self.reviewRelationalArray = []
-       
-       self.reviewLinkArray = []
-       
-       self.reviewId = ""
-       
-       
-       
-       //自分がブロック中のユーザーを取得
-       self.db.collection("block_user").whereField("blocking_user_id", isEqualTo: self.currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).limit(to: 10).getDocuments() { [self] (querySnapshot, err) in
-
-           if let err = err {
-               print("Error getting documents: \(err)")
-               return
-
-           } else {
-               for document in querySnapshot!.documents {
-                   
-                   self.blockingUserArray.append(document.data()["blocked_user_id"] as! String)
-                   
-               }
-               
-               //自分をブロックしているユーザーを取得
-               self.db.collection("block_user").whereField("blocked_user_id", isEqualTo: self.currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).limit(to: 10).getDocuments() { [self] (querySnapshot, err) in
-
-                   if let err = err {
-                       print("Error getting documents: \(err)")
-                       return
-
-                   } else {
-                       for document in querySnapshot!.documents {
-                           
-                           self.blockedUserArray.append(document.data()["blocking_user_id"] as! String)
-                           
-                       }
-                       
-                       if self.blockingUserArray != [] && self.blockedUserArray != [] {
-                           
-                           //ブロックしている・されているユーザー両者を除くユーザーのレビューを呼ぶ場合
-                           self.db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).whereField("user_id", notIn: self.blockingUserArray).whereField("user_id", notIn: self.blockedUserArray).order(by: "user_id", descending: true).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
-
-                               if let err = err {
-                                   print("Error getting documents: \(err)")
-                                   return
-
-                               } else {
-                                   for document in querySnapshot!.documents {
-
-
-                                       self.reviewIdArray.append(document.documentID)
-                                       self.comedianIdArray.append(document.data()["comedian_id"] as! String)
-                                       self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
-                                       self.userIdArray.append(document.data()["user_id"] as! String)
-                                       self.userNameArray.append(document.data()["user_name"] as! String)
-
-                                       self.userDisplayIdArray.append(document.data()["display_id"] as! String)
-
-                                       let dateFormatter = DateFormatter()
-                                       dateFormatter.dateStyle = .short
-                                       dateFormatter.timeStyle = .short
-                                       dateFormatter.locale = Locale(identifier: "ja_JP")
-
-                                       dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
-
-                                       let updated = document.data()["update_datetime"] as! Timestamp
-                                       let updatedDate = updated.dateValue()
-                                       let updatedDateTime = dateFormatter.string(from: updatedDate)
-                                       self.reviewUpdateDatetimeArray.append(updatedDateTime)
-
-                                       let reviewFloatScoreArray = document.data()["score"] as! Float
-                                       self.reviewScoreArray.append(String(reviewFloatScoreArray))
-
-                                       self.reviewCommentArray.append(document.data()["comment"] as! String)
-
-                                       self.reviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
-                                   }
-
-                                   self.tableView.reloadData()
-                                   print("reviewScoreArray:\(reviewScoreArray)")
-
-                               }
-                               
-                               tableView.delegate = self
-                               tableView.dataSource = self
-
-                               self.tableView.refreshControl?.endRefreshing()
-
-                           }
-                       }
-                       
-                       //ブロックしているけどブロックされていない場合
-                       if self.blockingUserArray != [] && self.blockedUserArray == [] {
-                           
-                           //ブロックしている・されているユーザー両者を除くユーザーのレビューを呼ぶ
-                           self.db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).whereField("user_id", notIn: self.blockingUserArray).order(by: "user_id", descending: true).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
-
-                               if let err = err {
-                                   print("Error getting documents: \(err)")
-                                   return
-
-                               } else {
-                                   for document in querySnapshot!.documents {
-
-
-                                       self.reviewIdArray.append(document.documentID)
-                                       self.comedianIdArray.append(document.data()["comedian_id"] as! String)
-                                       self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
-                                       self.userIdArray.append(document.data()["user_id"] as! String)
-                                       self.userNameArray.append(document.data()["user_name"] as! String)
-
-                                       self.userDisplayIdArray.append(document.data()["display_id"] as! String)
-
-                                       let dateFormatter = DateFormatter()
-                                       dateFormatter.dateStyle = .short
-                                       dateFormatter.timeStyle = .short
-                                       dateFormatter.locale = Locale(identifier: "ja_JP")
-
-                                       dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
-
-                                       let updated = document.data()["update_datetime"] as! Timestamp
-                                       let updatedDate = updated.dateValue()
-                                       let updatedDateTime = dateFormatter.string(from: updatedDate)
-                                       self.reviewUpdateDatetimeArray.append(updatedDateTime)
-
-                                       let reviewFloatScoreArray = document.data()["score"] as! Float
-                                       self.reviewScoreArray.append(String(reviewFloatScoreArray))
-
-                                       self.reviewCommentArray.append(document.data()["comment"] as! String)
-
-                                       self.reviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
-                                   }
-
-                                   self.tableView.reloadData()
-                                   print("reviewScoreArray:\(reviewScoreArray)")
-
-                               }
-                               
-                               tableView.delegate = self
-                               tableView.dataSource = self
-
-                               self.tableView.refreshControl?.endRefreshing()
-
-                           }
-                       }
-                       
-                       //ブロックされているけどブロックしていない場合
-                       
-                       if self.blockingUserArray == [] && self.blockedUserArray != [] {
-                           
-                           //ブロックしている・されているユーザー両者を除くユーザーのレビューを呼ぶ
-                           self.db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).whereField("user_id", notIn: self.blockedUserArray).order(by: "user_id", descending: true).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
-
-                               if let err = err {
-                                   print("Error getting documents: \(err)")
-                                   return
-
-                               } else {
-                                   for document in querySnapshot!.documents {
-
-
-                                       self.reviewIdArray.append(document.documentID)
-                                       self.comedianIdArray.append(document.data()["comedian_id"] as! String)
-                                       self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
-                                       self.userIdArray.append(document.data()["user_id"] as! String)
-                                       self.userNameArray.append(document.data()["user_name"] as! String)
-
-                                       self.userDisplayIdArray.append(document.data()["display_id"] as! String)
-
-                                       let dateFormatter = DateFormatter()
-                                       dateFormatter.dateStyle = .short
-                                       dateFormatter.timeStyle = .short
-                                       dateFormatter.locale = Locale(identifier: "ja_JP")
-
-                                       dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
-
-                                       let updated = document.data()["update_datetime"] as! Timestamp
-                                       let updatedDate = updated.dateValue()
-                                       let updatedDateTime = dateFormatter.string(from: updatedDate)
-                                       self.reviewUpdateDatetimeArray.append(updatedDateTime)
-
-                                       let reviewFloatScoreArray = document.data()["score"] as! Float
-                                       self.reviewScoreArray.append(String(reviewFloatScoreArray))
-
-                                       self.reviewCommentArray.append(document.data()["comment"] as! String)
-
-                                       self.reviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
-                                   }
-
-                                   self.tableView.reloadData()
-                                   print("reviewScoreArray:\(reviewScoreArray)")
-
-                               }
-                               
-                               tableView.delegate = self
-                               tableView.dataSource = self
-
-                               self.tableView.refreshControl?.endRefreshing()
-
-                           }
-                       }
-                       
-                       //ブロックしてもされてもいない場合
-                       
-                       if self.blockingUserArray == [] && self.blockedUserArray == [] {
-                           
-                           //ブロックしている・されているユーザー両者を除くユーザーのレビューを呼ぶ
-                           self.db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
-
-                               if let err = err {
-                                   print("Error getting documents: \(err)")
-                                   return
-
-                               } else {
-                                   for document in querySnapshot!.documents {
-
-
-                                       self.reviewIdArray.append(document.documentID)
-                                       self.comedianIdArray.append(document.data()["comedian_id"] as! String)
-                                       self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
-                                       self.userIdArray.append(document.data()["user_id"] as! String)
-                                       self.userNameArray.append(document.data()["user_name"] as! String)
-
-                                       self.userDisplayIdArray.append(document.data()["display_id"] as! String)
-
-                                       let dateFormatter = DateFormatter()
-                                       dateFormatter.dateStyle = .short
-                                       dateFormatter.timeStyle = .short
-                                       dateFormatter.locale = Locale(identifier: "ja_JP")
-
-                                       dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
-
-                                       let updated = document.data()["update_datetime"] as! Timestamp
-                                       let updatedDate = updated.dateValue()
-                                       let updatedDateTime = dateFormatter.string(from: updatedDate)
-                                       self.reviewUpdateDatetimeArray.append(updatedDateTime)
-
-                                       let reviewFloatScoreArray = document.data()["score"] as! Float
-                                       self.reviewScoreArray.append(String(reviewFloatScoreArray))
-
-                                       self.reviewCommentArray.append(document.data()["comment"] as! String)
-
-                                       self.reviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
-                                   }
-
-                                   self.tableView.reloadData()
-                                   print("reviewScoreArray:\(reviewScoreArray)")
-
-                               }
-                               
-                               tableView.delegate = self
-                               tableView.dataSource = self
-
-                               self.tableView.refreshControl?.endRefreshing()
-
-                           }
-                       }
-                       
-                   }
-               }
-                              
-           }
-       }
-       
-       
-   }
+    
+    @objc func dataRefresh() {
+        
+        self.blockingUserArray = []
+        self.blockedUserArray = []
+        
+        
+        self.reviewIdArray = []
+        self.comedianIdArray = []
+        self.comedianNameArray = []
+        self.userIdArray = []
+        self.userNameArray = []
+        self.userDisplayIdArray = []
+        self.reviewUpdateDatetimeArray = []
+        self.reviewScoreArray = []
+        self.reviewCommentArray = []
+        self.reviewRelationalArray = []
+        
+        self.reviewLinkArray = []
+        
+        self.reviewId = ""
+        
+        
+        
+        //自分がブロック中のユーザーを取得
+        self.db.collection("block_user").whereField("blocking_user_id", isEqualTo: self.currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).limit(to: 10).getDocuments() { [self] (querySnapshot, err) in
+            
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+                
+            } else {
+                for document in querySnapshot!.documents {
+                    
+                    self.blockingUserArray.append(document.data()["blocked_user_id"] as! String)
+                    
+                }
+                
+                //自分をブロックしているユーザーを取得
+                self.db.collection("block_user").whereField("blocked_user_id", isEqualTo: self.currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).limit(to: 10).getDocuments() { [self] (querySnapshot, err) in
+                    
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                        return
+                        
+                    } else {
+                        for document in querySnapshot!.documents {
+                            
+                            self.blockedUserArray.append(document.data()["blocking_user_id"] as! String)
+                            
+                        }
+                        
+                        if self.blockingUserArray != [] && self.blockedUserArray != [] {
+                            
+                            //ブロックしている・されているユーザー両者を除くユーザーのレビューを呼ぶ場合
+                            self.db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).whereField("user_id", notIn: self.blockingUserArray).whereField("user_id", notIn: self.blockedUserArray).order(by: "user_id", descending: true).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
+                                
+                                if let err = err {
+                                    print("Error getting documents: \(err)")
+                                    return
+                                    
+                                } else {
+                                    for document in querySnapshot!.documents {
+                                        
+                                        
+                                        self.reviewIdArray.append(document.documentID)
+                                        self.comedianIdArray.append(document.data()["comedian_id"] as! String)
+                                        self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
+                                        self.userIdArray.append(document.data()["user_id"] as! String)
+                                        self.userNameArray.append(document.data()["user_name"] as! String)
+                                        
+                                        self.userDisplayIdArray.append(document.data()["display_id"] as! String)
+                                        
+                                        let dateFormatter = DateFormatter()
+                                        dateFormatter.dateStyle = .short
+                                        dateFormatter.timeStyle = .short
+                                        dateFormatter.locale = Locale(identifier: "ja_JP")
+                                        
+                                        dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
+                                        
+                                        let updated = document.data()["update_datetime"] as! Timestamp
+                                        let updatedDate = updated.dateValue()
+                                        let updatedDateTime = dateFormatter.string(from: updatedDate)
+                                        self.reviewUpdateDatetimeArray.append(updatedDateTime)
+                                        
+                                        let reviewFloatScoreArray = document.data()["score"] as! Float
+                                        self.reviewScoreArray.append(String(reviewFloatScoreArray))
+                                        
+                                        self.reviewCommentArray.append(document.data()["comment"] as! String)
+                                        
+                                        self.reviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
+                                    }
+                                    
+                                    self.tableView.reloadData()
+                                    print("reviewScoreArray:\(reviewScoreArray)")
+                                    
+                                }
+                                
+                                tableView.delegate = self
+                                tableView.dataSource = self
+                                
+                                self.tableView.refreshControl?.endRefreshing()
+                                
+                            }
+                        }
+                        
+                        //ブロックしているけどブロックされていない場合
+                        if self.blockingUserArray != [] && self.blockedUserArray == [] {
+                            
+                            //ブロックしている・されているユーザー両者を除くユーザーのレビューを呼ぶ
+                            self.db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).whereField("user_id", notIn: self.blockingUserArray).order(by: "user_id", descending: true).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
+                                
+                                if let err = err {
+                                    print("Error getting documents: \(err)")
+                                    return
+                                    
+                                } else {
+                                    for document in querySnapshot!.documents {
+                                        
+                                        
+                                        self.reviewIdArray.append(document.documentID)
+                                        self.comedianIdArray.append(document.data()["comedian_id"] as! String)
+                                        self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
+                                        self.userIdArray.append(document.data()["user_id"] as! String)
+                                        self.userNameArray.append(document.data()["user_name"] as! String)
+                                        
+                                        self.userDisplayIdArray.append(document.data()["display_id"] as! String)
+                                        
+                                        let dateFormatter = DateFormatter()
+                                        dateFormatter.dateStyle = .short
+                                        dateFormatter.timeStyle = .short
+                                        dateFormatter.locale = Locale(identifier: "ja_JP")
+                                        
+                                        dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
+                                        
+                                        let updated = document.data()["update_datetime"] as! Timestamp
+                                        let updatedDate = updated.dateValue()
+                                        let updatedDateTime = dateFormatter.string(from: updatedDate)
+                                        self.reviewUpdateDatetimeArray.append(updatedDateTime)
+                                        
+                                        let reviewFloatScoreArray = document.data()["score"] as! Float
+                                        self.reviewScoreArray.append(String(reviewFloatScoreArray))
+                                        
+                                        self.reviewCommentArray.append(document.data()["comment"] as! String)
+                                        
+                                        self.reviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
+                                    }
+                                    
+                                    self.tableView.reloadData()
+                                    print("reviewScoreArray:\(reviewScoreArray)")
+                                    
+                                }
+                                
+                                tableView.delegate = self
+                                tableView.dataSource = self
+                                
+                                self.tableView.refreshControl?.endRefreshing()
+                                
+                            }
+                        }
+                        
+                        //ブロックされているけどブロックしていない場合
+                        
+                        if self.blockingUserArray == [] && self.blockedUserArray != [] {
+                            
+                            //ブロックしている・されているユーザー両者を除くユーザーのレビューを呼ぶ
+                            self.db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).whereField("user_id", notIn: self.blockedUserArray).order(by: "user_id", descending: true).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
+                                
+                                if let err = err {
+                                    print("Error getting documents: \(err)")
+                                    return
+                                    
+                                } else {
+                                    for document in querySnapshot!.documents {
+                                        
+                                        
+                                        self.reviewIdArray.append(document.documentID)
+                                        self.comedianIdArray.append(document.data()["comedian_id"] as! String)
+                                        self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
+                                        self.userIdArray.append(document.data()["user_id"] as! String)
+                                        self.userNameArray.append(document.data()["user_name"] as! String)
+                                        
+                                        self.userDisplayIdArray.append(document.data()["display_id"] as! String)
+                                        
+                                        let dateFormatter = DateFormatter()
+                                        dateFormatter.dateStyle = .short
+                                        dateFormatter.timeStyle = .short
+                                        dateFormatter.locale = Locale(identifier: "ja_JP")
+                                        
+                                        dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
+                                        
+                                        let updated = document.data()["update_datetime"] as! Timestamp
+                                        let updatedDate = updated.dateValue()
+                                        let updatedDateTime = dateFormatter.string(from: updatedDate)
+                                        self.reviewUpdateDatetimeArray.append(updatedDateTime)
+                                        
+                                        let reviewFloatScoreArray = document.data()["score"] as! Float
+                                        self.reviewScoreArray.append(String(reviewFloatScoreArray))
+                                        
+                                        self.reviewCommentArray.append(document.data()["comment"] as! String)
+                                        
+                                        self.reviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
+                                    }
+                                    
+                                    self.tableView.reloadData()
+                                    print("reviewScoreArray:\(reviewScoreArray)")
+                                    
+                                }
+                                
+                                tableView.delegate = self
+                                tableView.dataSource = self
+                                
+                                self.tableView.refreshControl?.endRefreshing()
+                                
+                            }
+                        }
+                        
+                        //ブロックしてもされてもいない場合
+                        
+                        if self.blockingUserArray == [] && self.blockedUserArray == [] {
+                            
+                            //ブロックしている・されているユーザー両者を除くユーザーのレビューを呼ぶ
+                            self.db.collection("review").whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
+                                
+                                if let err = err {
+                                    print("Error getting documents: \(err)")
+                                    return
+                                    
+                                } else {
+                                    for document in querySnapshot!.documents {
+                                        
+                                        
+                                        self.reviewIdArray.append(document.documentID)
+                                        self.comedianIdArray.append(document.data()["comedian_id"] as! String)
+                                        self.comedianNameArray.append(document.data()["comedian_display_name"] as! String)
+                                        self.userIdArray.append(document.data()["user_id"] as! String)
+                                        self.userNameArray.append(document.data()["user_name"] as! String)
+                                        
+                                        self.userDisplayIdArray.append(document.data()["display_id"] as! String)
+                                        
+                                        let dateFormatter = DateFormatter()
+                                        dateFormatter.dateStyle = .short
+                                        dateFormatter.timeStyle = .short
+                                        dateFormatter.locale = Locale(identifier: "ja_JP")
+                                        
+                                        dateFormatter.dateFormat = "yyyy/MM/dd hh:mm"
+                                        
+                                        let updated = document.data()["update_datetime"] as! Timestamp
+                                        let updatedDate = updated.dateValue()
+                                        let updatedDateTime = dateFormatter.string(from: updatedDate)
+                                        self.reviewUpdateDatetimeArray.append(updatedDateTime)
+                                        
+                                        let reviewFloatScoreArray = document.data()["score"] as! Float
+                                        self.reviewScoreArray.append(String(reviewFloatScoreArray))
+                                        
+                                        self.reviewCommentArray.append(document.data()["comment"] as! String)
+                                        
+                                        self.reviewRelationalArray.append(document.data()["relational_comedian_listname"] as! String)
+                                    }
+                                    
+                                    self.tableView.reloadData()
+                                    print("reviewScoreArray:\(reviewScoreArray)")
+                                    
+                                }
+                                
+                                tableView.delegate = self
+                                tableView.dataSource = self
+                                
+                                self.tableView.refreshControl?.endRefreshing()
+                                
+                            }
+                        }
+                        
+                    }
+                }
+                
+            }
+        }
+        
+        
+    }
     
     
     @objc func createRefreshLog() {
@@ -437,14 +619,172 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                 "delete_datetime": nil,
             ] as [String : Any]
             logRef.setData(logDic)
-                        
+            
         }
         
     }
-                    
-                
-                
-                
+    
+    @IBAction func tappedPopupMain(_ sender: Any) {
+        
+        let url = URL(string: "\(self.promoMainUrl)")
+        if UIApplication.shared.canOpenURL(url!) {
+            UIApplication.shared.open(url!)
+        }
+        
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "NewReview",
+                "action_type": "tap_promopopup_main",
+                "tapped_comedian_id": "",
+                "tapped_user_id": "",
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+        }
+        
+    }
+    
+    @IBAction func tappedPopupOption(_ sender: Any) {
+        
+        let url = URL(string: "\(self.promoOptionalUrl)")
+        if UIApplication.shared.canOpenURL(url!) {
+            UIApplication.shared.open(url!)
+        }
+        
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "NewReview",
+                "action_type": "tap_promopopup_option",
+                "tapped_comedian_id": "",
+                "tapped_user_id": "",
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+        }
+        
+    }
+    
+    
+    
+    
+    @IBAction func tappedPopupCloseButton(_ sender: Any) {
+        
+        self.popupButton.isHidden = true
+        self.popupButton.isEnabled = true
+        
+        self.popupButtonOption.isHidden = true
+        self.popupButtonOption.isEnabled = true
+        
+        self.popupCloseButton.isHidden = true
+        self.popupCloseButton.isEnabled = true
+        
+    }
+    
+    
+    
+    @IBAction func tappedBannerMain(_ sender: Any) {
+        
+        let url = URL(string: "\(self.promoMainUrl)")
+        if UIApplication.shared.canOpenURL(url!) {
+            UIApplication.shared.open(url!)
+        }
+        
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "NewReview",
+                "action_type": "tap_promobanner_main",
+                "tapped_comedian_id": "",
+                "tapped_user_id": "",
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+        }
+    }
+    
+    
+    
+    @IBAction func tappedBannerOptional(_ sender: Any) {
+        
+        let url = URL(string: "\(self.promoOptionalUrl)")
+        if UIApplication.shared.canOpenURL(url!) {
+            UIApplication.shared.open(url!)
+        }
+        
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "NewReview",
+                "action_type": "tap_promobanner_option",
+                "tapped_comedian_id": "",
+                "tapped_user_id": "",
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+        }
+        
+    }
+    
+    
+
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -509,7 +849,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         
         //alertボタンをセット
         cell.alertButton.addTarget(self, action: #selector(self.tappedAlertButton), for: .touchUpInside)
-
+        
         
         //copyrightflagを取得して画像をセット
         db.collection("comedian").whereField(FieldPath.documentID(), isEqualTo: self.comedianIdArray[indexPath.row]).getDocuments() {(querySnapshot, err) in
@@ -532,7 +872,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                         //                        cell.comedianImageView.clipsToBounds = true
                         
                         cell.referenceButton.setTitle("", for: .normal)
-//                        cell.referenceButton.isEnabled = false
+                        //                        cell.referenceButton.isEnabled = false
                         
                     }
                     
@@ -540,7 +880,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                         
                         cell.comedianImageView.image = UIImage(named: "noImage")
                         cell.referenceButton.setTitle("", for: .normal)
-//                        cell.referenceButton.isEnabled = false
+                        //                        cell.referenceButton.isEnabled = false
                         
                     }
                     
@@ -549,11 +889,11 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                         let comedianImage: UIImage? = UIImage(named: "\(self.comedianIdArray[indexPath.row])")
                         //画像がAssetsにあれば画像と引用元を表示し、なければ引用元なしのnoImageをセット
                         if let validImage = comedianImage {
-
+                            
                             let comedianReference = document.data()["reference_name"] as! String
                             cell.referenceButton.tag = indexPath.row
                             self.referenceUrl = document.data()["reference_url"] as! String
-
+                            
                             cell.referenceButton.contentHorizontalAlignment = .left
                             cell.referenceButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 6.0)
                             cell.referenceButton.setTitle(comedianReference, for: .normal)
@@ -562,20 +902,20 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                             cell.comedianImageView.image = comedianImage
                             cell.comedianImageView.contentMode = .scaleAspectFill
                             cell.comedianImageView.clipsToBounds = true
-
-
+                            
+                            
                         } else {
                             
                             //画像がない場合
                             
                             cell.comedianImageView.image = UIImage(named: "noImage")
                             cell.referenceButton.setTitle("", for: .normal)
-
+                            
                             
                         }
                         
                     }
-
+                    
                     
                 }
             }
@@ -627,7 +967,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                     cell.likeCountButton.contentHorizontalAlignment = .left
                     cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
                     cell.likeCountButton.setTitle("\(querySnapshot!.documents.count)件のいいね！", for: .normal)
-                                        
+                    
                     //自分のlike_frag==trueのレビュー有無でレビューボタンの色を変える
                     self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewIdArray[indexPath.row]).whereField("like_user_id", isEqualTo: self.currentUser?.uid as Any).whereField("like_flag", isEqualTo: true).getDocuments() { [self](querySnapshot, err) in
                         
@@ -658,14 +998,14 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //セルタップでレビュー全文に遷移
         let allReviewVC = storyboard?.instantiateViewController(withIdentifier: "AllReview") as! AllReviewViewController
-
+        
         allReviewVC.reviewId = self.reviewIdArray[indexPath.row]
         self.navigationController?.pushViewController(allReviewVC, animated: true)
-
+        
         self.tableView.deselectRow(at: indexPath, animated: true)
-
-
-
+        
+        
+        
     }
     
     @objc func tappedReferenceButton(sender: UIButton) {
@@ -968,7 +1308,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                 "delete_datetime": nil,
             ] as [String : Any]
             logRef.setData(logDic)
-                        
+            
         }
         
         
@@ -1047,7 +1387,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                 "delete_datetime": nil,
             ] as [String : Any]
             logRef.setData(logDic)
-                        
+            
         }
         
     }
@@ -1064,7 +1404,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
             
             let inquiryVC = self.storyboard?.instantiateViewController(withIdentifier: "Inquiry") as! InquiryViewController
             self.navigationController?.pushViewController(inquiryVC, animated: true)
-
+            
         })
         actionAlert.addAction(kabigonAction)
         
@@ -1072,15 +1412,15 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         //UIAlertControllerにキャンセルのアクションを追加する
         let cancelAction = UIAlertAction(title: "キャンセル", style: UIAlertAction.Style.cancel, handler: {
             (action: UIAlertAction!) in
-
+            
             return
         })
         actionAlert.addAction(cancelAction)
         
         //アクションを表示する
         present(actionAlert, animated: true, completion: nil)
-
-
+        
+        
         
     }
     

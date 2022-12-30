@@ -19,7 +19,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
     //comedian_idが渡される用の変数
     var comedianId: String = ""
-        
+    
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var scrollVIewHight: NSLayoutConstraint!
@@ -30,7 +30,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
     @IBOutlet weak var comedianNameLabel: UILabel!
     @IBOutlet weak var startYearLabel: UILabel!
-//    @IBOutlet weak var comedianTypeLabel: UILabel!
+    //    @IBOutlet weak var comedianTypeLabel: UILabel!
     @IBOutlet weak var comedyTypeLabel1: UILabel!
     @IBOutlet weak var comedyTypeLabel2: UILabel!
     @IBOutlet weak var comedianImageView: UIImageView!
@@ -51,8 +51,6 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     @IBOutlet weak var memberLabel2: UILabel!
     @IBOutlet weak var memberLabel3: UILabel!
     
-    
-    
     //レビュー・あとでみるボタンの画像を設定するための接続
     @IBOutlet weak var reviewButton: UIButton!
     @IBOutlet weak var stockButton: UIButton!
@@ -62,6 +60,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
     @IBOutlet weak var reviewImageView: UIImageView!
     @IBOutlet weak var stockImageView: UIImageView!
+    
+    @IBOutlet weak var followButton: UIButton!
+    var followFlag :String = ""
+    var followId :String = ""
+    var followStatus :String = ""
     
     
     //Youtube動画のパラメータを格納する変数
@@ -106,7 +109,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
     //reviewをセットする配列(別画面から戻る場合などにレビュー×2が読み込まれてしまうので、一旦この配列に入れてあとでユニークにする)
     var reviewBeforeUniqueArray: [String] = []
-
+    
     //ブロックしている・されているユーザーの配列
     var blockingUserArray: [String] = []
     var blockedUserArray: [String] = []
@@ -128,7 +131,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
     var referenceUrl :String = ""
     var referenceName :String = ""
-
+    
     var reviewId :String = ""
     
     //Firestoreを使うための下準備
@@ -137,10 +140,10 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
     //画像のパス
     let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
-
+    
     // インジゲーターの設定
     var indicator = UIActivityIndicatorView()
-
+    
     
     override func viewDidLoad() {
         
@@ -154,7 +157,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         self.indicator.color = UIColor.darkGray
         // インジケーターを View に追加
         view.addSubview(indicator)
-
+        
     }
     
     
@@ -169,9 +172,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         self.reviewCreatedArray = []
         self.reviewScoreArray = []
         self.reviewCommentArray = []
-
         
-//        self.scrollVIewHight.constant = CGFloat(2000)
+        
+        //        self.scrollVIewHight.constant = CGFloat(2000)
         
         print("comedian:\(comedianId)")
         
@@ -187,8 +190,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                 if querySnapshot?.documents.count == 0 {
                     
                     //レビュー前ユーザーのレビューボタンの状態
-//                    self.reviewLabel.text = ""
-//                    self.reviewLabel.font = UIFont.systemFont(ofSize: 14)
+                    //                    self.reviewLabel.text = ""
+                    //                    self.reviewLabel.font = UIFont.systemFont(ofSize: 14)
                     self.reviewButton.backgroundColor = UIColor.systemYellow
                     self.reviewImageView.tintColor = #colorLiteral(red: 0.424124063, green: 0.424124063, blue: 0.424124063, alpha: 1)
                     self.reviewCountLabel.tintColor = #colorLiteral(red: 0.424124063, green: 0.424124063, blue: 0.424124063, alpha: 1)
@@ -196,11 +199,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                 } else {
                     
                     //レビュー済みユーザーのレビューボタンの状態
-//                    self.reviewLabel.text = "レビュー" + "\n" + "編集"
+                    //                    self.reviewLabel.text = "レビュー" + "\n" + "編集"
                     self.reviewButton.backgroundColor = #colorLiteral(red: 1, green: 0.9310497734, blue: 0.695790851, alpha: 1)
                     self.reviewImageView.tintColor = #colorLiteral(red: 0.6666666865, green: 0.6238060739, blue: 0.6320286928, alpha: 1)
                     self.reviewCountLabel.tintColor = #colorLiteral(red: 0.6666666865, green: 0.6238060739, blue: 0.6320286928, alpha: 1)
-
+                    
                 }
             }
         }
@@ -235,11 +238,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                 
                 //レビューボタンの件数ラベルを設定
                 self.reviewCountLabel.text = "\(querySnapshot!.documents.count)"
-
+                
                 
                 for document in querySnapshot!.documents {
                     
-
+                    
                     //平均スコアを算出し、画像を設定
                     scoreArray.append(document.data()["score"] as! Float)
                     var averageScore = scoreArray.reduce(0, +) / Float(scoreArray.count)
@@ -254,11 +257,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     
                     //自分がブロック中のユーザーを取得
                     self.db.collection("block_user").whereField("blocking_user_id", isEqualTo: self.currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).limit(to: 10).getDocuments() { [self] (querySnapshot, err) in
-
+                        
                         if let err = err {
                             print("Error getting documents: \(err)")
                             return
-
+                            
                         } else {
                             for document in querySnapshot!.documents {
                                 
@@ -268,11 +271,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                             
                             //自分をブロックしているユーザーを取得
                             self.db.collection("block_user").whereField("blocked_user_id", isEqualTo: self.currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).limit(to: 10).getDocuments() { [self] (querySnapshot, err) in
-
+                                
                                 if let err = err {
                                     print("Error getting documents: \(err)")
                                     return
-
+                                    
                                 } else {
                                     for document in querySnapshot!.documents {
                                         
@@ -284,11 +287,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     if self.blockingUserArray != [] && self.blockedUserArray != [] {
                                         
                                         self.db.collection("review").whereField("comedian_id", isEqualTo: self.comedianId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).whereField("user_id", notIn: self.blockingUserArray).whereField("user_id", notIn: self.blockedUserArray).order(by: "user_id", descending: true).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
-
+                                            
                                             if let err = err {
                                                 print("Error getting documents: \(err)")
                                                 return
-
+                                                
                                             } else {
                                                 for document in querySnapshot!.documents {
                                                     
@@ -325,11 +328,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     if self.blockingUserArray != [] && self.blockedUserArray == [] {
                                         
                                         self.db.collection("review").whereField("comedian_id", isEqualTo: self.comedianId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).whereField("user_id", notIn: self.blockingUserArray).order(by: "user_id", descending: true).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
-
+                                            
                                             if let err = err {
                                                 print("Error getting documents: \(err)")
                                                 return
-
+                                                
                                             } else {
                                                 for document in querySnapshot!.documents {
                                                     
@@ -366,11 +369,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     if self.blockingUserArray == [] && self.blockedUserArray != [] {
                                         
                                         self.db.collection("review").whereField("comedian_id", isEqualTo: self.comedianId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).whereField("user_id", notIn: self.blockedUserArray).order(by: "user_id", descending: true).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
-
+                                            
                                             if let err = err {
                                                 print("Error getting documents: \(err)")
                                                 return
-
+                                                
                                             } else {
                                                 for document in querySnapshot!.documents {
                                                     
@@ -407,11 +410,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     if self.blockingUserArray == [] && self.blockedUserArray == [] {
                                         
                                         self.db.collection("review").whereField("comedian_id", isEqualTo: self.comedianId).whereField("private_flag", isEqualTo: false).whereField("delete_flag", isEqualTo: false).order(by: "update_datetime", descending: true).limit(to: 50).getDocuments() { [self] (querySnapshot, err) in
-
+                                            
                                             if let err = err {
                                                 print("Error getting documents: \(err)")
                                                 return
-
+                                                
                                             } else {
                                                 for document in querySnapshot!.documents {
                                                     
@@ -463,32 +466,32 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                 if querySnapshot?.documents.count == 0 {
                     
                     //あとでみる前ユーザーのあとでみるボタンの状態
-//                    self.stockLabel.text = "あとでみる"
-//                    self.stockLabel.font = UIFont.systemFont(ofSize: 14)
+                    //                    self.stockLabel.text = "あとでみる"
+                    //                    self.stockLabel.font = UIFont.systemFont(ofSize: 14)
                     self.stockButton.backgroundColor = UIColor.systemYellow
                     self.stockImageView.tintColor = #colorLiteral(red: 0.424124063, green: 0.424124063, blue: 0.424124063, alpha: 1)
                     self.stockCountLabel.tintColor = #colorLiteral(red: 0.424124063, green: 0.424124063, blue: 0.424124063, alpha: 1)
-
+                    
                     
                 } else {
                     
                     //あとでみる済みユーザーのあとでみるボタンの状態
-//                    self.stockLabel.text = "あとでみる" + "\n" + "削除"
-//                    self.stockLabel.font = UIFont.systemFont(ofSize: 12)
+                    //                    self.stockLabel.text = "あとでみる" + "\n" + "削除"
+                    //                    self.stockLabel.font = UIFont.systemFont(ofSize: 12)
                     self.stockButton.backgroundColor = #colorLiteral(red: 1, green: 0.9310497734, blue: 0.695790851, alpha: 1)
                     self.stockImageView.tintColor = #colorLiteral(red: 0.6666666865, green: 0.6238060739, blue: 0.6320286928, alpha: 1)
                     self.stockCountLabel.tintColor = #colorLiteral(red: 0.6666666865, green: 0.6238060739, blue: 0.6320286928, alpha: 1)
-
-
-
+                    
+                    
+                    
                     
                 }
             }
         }
-
         
         
-
+        
+        
         
         //user_id=currentUserかつcomedian_id=comedianIdのstockがあれば、あとでみるボタンに保存済みの画像を設定
         //なければ保存前の画像に設定
@@ -552,7 +555,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     if document.data()["start_year"] as! String != "" {
                         self.startYearLabel.text = document.data()["start_year"] as! String + "結成"
                     }
-//                    self.comedianTypeLabel.text = document.data()["comedian_type"] as? String
+                    //                    self.comedianTypeLabel.text = document.data()["comedian_type"] as? String
                     self.comedyTypeLabel1.text = document.data()["comedy_type_1"] as? String
                     self.comedyTypeLabel2.text = document.data()["comedy_type_2"] as? String
                     self.memberLabel1.text = document.data()["member_1"] as? String
@@ -629,11 +632,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                 self.comedianImageView.image = UIImage(named: "\(self.comedianId)")
                                 self.comedianImageView.contentMode = .scaleAspectFill
                                 self.comedianImageView.clipsToBounds = true
-
-                                                                                                
-
                                 
-//                                self.comedianImageView.image = UIImage(named: "\(self.comedianId)")
+                                
+                                
+                                
+                                //                                self.comedianImageView.image = UIImage(named: "\(self.comedianId)")
                                 
                                 
                                 if self.movieId2 != "" {
@@ -647,7 +650,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     
                                     //contentViewの高さをscrollViewに反映させる
                                     self.scrollVIewHight.constant = CGFloat(self.contentViewHight.constant)
-
+                                    
                                     
                                     //参考：https://dev.classmethod.jp/articles/youtube-player-ios-helper/
                                     //動画の見出しをセットする
@@ -677,7 +680,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     youtubeView2.delegate = self;
                                     self.contentView.addSubview(youtubeView2)
                                     
-                                                                        
+                                    
                                     //レビューの見出しをセットする
                                     let reviewLabel = UILabel(frame: CGRect(x: 0, y: 815, width: self.contentView.frame.width, height: 25))
                                     reviewLabel.text = "　みんなの感想"
@@ -718,7 +721,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     
                                     //contentViewの高さをscrollViewに反映させる
                                     self.scrollVIewHight.constant = CGFloat(self.contentViewHight.constant)
-
+                                    
                                     
                                     //動画の見出しをセットする
                                     let movieLabel = UILabel(frame: CGRect(x: 0, y: 330, width: self.contentView.frame.width, height: 25))
@@ -778,7 +781,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     
                                     //contentViewの高さをscrollViewに反映させる
                                     self.scrollVIewHight.constant = CGFloat(self.contentViewHight.constant)
-
+                                    
                                     
                                     //レビューの見出しをセットする
                                     let reviewLabel = UILabel(frame: CGRect(x: 0, y: 370, width: self.contentView.frame.width, height: 25))
@@ -793,7 +796,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     //動画なしでレビューをセットする
                                     self.contentView.addSubview(self.tableView)
                                     self.tableView.backgroundColor = #colorLiteral(red: 0.9694761634, green: 0.9694761634, blue: 0.9694761634, alpha: 1)
-
+                                    
                                     
                                     self.tableView.translatesAutoresizingMaskIntoConstraints = false
                                     self.tableView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 395.0).isActive = true
@@ -809,11 +812,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     let nib = UINib(nibName: "ComedianReviewTableViewCell", bundle: nil)
                                     self.tableView.register(nib, forCellReuseIdentifier: "cell")
                                     
-
+                                    
                                 }
                                 
                                 self.referenceButton.setTitle("", for: .normal)
-
+                                
                                 
                             }
                             if self.comedianCopyRight == "false" {
@@ -860,13 +863,13 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                 self.tableView.register(nib, forCellReuseIdentifier: "cell")
                                 
                                 self.referenceButton.setTitle("", for: .normal)
-
+                                
                                 
                             }
                             
                             if self.comedianCopyRight == "reference" {
                                 
-
+                                
                                 let comedianImage: UIImage? = UIImage(named: "\(self.comedianId)")
                                 
                                 //画像がAssetsにあれば画像と引用元を表示し、なければ引用元なしのnoImageをセット
@@ -883,7 +886,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                                 
                                                 self.referenceName = document.data()["reference_name"] as! String
                                                 self.referenceUrl = document.data()["reference_url"] as! String
-
+                                                
                                             }
                                             
                                             print("referenceName:\(self.referenceName)")
@@ -899,7 +902,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     self.comedianImageView.image = comedianImage
                                     self.comedianImageView.contentMode = .scaleAspectFill
                                     self.comedianImageView.clipsToBounds = true
-
+                                    
                                     
                                 } else {
                                     
@@ -909,7 +912,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     
                                 }
                                 
-
+                                
                                 //レビューの件数に応じたcontentViewのheightになるように設定(レビュー1件あたりheight=300)
                                 print("self.reviewIdArray.count:\(reviewCount!)")
                                 
@@ -1186,33 +1189,239 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             }
         }
         
+        //フォロー状況をチェックする
+        checkFollowStatus()
+        self.followButton.layer.cornerRadius = 15
+        self.followButton.clipsToBounds = true
+        
         
         self.indicator.stopAnimating()
-
+        
         //pvログ
         AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .comedianDetailVC))
         
         
+        
     }
     
     
+    func checkFollowStatus() {
+        
+        
+        self.db.collection("follow_comedian").whereField("comedian_id", isEqualTo: self.comedianId).whereField("user_id", isEqualTo: currentUser?.uid).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+                
+            } else {
+                
+                //フォローしていない場合
+                if querySnapshot?.documents.count == 0 {
+                    
+                    self.followButton.setTitle("フォロー", for: .normal)
+                    self.followButton.backgroundColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
+                    self.followButton.titleLabel?.tintColor = #colorLiteral(red: 0.9686005305, green: 0.9686005305, blue: 0.9686005305, alpha: 1)
+                    
+                    self.followFlag = "false"
+                    
+                } else {
+                    
+                    for document in querySnapshot!.documents {
+                        
+                        self.followId = document.documentID
+                        self.followStatus = String(document.data()["valid_flag"] as! Bool)
+                        self.followStatus = String(self.followStatus)
+                        
+                    }
+                    
+                    if self.followStatus == "true" {
+                        
+                        self.followButton.setTitle("フォロー中", for: .normal)
+                        self.followButton.backgroundColor = #colorLiteral(red: 0.9686005305, green: 0.9686005305, blue: 0.9686005305, alpha: 1)
+                        self.followButton.titleLabel?.tintColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
+                        self.followButton.layer.borderColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
+                        self.followButton.layer.borderWidth = 1.0
+                        
+                        self.followFlag = "true"
+                        
+                        
+                    }
+                    
+                    if self.followStatus == "false" {
+                        
+                        self.followButton.setTitle("フォロー", for: .normal)
+                        self.followButton.backgroundColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
+                        self.followButton.titleLabel?.tintColor = #colorLiteral(red: 0.9686005305, green: 0.9686005305, blue: 0.9686005305, alpha: 1)
+                        
+                        self.followFlag = "past_true"
+                        
+                        
+                    }
+                    
+                }
+            }
+        }
+    }
+    
+    
+    @IBAction func tappedfollowButton(_ sender: Any) {
+        
+        
+        
+        if currentUser?.uid == nil {
+            
+            //ログインしていない場合、ログイン推奨ページに遷移
+            let recLoginVC = storyboard?.instantiateViewController(withIdentifier: "RecLogin") as! RecommendLoginViewController
+            
+            self.navigationController?.pushViewController(recLoginVC, animated: true)
+            
+            
+            
+            
+            //ログ
+            AnalyticsUtil.sendAction(ActionEvent(screenName: .myReviewVC,
+                                                 actionType: .tap,
+                                                 actionLabel: .template(ActionLabelTemplate.myPageRecLoginPush)))
+            
+        } else {
+            
+            
+            
+            var currentUserDisplayId :String = ""
+            var currentUserName :String = ""
+            let deleteDateTime :String? = nil
+            
+            //currentUserのuserNmae等を取得
+            self.db.collection("user_detail").whereField("user_id", isEqualTo: currentUser?.uid).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    return
+                    
+                } else {
+                    for document in querySnapshot!.documents {
+                        
+                        currentUserDisplayId = document.data()["display_id"] as! String
+                        
+                    }
+                    
+                    if self.followFlag == "true" {
+                        
+
+                                
+                                //既存のfollowデータのフラグをfalseにする
+                                let existfollowRef = Firestore.firestore().collection("follow_comedian").document(self.followId)
+                                existfollowRef.updateData([
+                                    "user_name": self.currentUser?.displayName!,
+                                    "user_display_id": currentUserDisplayId,
+                                    "comedian_id": self.comedianId,
+                                    "comedian_name": self.comedianNameLabel.text!,
+                                    "valid_flag": false,
+                                    "update_datetime": FieldValue.serverTimestamp(),
+                                ]) { err in
+                                    if let err = err {
+                                        
+                                        print("Error updating document: \(err)")
+                                        
+                                    } else {
+                                        
+                                        print("Document successfully updated")
+                                        
+                                        //ボタンの色とテキストを変える
+                                        self.followButton.setTitle("フォロー", for: .normal)
+                                        self.followButton.backgroundColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
+                                        self.followButton.titleLabel?.tintColor = #colorLiteral(red: 0.9686005305, green: 0.9686005305, blue: 0.9686005305, alpha: 1)
+                                        
+                                        self.followFlag = "past_true"
+                                    }
+                                }
+                    }
+                    
+                    if self.followFlag == "past_true" {
+                                
+                                //既存のfollowデータのフラグをtrueにする
+                                let existfollowRef = Firestore.firestore().collection("follow_comedian").document(self.followId)
+                                existfollowRef.updateData([
+                                    "user_name": self.currentUser?.displayName!,
+                                    "user_display_id": currentUserDisplayId,
+                                    "comedian_id": self.comedianId,
+                                    "comedian_name": self.comedianNameLabel.text!,
+                                    "valid_flag": true,
+                                    "update_datetime": FieldValue.serverTimestamp(),
+                                ]) { err in
+                                    if let err = err {
+                                        
+                                        print("Error updating document: \(err)")
+                                        
+                                    } else {
+                                        
+                                        print("Document successfully updated")
+                                        
+                                        //ボタンの色とテキストを変える
+                                        self.followButton.setTitle("フォロー中", for: .normal)
+                                        self.followButton.backgroundColor = #colorLiteral(red: 0.9686005305, green: 0.9686005305, blue: 0.9686005305, alpha: 1)
+                                        self.followButton.titleLabel?.tintColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
+                                        self.followButton.layer.borderColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
+                                        self.followButton.layer.borderWidth = 1.0
+
+                                        self.followFlag = "past_true"
+                                    }
+                                }
+                    }
+                    
+                    
+                    if self.followFlag == "false" {
+                        
+                        //ボタンの色とテキストを変える
+                        self.followButton.setTitle("フォロー中", for: .normal)
+                        self.followButton.backgroundColor = #colorLiteral(red: 0.9686005305, green: 0.9686005305, blue: 0.9686005305, alpha: 1)
+                        self.followButton.titleLabel?.tintColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
+                        self.followButton.layer.borderColor = #colorLiteral(red: 0.1268742108, green: 0.1268742108, blue: 0.1268742108, alpha: 1)
+                        self.followButton.layer.borderWidth = 1.0
+                        
+                        self.followFlag = "true"
+                        
+                                    
+                                    let followRef = Firestore.firestore().collection("follow_comedian").document()
+                                    let followDic = [
+                                        "user_id": self.currentUser?.uid,
+                                        "user_name": self.currentUser?.displayName,
+                                        "user_display_id": currentUserDisplayId,
+                                        "comedian_id": self.comedianId,
+                                        "comedian_name": self.comedianNameLabel.text,
+                                        "valid_flag": true,
+                                        "create_datetime": FieldValue.serverTimestamp(),
+                                        "update_datetime": FieldValue.serverTimestamp(),
+                                        "delete_flag": false,
+                                        "delete_datetime": deleteDateTime,
+                                    ] as [String : Any]
+                                    followRef.setData(followDic)
+                        
+                    }
+                }
+            }
+        }
+    }
 
     
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//
-//        self.tableView.estimatedRowHeight = 300
-//        return UITableView.automaticDimension
-//
-//    }
+    
+    
+    
+    
+    //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    //
+    //        self.tableView.estimatedRowHeight = 300
+    //        return UITableView.automaticDimension
+    //
+    //    }
     
     
     @objc func tappedReferenceButton(sender: UIButton) {
-
+        
         let referenceUrl = URL(string: "\(self.referenceUrl)")
         UIApplication.shared.open(referenceUrl!)
         
     }
-
+    
     
     
     //各メディアボタンタップでmediaUrlArrayの該当indexのurlに遷移するメソッド
@@ -1281,7 +1490,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
     
     @IBAction func reviewButton(_ sender: Any) {
-    
+        
         
         if currentUser?.uid == nil {
             //ログインしていない場合、ログイン推奨ページに遷移
@@ -1292,9 +1501,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             
             //ログ
             AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
-                                                         actionType: .tap,
+                                                 actionType: .tap,
                                                  actionLabel: .template(ActionLabelTemplate.comedianReviewRecLoginPush)))
-
+            
             
         } else {
             
@@ -1305,17 +1514,17 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             //comedian_idを渡す
             reviewVC.comedianID = self.comedianId
             
-//            //comedianNameLabelをStringに変換して芸人名を渡す
-//            var comedianName = comedianNameLabel.text! as String
+            //            //comedianNameLabelをStringに変換して芸人名を渡す
+            //            var comedianName = comedianNameLabel.text! as String
             reviewVC.comedianName = self.comedianDisplayName
             
             self.present(nav, animated: true, completion: nil)
             
             //ログ
             AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
-                                                         actionType: .tap,
+                                                 actionType: .tap,
                                                  actionLabel: .template(ActionLabelTemplate.reviewButtonTap)))
-
+            
         }
         
     }
@@ -1332,15 +1541,15 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             
             //ログ
             AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
-                                                         actionType: .tap,
+                                                 actionType: .tap,
                                                  actionLabel: .template(ActionLabelTemplate.comedianStockRecLoginPush)))
-
+            
             
         } else {
             
             
             self.indicator.startAnimating()
-
+            
             
             //user_id=currentUserかつcomedian_id=comedianIdstockがなければtrueでレコード作り、画像を保存済みに更新する
             //あれば、flagを確認しtrueだったらfalseに、falseだったらtrueに更新する
@@ -1433,7 +1642,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                             self.stockButton.backgroundColor = #colorLiteral(red: 1, green: 0.8525225841, blue: 0.1762744927, alpha: 1)
                             self.stockImageView.tintColor = #colorLiteral(red: 0.3700678761, green: 0.3700678761, blue: 0.3700678761, alpha: 1)
                             self.stockCountLabel.tintColor = #colorLiteral(red: 0.3700678761, green: 0.3700678761, blue: 0.3700678761, alpha: 1)
-
+                            
                         }
                         
                         self.db.collection("stock").whereField("comedian_id", isEqualTo: self.comedianId).whereField("valid_flag", isEqualTo: true).getDocuments() {(querySnapshot, err) in
@@ -1459,12 +1668,12 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         
         //ログ
         AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
-                                                     actionType: .tap,
+                                             actionType: .tap,
                                              actionLabel: .template(ActionLabelTemplate.stockButtonTap)))
         
         self.indicator.stopAnimating()
-
-
+        
+        
     }
     
     
@@ -1495,10 +1704,10 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         
         //reviewidを入れる変数
         self.reviewId = self.reviewIdArray[indexPath.row]
-                
+        
         //alertボタンをセット
         cell.alertButton.addTarget(self, action: #selector(self.tappedAlertButton), for: .touchUpInside)
-
+        
         
         //※プロフィール画像の仕様が決まったらここに追加する(reviewUserIdArryがあるのでそれを使う)
         //ユーザー名
@@ -1509,9 +1718,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         cell.userNameButton.contentHorizontalAlignment = .left
         cell.userNameButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14.0)
         cell.userNameButton.setTitle("　" + reviewUserName, for: .normal)
-
+        
         cell.userNameButton.addTarget(self, action: #selector(self.tappedUserNameButton(sender:)), for: .touchUpInside)
-
+        
         
         
         //ユーザーID
@@ -1550,7 +1759,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         //likereviewをセット
         cell.likeCountButton.tag = indexPath.row
         cell.likeCountButton.addTarget(self, action: #selector(tappedLikeCountButton(sender:)), for: .touchUpInside)
-
+        
         
         db.collection("like_review").whereField("review_id", isEqualTo: reviewId).whereField("like_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() {(querySnapshot, err) in
             if let err = err {
@@ -1564,7 +1773,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     cell.likeCountButton.contentHorizontalAlignment = .left
                     cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
                     cell.likeCountButton.setTitle("いいね！はまだありません", for: .normal)
-
+                    
                     cell.likeButton.setImage(self.unLikeImage, for: .normal)
                     
                 } else {
@@ -1572,7 +1781,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     cell.likeCountButton.contentHorizontalAlignment = .left
                     cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
                     cell.likeCountButton.setTitle("\(querySnapshot!.documents.count)件のいいね！", for: .normal)
-
+                    
                     //自分のlike_frag==trueのレビュー有無でレビューボタンの色を変える
                     self.db.collection("like_review").whereField("review_id", isEqualTo: self.reviewId).whereField("like_user_id", isEqualTo: self.currentUser?.uid as Any).whereField("like_flag", isEqualTo: true).getDocuments() { [self](querySnapshot, err) in
                         
@@ -1594,7 +1803,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                             
                             
                         }
-                    }                    
+                    }
                     
                 }
             }
@@ -1604,11 +1813,15 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // セルの選択を解除
+        self.tableView.deselectRow(at: indexPath, animated: true)
+
         //セルタップでレビュー全文に遷移
         let allReviewVC = storyboard?.instantiateViewController(withIdentifier: "AllReview") as! AllReviewViewController
         
         allReviewVC.reviewId = self.reviewIdArray[indexPath.row]
-        self.navigationController?.pushViewController(allReviewVC, animated: true)
+        self.navigationController?.pushViewController(allReviewVC, animated: true)        
+
         
     }
     
@@ -1618,22 +1831,22 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         let buttonTag = sender.tag
         let tappedUserId = self.reviewUserIdArray[buttonTag]
         let tappedUserName = self.reviewUserNameArray[buttonTag]
-
+        
         
         let button = sender
         let cell = button.superview?.superview as! ComedianReviewTableViewCell
-
+        
         
         //セルタップでプロフィールに遷移
         let profileVC = storyboard?.instantiateViewController(withIdentifier: "ProfileTab") as! ProfilePageTabViewController
-
+        
         profileVC.userId = tappedUserId
         profileVC.userName = tappedUserName
-
+        
         
         
         self.navigationController?.pushViewController(profileVC, animated: true)
-
+        
         
     }
     
@@ -1657,9 +1870,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             
             //ログ
             AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
-                                                         actionType: .tap,
+                                                 actionType: .tap,
                                                  actionLabel: .template(ActionLabelTemplate.comedianLikeReviewReLoginPush)))
-
+            
         } else {
             
             //ボタン画像の切り替え
@@ -1667,15 +1880,15 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             if cell.likeButton.imageView?.image == self.likeImage {
                 
                 cell.likeButton.setImage(self.unLikeImage, for: .normal)
-
+                
             }
             
             if cell.likeButton.imageView?.image == self.unLikeImage {
                 
                 cell.likeButton.setImage(self.likeImage, for: .normal)
-
+                
             }
-
+            
             //like_reviewにセットする項目
             var documentId :String?
             var likeFlag :Bool?
@@ -1728,7 +1941,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     return
                     
                 } else {
-
+                    
                     
                     for document in querySnapshot!.documents{
                         
@@ -1739,7 +1952,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                         reviewUserDisplayId = document.data()["display_id"] as? String
                         reviewComment = document.data()["comment"] as? String
                         reviewScore = document.data()["score"] as? Float
-
+                        
                         
                         //すでに自分がいいねしたことがあるレビューかどうかをチェック
                         self.db.collection("like_review").whereField("review_id", isEqualTo: tappedReviewId).whereField("like_user_id", isEqualTo: self.currentUser?.uid as Any).getDocuments() {(querySnapshot, err) in
@@ -1778,13 +1991,13 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     
                                     //ログ
                                     AnalyticsUtil.sendAction(ActionEvent(screenName: .comedianDetailVC,
-                                                                                 actionType: .tap,
+                                                                         actionType: .tap,
                                                                          actionLabel: .template(ActionLabelTemplate.comedianLikeReviewTap)))
                                     
                                 } else {
                                     
                                     for document in querySnapshot!.documents {
-
+                                        
                                         documentId = document.documentID
                                         likeFlag = document.data()["like_flag"] as? Bool
                                         
@@ -1812,7 +2025,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                         ])
                                         
                                     } else {
-
+                                        
                                         
                                         let existlikeReviewRef = Firestore.firestore().collection("like_review").document(documentId!)
                                         existlikeReviewRef.updateData([
@@ -1841,13 +2054,13 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                             cell.likeCountButton.contentHorizontalAlignment = .left
                                             cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
                                             cell.likeCountButton.setTitle("いいね！はまだありません", for: .normal)
-
+                                            
                                         } else {
                                             cell.likeCountButton.contentHorizontalAlignment = .left
                                             cell.likeCountButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
                                             cell.likeCountButton.setTitle("\(querySnapshot!.documents.count)件のいいね！", for: .normal)
                                         }
-
+                                        
                                         
                                     }
                                 }
@@ -1892,7 +2105,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             
             let inquiryVC = self.storyboard?.instantiateViewController(withIdentifier: "Inquiry") as! InquiryViewController
             self.navigationController?.pushViewController(inquiryVC, animated: true)
-
+            
         })
         actionAlert.addAction(kabigonAction)
         
@@ -1900,18 +2113,18 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         //UIAlertControllerにキャンセルのアクションを追加する
         let cancelAction = UIAlertAction(title: "キャンセル", style: UIAlertAction.Style.cancel, handler: {
             (action: UIAlertAction!) in
-
+            
             return
         })
         actionAlert.addAction(cancelAction)
         
         //アクションを表示する
         present(actionAlert, animated: true, completion: nil)
-
-
+        
+        
         
     }
-
+    
     
     
 }
@@ -1923,15 +2136,15 @@ extension UIImage {
         let host = "gs://owaraiapp-f80fd.appspot.com/comedian_image/"
         storage.reference(forURL: host).child(path)
             .getData(maxSize: 1024 * 1024 * 10) { (data: Data?, error: Error?) in
-            if error != nil {
-                callback(nil)
-                return
+                if error != nil {
+                    callback(nil)
+                    return
+                }
+                if let imageData = data {
+                    let image = UIImage(data: imageData)
+                    callback(image)
+                }
             }
-            if let imageData = data {
-                let image = UIImage(data: imageData)
-                callback(image)
-            }
-        }
     }
     
     func resizeUIImageRatio(ratio: CGFloat) -> UIImage! {

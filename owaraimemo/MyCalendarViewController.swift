@@ -18,26 +18,29 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     @IBOutlet weak var calendarHeight: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
     
+    let df = DateFormatter()
+
     let db = Firestore.firestore()
     let currentUser = Auth.auth().currentUser
     
+    //画像のパス
+    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
+
+    
     
     var followComedianIdArray: [String] = []
-    var followComedianIdArray1: [String] = []
-    var followComedianIdArray2: [String] = []
-    var followComedianIdArray3: [String] = []
-    var followComedianIdArray4: [String] = []
-    var followComedianIdArray5: [String] = []
-    var followComedianIdArray6: [String] = []
-    var followComedianIdArray7: [String] = []
-    var followComedianIdArray8: [String] = []
-    var followComedianIdArray9: [String] = []
-    var followComedianIdArray10: [String] = []
-    
+
     var eventDate :String = ""
     
+    var allEventDateArray: [String] = []
+    var uniqueAllEventDateArray: [String] = []
+
+    
     var eventIdArray: [String] = []
+    var eventDateArray: [String] = []
     var uniqueEventIdArray: [String] = []
+    var uniqueEventDateArray: [String] = []
+
     
     //表示させるeventIdのイベント名、エリア、配信有無、時間、会場を格納
     var eventNameArray: [String] = []
@@ -47,6 +50,9 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     var eventPlaceArray: [String] = []
     var eventCastArray: [String] = []
     var eventUrlArray: [String] = []
+    var eventImageUrlArray: [String] = []
+    var eventReferenceArray: [String] = []
+
     
     override func viewDidLoad() {
         
@@ -58,6 +64,8 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         self.calendar.dataSource = self
         self.calendar.delegate = self
         
+        self.calendar.setScope(.week, animated: false)
+
         
         // gesture settings
         let swipUpGesture:UISwipeGestureRecognizer = UISwipeGestureRecognizer(
@@ -71,15 +79,52 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         self.calendar.addGestureRecognizer(swipUpGesture)
         self.calendar.addGestureRecognizer(swipDownGesture)
         
-        
-        
+        self.calendar.locale = Locale(identifier: "ja")
+        self.calendar.appearance.calendar.firstWeekday = 2 //月曜からに変更
+        self.calendar.appearance.headerTitleFont = UIFont.boldSystemFont(ofSize: 15)
+        self.calendar.appearance.headerDateFormat = "yyyy年MM月"
+        self.calendar.appearance.headerTitleColor = UIColor.black
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
-        //フォロー中の芸人さんのArrayを取得
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        //フォロー中の芸人さんとそのイベントのArrayを取得
         self.getFollowComedian()
         
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            //pvログを取得
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "MyCalendar",
+                "action_type": "pv",
+                "tapped_comedian_id": "",
+                "tapped_user_id": "",
+                "tapped_date": "",
+                "tapped_event_id": "",
+                "action_date": "",
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+            
+        }
         
     }
     
@@ -95,6 +140,22 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     
     func getFollowComedian() {
         
+        self.followComedianIdArray = []
+        self.allEventDateArray = []
+        
+        self.eventIdArray = []
+        self.eventDateArray = []
+        self.uniqueEventIdArray = []
+        self.uniqueEventDateArray = []
+        self.eventNameArray = []
+        self.eventAreaArray = []
+        self.eventOnlineFlagArray = []
+        self.eventStartArray = []
+        self.eventPlaceArray = []
+        self.eventCastArray = []
+        self.eventUrlArray = []
+        self.eventImageUrlArray = []
+        self.eventReferenceArray = []
         
         
         self.db.collection("follow_comedian").whereField("user_id", isEqualTo: self.currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() { [self] (querySnapshot, err) in
@@ -110,69 +171,52 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                     
                 }
                 
-                let documentCount = querySnapshot?.documents.count
+                print("followComedianIdArray:\(self.followComedianIdArray)")
+        
+
+                print("getSchedule_followComedianIdArray:\(self.followComedianIdArray)")
                 
-                self.followComedianIdArray1 = Array(self.followComedianIdArray[0..<documentCount!])
-                
-                print("followComedianIdArray1:\(self.followComedianIdArray1)")
-                
-                
-                if (querySnapshot?.documents.count)! > 10 {
+                for comedianId in self.followComedianIdArray {
                     
-                    self.followComedianIdArray1 = Array(self.followComedianIdArray[10..<20])
-                    
-                }
-                if (querySnapshot?.documents.count)! > 20 {
-                    
-                    self.followComedianIdArray1 = Array(self.followComedianIdArray[20..<30])
-                    
-                }
-                if (querySnapshot?.documents.count)! > 30 {
-                    
-                    self.followComedianIdArray1 = Array(self.followComedianIdArray[30..<40])
-                    
-                }
-                if (querySnapshot?.documents.count)! > 40 {
-                    
-                    self.followComedianIdArray1 = Array(self.followComedianIdArray[40..<50])
-                    
-                }
-                
-                if (querySnapshot?.documents.count)! > 50 {
-                    
-                    self.followComedianIdArray1 = Array(self.followComedianIdArray[50..<60])
-                    
+                    //フォロー芸人さんのすべてのイベントを取得する
+                    self.db.collection("schedule").whereField("comedian_id", isEqualTo: comedianId).whereField("delete_flag", isEqualTo: "false").getDocuments() { [self] (querySnapshot, err) in
+                        
+                        if let err = err {
+                            print("Error getting documents: \(err)")
+                            return
+                            
+                        } else {
+                            
+                            for document in querySnapshot!.documents {
+                                
+                                self.allEventDateArray.append(document.data()["event_date"] as! String)
+
+                                print("load_self.allEventDateArray:\(self.allEventDateArray)")
+
+                                
+                            }
+                        }
+                    }
                 }
                 
-                if (querySnapshot?.documents.count)! > 60 {
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     
-                    self.followComedianIdArray1 = Array(self.followComedianIdArray[60..<70])
+                    //aleventDateArrayをユニークにする
+                    var eventDate = Set<String>()
+                    self.uniqueAllEventDateArray = self.allEventDateArray.filter { eventDate.insert($0).inserted }
+                    
+                    print("uniqueEventDateArray:\(self.uniqueAllEventDateArray)")
                     
                 }
-                
-                if (querySnapshot?.documents.count)! > 70 {
-                    
-                    self.followComedianIdArray1 = Array(self.followComedianIdArray[70..<80])
-                    
-                }
-                
-                if (querySnapshot?.documents.count)! > 80 {
-                    
-                    self.followComedianIdArray1 = Array(self.followComedianIdArray[80..<90])
-                    
-                }
-                
-                if (querySnapshot?.documents.count)! > 90 {
-                    
-                    self.followComedianIdArray1 = Array(self.followComedianIdArray[90..<100])
-                    
-                }
-                
                 
             }
+                
         }
     }
-    
+            
+
+                
     //カレンダーのheightにスワイプによる表示切り替えを反映させる
     func calendar(_ calendar: FSCalendar, boundingRectWillChange bounds: CGRect, animated: Bool) {
         print(bounds)
@@ -196,15 +240,44 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         
         getSchedule()
         
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            //ログを取得
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "MyCalendar",
+                "action_type": "tap_date",
+                "tapped_comedian_id": "",
+                "tapped_user_id": "",
+                "tapped_date": self.eventDate,
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+            
+        }
+        
         
     }
     
     func getSchedule() {
         
-        
-        
         self.eventIdArray = []
+        self.eventDateArray = []
         self.uniqueEventIdArray = []
+        self.uniqueEventDateArray = []
         self.eventNameArray = []
         self.eventAreaArray = []
         self.eventOnlineFlagArray = []
@@ -212,218 +285,49 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         self.eventPlaceArray = []
         self.eventCastArray = []
         self.eventUrlArray = []
+        self.eventImageUrlArray = []
+        self.eventReferenceArray = []
+
+        print("getSchedule_followComedianIdArray:\(self.followComedianIdArray)")
         
-        
-        
-        self.db.collection("schedule").whereField("event_date", isEqualTo: self.eventDate).whereField("comedian_id", in: self.followComedianIdArray1).whereField("delete_flag", isEqualTo: "false").getDocuments() { [self] (querySnapshot, err) in
+        for comedianId in self.followComedianIdArray {
             
-            if let err = err {
-                print("Error getting documents: \(err)")
-                return
+            self.db.collection("schedule").whereField("event_date", isEqualTo: self.eventDate).whereField("comedian_id", isEqualTo: comedianId).whereField("delete_flag", isEqualTo: "false").order(by: "create_date", descending: true).getDocuments() { [self] (querySnapshot, err) in
                 
-            } else {
-                
-                for document in querySnapshot!.documents {
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    return
                     
-                    self.eventIdArray.append(document.data()["event_id"] as! String)
-                    print("getschedule_eventIdArray:\(self.eventIdArray)")
+                } else {
                     
-                }
-                
-                if self.followComedianIdArray2 != [] {
-                    
-                    
-                    self.db.collection("schedule").whereField("event_date", isEqualTo: self.eventDate).whereField("comedian_id", in: self.followComedianIdArray2).whereField("delete_flag", isEqualTo: false).getDocuments() { [self] (querySnapshot, err) in
+                    for document in querySnapshot!.documents {
                         
-                        if let err = err {
-                            print("Error getting documents: \(err)")
-                            return
-                            
-                        } else {
-                            for document in querySnapshot!.documents {
-                                
-                                self.eventIdArray.append(document.data()["event_id"] as! String)
-                                
-                            }
-                            
-                            
-                        }
-                    }
-                    
-                }
-                
-                if self.followComedianIdArray3 != [] {
-                    
-                    
-                    self.db.collection("schedule").whereField("event_date", isEqualTo: self.eventDate).whereField("comedian_id", in: self.followComedianIdArray3).whereField("delete_flag", isEqualTo: false).getDocuments() { [self] (querySnapshot, err) in
+                        self.eventIdArray.append(document.data()["event_id"] as! String)
+                        self.eventDateArray.append(document.data()["event_date"] as! String)
+
                         
-                        if let err = err {
-                            print("Error getting documents: \(err)")
-                            return
-                            
-                        } else {
-                            for document in querySnapshot!.documents {
-                                
-                                self.eventIdArray.append(document.data()["event_id"] as! String)
-                                
-                            }
-                        }
                     }
-                    
                 }
-                
-                if self.followComedianIdArray4 != [] {
-                    
-                    
-                    self.db.collection("schedule").whereField("event_date", isEqualTo: self.eventDate).whereField("comedian_id", in: self.followComedianIdArray4).whereField("delete_flag", isEqualTo: false).getDocuments() { [self] (querySnapshot, err) in
-                        
-                        if let err = err {
-                            print("Error getting documents: \(err)")
-                            return
-                            
-                        } else {
-                            for document in querySnapshot!.documents {
-                                
-                                self.eventIdArray.append(document.data()["event_id"] as! String)
-                                
-                            }
-                        }
-                    }
-                    
-                }
-                
-                if self.followComedianIdArray5 != [] {
-                    
-                    
-                    self.db.collection("schedule").whereField("event_date", isEqualTo: self.eventDate).whereField("comedian_id", in: self.followComedianIdArray5).whereField("delete_flag", isEqualTo: false).getDocuments() { [self] (querySnapshot, err) in
-                        
-                        if let err = err {
-                            print("Error getting documents: \(err)")
-                            return
-                            
-                        } else {
-                            for document in querySnapshot!.documents {
-                                
-                                self.eventIdArray.append(document.data()["event_id"] as! String)
-                                
-                            }
-                        }
-                    }
-                    
-                }
-                
-                if self.followComedianIdArray6 != [] {
-                    
-                    
-                    self.db.collection("schedule").whereField("event_date", isEqualTo: self.eventDate).whereField("comedian_id", in: self.followComedianIdArray6).whereField("delete_flag", isEqualTo: false).getDocuments() { [self] (querySnapshot, err) in
-                        
-                        if let err = err {
-                            print("Error getting documents: \(err)")
-                            return
-                            
-                        } else {
-                            for document in querySnapshot!.documents {
-                                
-                                self.eventIdArray.append(document.data()["event_id"] as! String)
-                                
-                            }
-                        }
-                    }
-                    
-                }
-                
-                if self.followComedianIdArray7 != [] {
-                    
-                    
-                    self.db.collection("schedule").whereField("event_date", isEqualTo: self.eventDate).whereField("comedian_id", in: self.followComedianIdArray7).whereField("delete_flag", isEqualTo: false).getDocuments() { [self] (querySnapshot, err) in
-                        
-                        if let err = err {
-                            print("Error getting documents: \(err)")
-                            return
-                            
-                        } else {
-                            for document in querySnapshot!.documents {
-                                
-                                self.eventIdArray.append(document.data()["event_id"] as! String)
-                                
-                            }
-                        }
-                    }
-                    
-                }
-                
-                if self.followComedianIdArray8 != [] {
-                    
-                    
-                    self.db.collection("schedule").whereField("event_date", isEqualTo: self.eventDate).whereField("comedian_id", in: self.followComedianIdArray8).whereField("delete_flag", isEqualTo: false).getDocuments() { [self] (querySnapshot, err) in
-                        
-                        if let err = err {
-                            print("Error getting documents: \(err)")
-                            return
-                            
-                        } else {
-                            for document in querySnapshot!.documents {
-                                
-                                self.eventIdArray.append(document.data()["event_id"] as! String)
-                                
-                            }
-                        }
-                    }
-                    
-                }
-                
-                if self.followComedianIdArray9 != [] {
-                    
-                    
-                    self.db.collection("schedule").whereField("event_date", isEqualTo: self.eventDate).whereField("comedian_id", in: self.followComedianIdArray9).whereField("delete_flag", isEqualTo: false).getDocuments() { [self] (querySnapshot, err) in
-                        
-                        if let err = err {
-                            print("Error getting documents: \(err)")
-                            return
-                            
-                        } else {
-                            for document in querySnapshot!.documents {
-                                
-                                self.eventIdArray.append(document.data()["event_id"] as! String)
-                                
-                            }
-                        }
-                    }
-                    
-                }
-                
-                if self.followComedianIdArray10 != [] {
-                    
-                    
-                    self.db.collection("schedule").whereField("event_date", isEqualTo: self.eventDate).whereField("comedian_id", in: self.followComedianIdArray10).whereField("delete_flag", isEqualTo: false).getDocuments() { [self] (querySnapshot, err) in
-                        
-                        if let err = err {
-                            print("Error getting documents: \(err)")
-                            return
-                            
-                        } else {
-                            for document in querySnapshot!.documents {
-                                
-                                self.eventIdArray.append(document.data()["event_id"] as! String)
-                                
-                            }
-                        }
-                    }
-                    
-                }
-                
-                //eventIdArrayをユニークにする
-                var eventId = Set<String>()
-                self.uniqueEventIdArray = self.eventIdArray.filter { eventId.insert($0).inserted }
-                print("self.uniqueEventIdArray:\(self.uniqueEventIdArray)")
-                
-                
-                //ユニークのeventIdのevent_name、event_start、event_placeを取得
-                getEvent()
-                
-                
-                
             }
+        }
+        
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            
+            print("getschedule_eventIdArray:\(self.eventIdArray)")
+            //eventIdArrayをユニークにする
+            var eventId = Set<String>()
+            self.uniqueEventIdArray = self.eventIdArray.filter { eventId.insert($0).inserted }
+            
+            var eventDate = Set<String>()
+            self.uniqueEventDateArray = self.eventDateArray.filter { eventDate.insert($0).inserted }
+            
+            print("getschedule_eventIdArray:\(self.eventIdArray)")
+
+            //ユニークのeventIdのevent_name、event_start、event_placeを取得
+            print("getEvent")
+            self.getEvent()
+
             
         }
     }
@@ -448,11 +352,21 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                         self.eventOnlineFlagArray.append(document.data()["online_flag"] as! String)
                         self.eventStartArray.append(document.data()["event_start"] as! String)
                         self.eventPlaceArray.append(document.data()["event_place"] as! String)
+                        self.eventCastArray.append(document.data()["event_cast"] as! String)
                         self.eventUrlArray.append(document.data()["url"] as! String)
-                        
+                        self.eventImageUrlArray.append(document.data()["image_url"] as! String)
+                        self.eventReferenceArray.append(document.data()["event_reference"] as! String)
+
+
                     }
                     
-                    print("self.eventNameArray:\(self.eventNameArray)")
+                    print("tapped_eventNameArray:\(self.eventNameArray)")
+                    print("tapped_eventAreaArray:\(self.eventAreaArray)")
+                    print("tapped_eventOnlineFlagArray:\(self.eventOnlineFlagArray)")
+                    print("tapped_eventStartArray:\(self.eventStartArray)")
+                    print("tapped_eventPlaceArray:\(self.eventPlaceArray)")
+                    print("tapped_eventCastArray:\(self.eventCastArray)")
+                    print("tapped_eventUrlArray:\(self.eventUrlArray)")
                     
                 }
             }
@@ -465,7 +379,15 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     
     
     
-    
+    func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
+        
+        df.dateFormat = "yyyy/MM/dd"
+        if uniqueAllEventDateArray.first(where: { $0 == df.string(from: date) }) != nil {
+                return 1
+        }
+        return 0
+    }
+
     
     
     
@@ -486,13 +408,61 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCalendarCell", for: indexPath) as! MyCalendarTableViewCell
+
+        
+        print("imageTitle:\(self.uniqueEventIdArray[indexPath.row])")
+        
+
+        cell.onlineFlagLabel.layer.cornerRadius = 10
+        cell.onlineFlagLabel.clipsToBounds = true
+        
+        cell.areaLabel.layer.cornerRadius = 10
+        cell.areaLabel.clipsToBounds = true
+
+
         
         if self.eventNameArray == [] {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 
-                cell.eventNameLabel.text = self.eventNameArray[indexPath.row]
+                
+                cell.eventNameLabel.text = "　" + self.eventNameArray[indexPath.row]
                 cell.areaLabel.text = self.eventAreaArray[indexPath.row]
+                
+                
+                let image :UIImage = UIImage(url: "\(self.eventImageUrlArray[indexPath.row])")
+                cell.eventImageView.image = image
+                
+//                let imageRef = self.storage.child("event_image/\(self.uniqueEventIdArray[indexPath.row]).jpg")
+//                cell.eventImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+
+                if self.eventAreaArray[indexPath.row] == "東京" {
+                    
+                    cell.areaLabel.backgroundColor = #colorLiteral(red: 0.1848421342, green: 0.2122759584, blue: 0.7568627596, alpha: 1)
+                    cell.areaLabel.tintColor = UIColor.white
+//                    cell.areaLabel.layer.borderWidth = 2.0
+//                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
+                    
+                } else if self.eventAreaArray[indexPath.row] == "大阪" {
+                    
+                    cell.areaLabel.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+                    cell.areaLabel.tintColor = UIColor.white
+//                    cell.areaLabel.layer.borderWidth = 2.0
+//                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
+                    
+                } else {
+                    
+                    cell.areaLabel.backgroundColor = #colorLiteral(red: 0.5058823824, green: 0.3372549117, blue: 0.06666667014, alpha: 1)
+                    cell.areaLabel.tintColor = UIColor.white
+                    
+                    
+                }
+                
+                cell.onlineFlagLabel.backgroundColor = #colorLiteral(red: 0.9294985734, green: 0.9294985734, blue: 0.9294985734, alpha: 1)
+                cell.onlineFlagLabel.textColor = UIColor.black
+                cell.onlineFlagLabel.layer.borderWidth = 1.0
+                cell.onlineFlagLabel.layer.borderColor = UIColor.black.cgColor
+
                 
                 if self.eventOnlineFlagArray[indexPath.row] == "true" {
                     
@@ -506,40 +476,64 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                     
                 }
                 
-                cell.eventStartLabel.text = self.eventStartArray[indexPath.row]
-                cell.placeLabel.text = self.eventPlaceArray[indexPath.row]
-                
-                
-                self.db.collection("schedule").whereField("event_id", isEqualTo: self.uniqueEventIdArray[indexPath.row]).whereField("delete_flag", isEqualTo: "false").getDocuments() { [self] (querySnapshot, err) in
+                if self.eventOnlineFlagArray[indexPath.row] == "" {
                     
-                    if let err = err {
-                        print("Error getting documents: \(err)")
-                        return
-                        
-                    } else {
-                        for document in querySnapshot!.documents {
-                            
-                            self.eventCastArray.append(document.data()["comedian_name"] as! String)
-                            
-                        }
-                        
-                        cell.castLabel.text = self.eventCastArray.joined(separator: "、")
-                        
-                        print("cell.castLabel.text:\(cell.castLabel.text)")
-                        
-                    }
-                    
+                    cell.onlineFlagLabel.isHidden = true
                 }
                 
+                cell.eventStartLabel.text = "開演：" + self.eventStartArray[indexPath.row]
+                cell.placeLabel.text = "会場：" + self.eventPlaceArray[indexPath.row]
+                
+                cell.castLabel.text = self.eventCastArray[indexPath.row]
+                
+                cell.eventReferenceLabel.text = self.eventReferenceArray[indexPath.row]
+
+                                
             }
             
             return cell
             
         } else {
             
-            
-            cell.eventNameLabel.text = self.eventNameArray[indexPath.row]
+
+            cell.eventNameLabel.text = "　" + self.eventNameArray[indexPath.row]
             cell.areaLabel.text = self.eventAreaArray[indexPath.row]
+            
+            let image :UIImage = UIImage(url: "\(self.eventImageUrlArray[indexPath.row])")
+            cell.eventImageView.image = image
+
+            
+//            let imageRef = self.storage.child("event_image/\(self.uniqueEventIdArray[indexPath.row]).jpg")
+//            cell.eventImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+
+            
+            if self.eventAreaArray[indexPath.row] == "東京" {
+                
+                cell.areaLabel.backgroundColor = #colorLiteral(red: 0.1848421342, green: 0.2122759584, blue: 0.7568627596, alpha: 1)
+                cell.areaLabel.tintColor = UIColor.white
+//                    cell.areaLabel.layer.borderWidth = 2.0
+//                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
+                
+            } else if self.eventAreaArray[indexPath.row] == "大阪" {
+                
+                cell.areaLabel.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+                cell.areaLabel.tintColor = UIColor.white
+//                    cell.areaLabel.layer.borderWidth = 2.0
+//                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
+                
+            } else {
+                
+                cell.areaLabel.backgroundColor = #colorLiteral(red: 0.5058823824, green: 0.3372549117, blue: 0.06666667014, alpha: 1)
+                cell.areaLabel.tintColor = UIColor.white
+                
+                
+            }
+            
+            cell.onlineFlagLabel.backgroundColor = #colorLiteral(red: 0.9294985734, green: 0.9294985734, blue: 0.9294985734, alpha: 1)
+            cell.onlineFlagLabel.textColor = UIColor.black
+            cell.onlineFlagLabel.layer.borderWidth = 1.0
+            cell.onlineFlagLabel.layer.borderColor = UIColor.black.cgColor
+
             
             if self.eventOnlineFlagArray[indexPath.row] == "true" {
                 
@@ -550,32 +544,23 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
             if self.eventOnlineFlagArray[indexPath.row] == "false" {
                 
                 cell.onlineFlagLabel.text = "配信なし"
-                
+
             }
             
-            cell.eventStartLabel.text = self.eventStartArray[indexPath.row]
-            cell.placeLabel.text = self.eventPlaceArray[indexPath.row]
-            
-            
-            self.db.collection("schedule").whereField("event_id", isEqualTo: uniqueEventIdArray[indexPath.row]).whereField("delete_flag", isEqualTo: "false").getDocuments() { [self] (querySnapshot, err) in
+            if self.eventOnlineFlagArray[indexPath.row] == "" {
                 
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                    return
-                    
-                } else {
-                    for document in querySnapshot!.documents {
-                        
-                        self.eventCastArray.append(document.data()["comedian_name"] as! String)
-                        
-                    }
-                    
-                    cell.castLabel.text = self.eventCastArray.joined(separator: "、")
-                    
-                    print("cell.castLabel.text:\(cell.castLabel.text)")
-                    
-                }
+                cell.onlineFlagLabel.isHidden = true
             }
+
+            
+            
+            cell.eventStartLabel.text = "開演：" + self.eventStartArray[indexPath.row]
+            cell.placeLabel.text = "会場：" + self.eventPlaceArray[indexPath.row]
+            
+            cell.castLabel.text = self.eventCastArray[indexPath.row]
+            
+            cell.eventReferenceLabel.text = self.eventReferenceArray[indexPath.row]
+
             
             return cell
             
@@ -585,21 +570,65 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        
+        self.tableView.deselectRow(at: indexPath, animated: true)
+
         let urlString = self.eventUrlArray[indexPath.row]
         let url = URL(string: "\(urlString)")
         
         
         let wkVC = storyboard?.instantiateViewController(withIdentifier: "WebView") as! WKWebViewController
-
+        
         wkVC.url = url
         
         self.navigationController?.pushViewController(wkVC, animated: true)
-
         
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+            
+            //pvログを取得
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "MyCalendar",
+                "action_type": "tap_event",
+                "tapped_comedian_id": "",
+                "tapped_user_id": "",
+                "tapped_date": "",
+                "tapped_event_id": self.uniqueEventIdArray[indexPath.row],
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+            
+        }
+     
         
     }
     
     
     
+}
+
+extension UIImage {
+    public convenience init(url: String) {
+        let url = URL(string: url)
+        do {
+            let data = try Data(contentsOf: url!)
+            self.init(data: data)!
+            return
+        } catch let err {
+            print("Error : \(err.localizedDescription)")
+        }
+        self.init()
+    }
 }

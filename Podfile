@@ -1,5 +1,8 @@
 # Uncomment the next line to define a global platform for your project
-platform :ios, '15.2'
+platform :ios, '16.1.1'
+
+install! 'cocoapods',
+            :warn_for_unused_master_specs_repo => false
 
 target 'owaraimemo' do
   # Comment the next line if you don't want to use dynamic frameworks
@@ -24,8 +27,6 @@ target 'owaraimemo' do
   pod 'FirebaseStorageUI'
   pod 'MXParallaxHeader'
   pod 'FSCalendar'
-
-
 
 
 
