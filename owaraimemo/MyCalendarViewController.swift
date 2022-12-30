@@ -191,8 +191,6 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                                 
                                 self.allEventDateArray.append(document.data()["event_date"] as! String)
 
-                                print("load_self.allEventDateArray:\(self.allEventDateArray)")
-
                                 
                             }
                         }
@@ -289,10 +287,12 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         self.eventReferenceArray = []
 
         print("getSchedule_followComedianIdArray:\(self.followComedianIdArray)")
+        print("self.eventDate:\(self.eventDate)")
+        
         
         for comedianId in self.followComedianIdArray {
             
-            self.db.collection("schedule").whereField("event_date", isEqualTo: self.eventDate).whereField("comedian_id", isEqualTo: comedianId).whereField("delete_flag", isEqualTo: "false").order(by: "create_date", descending: true).getDocuments() { [self] (querySnapshot, err) in
+            self.db.collection("schedule").whereField("event_date_for_array", isEqualTo: self.eventDate).whereField("comedian_id", isEqualTo: comedianId).whereField("delete_flag", isEqualTo: "false").order(by: "create_date", descending: true).getDocuments() { [self] (querySnapshot, err) in
                 
                 if let err = err {
                     print("Error getting documents: \(err)")
