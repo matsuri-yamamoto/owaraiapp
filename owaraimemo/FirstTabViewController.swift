@@ -169,7 +169,7 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
         self.comedianScoreArray = []
         
 
-        self.db.collection("ranking_info").getDocuments() { (querySnapshot, err) in
+        self.db.collection("info").whereField(FieldPath.documentID(), isEqualTo: "ranking_latest_update").getDocuments() { (querySnapshot, err) in
             
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -178,7 +178,7 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
             } else {
                 for document in querySnapshot!.documents {
                     
-                    let updateInfo  = document.get("latest_update_info") as! String
+                    let updateInfo  = document.get("text") as! String
                     print("updateInfo:\(updateInfo)")
                     self.updateInfoLabel.text = updateInfo
 

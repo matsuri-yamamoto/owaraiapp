@@ -17,6 +17,8 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     @IBOutlet weak var calendar: FSCalendar!
     @IBOutlet weak var calendarHeight: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var updateInfoLabel: UILabel!
+    
     
     let df = DateFormatter()
 
@@ -102,15 +104,33 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         
         //フォロー中の芸人さんとそのイベントのArrayを取得
         self.getFollowComedian()
-
-
         
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
+        
         
         //フォロー中の芸人さんとそのイベントのArrayを取得
         self.getFollowComedian()
+        
+        //更新日を表示
+        self.db.collection("info").whereField(FieldPath.documentID(), isEqualTo: "event_latest_date").getDocuments() { (querySnapshot, err) in
+            
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+                
+            } else {
+                for document in querySnapshot!.documents {
+                    
+                    let updateInfo  = document.get("text") as! String
+                    print("updateInfo:\(updateInfo)")
+                    self.updateInfoLabel.text = updateInfo
+
+                }
+            }
+        }
+
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
             && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
@@ -216,7 +236,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                 }
                 
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     
                     //aleventDateArrayをユニークにする
                     var eventDate = Set<String>()
@@ -385,6 +405,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
             
         }
         
+        self.indicator.stopAnimating()
         self.tableView.reloadData()
         
     }
@@ -501,7 +522,6 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                                 
             }
             
-            self.indicator.stopAnimating()
             return cell
             
         } else {
@@ -572,7 +592,6 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
             
             cell.eventReferenceLabel.text = self.eventReferenceArray[indexPath.row]
 
-            self.indicator.stopAnimating()
             return cell
             
         }

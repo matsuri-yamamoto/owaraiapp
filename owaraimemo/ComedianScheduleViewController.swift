@@ -49,7 +49,6 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
         // インジケーターを View に追加
         view.addSubview(indicator)
         
-        self.indicator.startAnimating()
 
         
         self.tableView.dataSource = self
@@ -68,6 +67,8 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
     
     func getSchedule() {
         
+        self.indicator.startAnimating()
+
         
         self.eventIdArray = []
         self.eventDateArray = []
@@ -155,7 +156,6 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
         }
         
         self.tableView.reloadData()
-        self.indicator.stopAnimating()
 
         
     }
@@ -262,6 +262,7 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
                                 
             }
             
+            self.indicator.stopAnimating()
             return cell
             
         } else {
@@ -330,6 +331,7 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
             
             cell.eventReferenceLabel.text = self.eventReferenceArray[indexPath.row]
 
+            self.indicator.stopAnimating()
             return cell
             
         }

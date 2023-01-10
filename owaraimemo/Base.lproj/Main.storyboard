@@ -109,9 +109,26 @@
                                             <action selector="tappedFollowingButton:" destination="keI-lg-nSB" eventType="touchUpInside" id="yWe-qe-F1p"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DoB-Yc-2xj">
+                                        <rect key="frame" x="217" y="40" width="120" height="16"/>
+                                        <color key="backgroundColor" red="0.1268742108" green="0.1268742108" blue="0.1268742108" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="16" id="AbT-7Q-i5X"/>
+                                            <constraint firstAttribute="width" constant="120" id="CqE-tP-2zn"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                        <color key="tintColor" red="0.1268742108" green="0.1268742108" blue="0.1268742108" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="フォロー中芸人さん"/>
+                                        <connections>
+                                            <action selector="tappedFollowingComedianButton:" destination="keI-lg-nSB" eventType="touchUpInside" id="qKB-zS-RD1"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
+                                    <constraint firstItem="DoB-Yc-2xj" firstAttribute="top" secondItem="La2-Bv-p1G" secondAttribute="top" constant="40" id="5An-91-yxS"/>
+                                    <constraint firstItem="DoB-Yc-2xj" firstAttribute="leading" secondItem="4lb-bZ-YsK" secondAttribute="trailing" constant="10" id="6ck-UR-eR8"/>
                                     <constraint firstItem="4lb-bZ-YsK" firstAttribute="leading" secondItem="La2-Bv-p1G" secondAttribute="leading" constant="125" id="PN8-3b-POH"/>
                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="WwN-1P-6bC" secondAttribute="trailing" constant="20" symbolic="YES" id="THd-49-ZhQ"/>
                                     <constraint firstItem="rTs-yo-KGt" firstAttribute="leading" secondItem="La2-Bv-p1G" secondAttribute="leading" constant="29" id="X7Q-Ve-4YV"/>
@@ -137,6 +154,7 @@
                     <connections>
                         <outlet property="followedButton" destination="4lb-bZ-YsK" id="Uwy-w7-sxX"/>
                         <outlet property="followingButton" destination="rTs-yo-KGt" id="pOP-aW-9e4"/>
+                        <outlet property="followingComedianButton" destination="DoB-Yc-2xj" id="BJS-W5-Ryq"/>
                         <outlet property="profileView" destination="La2-Bv-p1G" id="JaM-pX-tbD"/>
                         <outlet property="userDisplayIdLabel" destination="WwN-1P-6bC" id="2OL-de-Pj6"/>
                         <outlet property="userNameLabel" destination="trq-y8-8pr" id="9gj-Ri-E45"/>
@@ -607,7 +625,7 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="　フォロー中芸人さんの出演情報" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IXq-M0-J40">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IXq-M0-J40">
                                 <rect key="frame" x="0.0" y="314" width="375" height="25"/>
                                 <color key="backgroundColor" red="0.85273484229999996" green="0.85273484229999996" blue="0.85273484229999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -637,6 +655,7 @@
                         <outlet property="calendar" destination="pxB-1F-fJP" id="Nj2-H0-xBu"/>
                         <outlet property="calendarHeight" destination="bCq-Ep-fhu" id="AF7-TH-ev1"/>
                         <outlet property="tableView" destination="GcA-qF-h5C" id="8dS-Cs-IAb"/>
+                        <outlet property="updateInfoLabel" destination="IXq-M0-J40" id="ew2-H6-whb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3cu-AD-THg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
