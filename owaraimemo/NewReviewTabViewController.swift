@@ -7,6 +7,7 @@ class NewReviewTabViewController: TabmanViewController {
 
     private var viewControllers = [UIViewController(), UIViewController()]
     
+    var newReviewTabHeight = CGFloat()
 
 
     override func viewDidLoad() {
@@ -43,6 +44,8 @@ class NewReviewTabViewController: TabmanViewController {
         addBar(bar, dataSource: self, at: .top)
         
 
+        self.newReviewTabHeight = bar.frame.height
+        print("newreview_tabsize:\(bar.frame.height)")
         
     }
         

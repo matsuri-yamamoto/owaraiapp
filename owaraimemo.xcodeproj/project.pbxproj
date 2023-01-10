@@ -28,6 +28,7 @@
 		6313CB9E28F0176300E71BFB /* ProfileLikeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6313CB9D28F0176300E71BFB /* ProfileLikeListViewController.swift */; };
 		631590EC289B95E8001FFDA0 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 631590EB289B95E8001FFDA0 /* AdSupport.framework */; };
 		63162843286F3DE8007679DC /* FirstTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63162842286F3DE8007679DC /* FirstTabViewController.swift */; };
+		63208AB0296CFE1B00030E88 /* ComedianScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63208AAF296CFE1B00030E88 /* ComedianScheduleViewController.swift */; };
 		632F88D127F3054B00350624 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D027F3054B00350624 /* SettingViewController.swift */; };
 		632F88D327FA8A7900350624 /* ComedianData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D227FA8A7900350624 /* ComedianData.swift */; };
 		632F88D627FABF9500350624 /* ComedianTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F88D427FABF9500350624 /* ComedianTableViewCell.swift */; };
@@ -105,6 +106,7 @@
 		6313CB9D28F0176300E71BFB /* ProfileLikeListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLikeListViewController.swift; sourceTree = "<group>"; };
 		631590EB289B95E8001FFDA0 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		63162842286F3DE8007679DC /* FirstTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstTabViewController.swift; sourceTree = "<group>"; };
+		63208AAF296CFE1B00030E88 /* ComedianScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianScheduleViewController.swift; sourceTree = "<group>"; };
 		632A473C2868400100FB28EA /* Carthage */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Carthage; sourceTree = "<group>"; };
 		632F88D027F3054B00350624 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		632F88D227FA8A7900350624 /* ComedianData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianData.swift; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 				633FA36E28ECA3AF00A0E77C /* StockCollectionViewCell.xib */,
 				633FA36728EC8B7D00A0E77C /* LikeListViewController.swift */,
 				639ACA2F28483E7D005E7BE3 /* ComedianDetailViewController.swift */,
+				63208AAF296CFE1B00030E88 /* ComedianScheduleViewController.swift */,
 				633FA35B28EA774900A0E77C /* AllReviewViewController.swift */,
 				6313CB9728EFB3AD00E71BFB /* ProfilePageTabViewController.swift */,
 				63E81FA528F0C8D900EA113C /* ProfileMyReviewViewController.swift */,
@@ -443,6 +446,7 @@
 				63E81FA628F0C8D900EA113C /* ProfileMyReviewViewController.swift in Sources */,
 				6313CB9C28F0169A00E71BFB /* ProfileStockViewController.swift in Sources */,
 				632F88D627FABF9500350624 /* ComedianTableViewCell.swift in Sources */,
+				63208AB0296CFE1B00030E88 /* ComedianScheduleViewController.swift in Sources */,
 				633FA35F28EBF33500A0E77C /* MyReviewTableViewCell.swift in Sources */,
 				63FB59962849EA8D00497210 /* TabViewController.swift in Sources */,
 				63134BB428B706BD00B0926D /* PlaceTextView.swift in Sources */,

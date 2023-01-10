@@ -9,6 +9,8 @@ import UIKit
 
 class MyCalendarTableViewCell: UITableViewCell {
     
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var dateLabelWidth: NSLayoutConstraint!
     @IBOutlet weak var eventNameLabel: UILabel!
     @IBOutlet weak var areaLabel: UILabel!
     @IBOutlet weak var onlineFlagLabel: UILabel!

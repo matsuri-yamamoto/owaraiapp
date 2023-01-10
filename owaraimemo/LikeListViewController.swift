@@ -74,6 +74,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidAppear(_ animated: Bool) {
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
@@ -704,6 +705,7 @@ class LikeListViewController: UIViewController, UITableViewDelegate, UITableView
         self.navigationController?.pushViewController(profileVC, animated: true)
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"

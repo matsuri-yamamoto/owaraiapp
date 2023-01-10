@@ -23,6 +23,9 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     let db = Firestore.firestore()
     let currentUser = Auth.auth().currentUser
     
+    // インジゲーターの設定
+    var indicator = UIActivityIndicatorView()
+
     //画像のパス
     let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
 
@@ -88,14 +91,29 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
+        // 表示位置を設定（画面中央）
+        self.indicator.center = view.center
+        // インジケーターのスタイルを指定（白色＆大きいサイズ）
+        self.indicator.style = .large
+        // インジケーターの色を設定（青色）
+        self.indicator.color = UIColor.darkGray
+        // インジケーターを View に追加
+        view.addSubview(indicator)
+        
+        //フォロー中の芸人さんとそのイベントのArrayを取得
+        self.getFollowComedian()
+
+
+        
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         
         //フォロー中の芸人さんとそのイベントのArrayを取得
         self.getFollowComedian()
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
@@ -198,7 +216,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                 }
                 
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     
                     //aleventDateArrayをユニークにする
                     var eventDate = Set<String>()
@@ -239,6 +257,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         getSchedule()
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
@@ -271,6 +290,8 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     }
     
     func getSchedule() {
+        
+        self.indicator.startAnimating()
         
         self.eventIdArray = []
         self.eventDateArray = []
@@ -359,15 +380,6 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
 
 
                     }
-                    
-                    print("tapped_eventNameArray:\(self.eventNameArray)")
-                    print("tapped_eventAreaArray:\(self.eventAreaArray)")
-                    print("tapped_eventOnlineFlagArray:\(self.eventOnlineFlagArray)")
-                    print("tapped_eventStartArray:\(self.eventStartArray)")
-                    print("tapped_eventPlaceArray:\(self.eventPlaceArray)")
-                    print("tapped_eventCastArray:\(self.eventCastArray)")
-                    print("tapped_eventUrlArray:\(self.eventUrlArray)")
-                    
                 }
             }
             
@@ -400,7 +412,6 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         
-        print("self.uniqueEventIdArray.count:\(self.uniqueEventIdArray.count)")
         
         return self.uniqueEventIdArray.count
     }
@@ -408,11 +419,10 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCalendarCell", for: indexPath) as! MyCalendarTableViewCell
-
         
-        print("imageTitle:\(self.uniqueEventIdArray[indexPath.row])")
+        //scheduleVC用の日付ラベルをの横幅を0にする
+        cell.dateLabelWidth.constant = CGFloat(0)
         
-
         cell.onlineFlagLabel.layer.cornerRadius = 10
         cell.onlineFlagLabel.clipsToBounds = true
         
@@ -491,6 +501,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                                 
             }
             
+            self.indicator.stopAnimating()
             return cell
             
         } else {
@@ -561,7 +572,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
             
             cell.eventReferenceLabel.text = self.eventReferenceArray[indexPath.row]
 
-            
+            self.indicator.stopAnimating()
             return cell
             
         }
@@ -583,6 +594,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         self.navigationController?.pushViewController(wkVC, animated: true)
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"

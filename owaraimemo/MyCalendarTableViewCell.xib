@@ -18,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oGg-Qy-VTK">
-                        <rect key="frame" x="15" y="15" width="290" height="21"/>
+                        <rect key="frame" x="101" y="15" width="204" height="21"/>
                         <color key="backgroundColor" red="0.95941394810000002" green="0.95941394810000002" blue="0.95941394810000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="V5n-JT-3ou"/>
@@ -91,24 +91,37 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pyV-ND-Tkk">
+                        <rect key="frame" x="15" y="15" width="84" height="21"/>
+                        <color key="backgroundColor" red="1" green="0.89211692330000003" blue="0.1129042948" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="84" id="3a1-YC-ms7"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="JWB-Y2-Zmr" firstAttribute="trailing" secondItem="fys-0T-0pC" secondAttribute="trailing" id="1cB-eB-v6N"/>
                     <constraint firstItem="fGl-xh-vWO" firstAttribute="leading" secondItem="Amx-X8-vE2" secondAttribute="leading" id="4in-Jq-nSP"/>
+                    <constraint firstItem="oGg-Qy-VTK" firstAttribute="leading" secondItem="pyV-ND-Tkk" secondAttribute="trailing" constant="2" id="4qW-Je-2Fm"/>
                     <constraint firstItem="TmF-MX-c9k" firstAttribute="leading" secondItem="Amx-X8-vE2" secondAttribute="trailing" constant="8" symbolic="YES" id="6v8-Qb-58v"/>
                     <constraint firstItem="JWB-Y2-Zmr" firstAttribute="top" secondItem="fys-0T-0pC" secondAttribute="bottom" constant="1" id="9wm-5B-fU1"/>
                     <constraint firstItem="oGg-Qy-VTK" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="CpS-d4-tLO"/>
                     <constraint firstItem="fys-0T-0pC" firstAttribute="trailing" secondItem="oGg-Qy-VTK" secondAttribute="trailing" id="E6I-qT-vkB"/>
                     <constraint firstAttribute="bottom" secondItem="fGl-xh-vWO" secondAttribute="bottom" constant="4" id="ETt-xQ-crM"/>
-                    <constraint firstItem="oGg-Qy-VTK" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="Hda-4X-Fql"/>
                     <constraint firstItem="Amx-X8-vE2" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="KDD-SY-YVk"/>
                     <constraint firstItem="JWB-Y2-Zmr" firstAttribute="trailing" secondItem="oGg-Qy-VTK" secondAttribute="trailing" id="MP6-cg-iZS"/>
                     <constraint firstItem="fys-0T-0pC" firstAttribute="top" secondItem="jD4-nN-mO2" secondAttribute="bottom" constant="15" id="OPt-NV-Q5r"/>
                     <constraint firstItem="JWB-Y2-Zmr" firstAttribute="leading" secondItem="TmF-MX-c9k" secondAttribute="leading" id="PMM-bI-BMs"/>
                     <constraint firstItem="fys-0T-0pC" firstAttribute="leading" secondItem="TmF-MX-c9k" secondAttribute="leading" id="ZYe-8R-QIh"/>
+                    <constraint firstItem="pyV-ND-Tkk" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="Zf7-Ln-t5s"/>
+                    <constraint firstItem="oGg-Qy-VTK" firstAttribute="top" secondItem="pyV-ND-Tkk" secondAttribute="top" id="a6v-cC-N8n"/>
                     <constraint firstItem="jD4-nN-mO2" firstAttribute="top" secondItem="TmF-MX-c9k" secondAttribute="bottom" constant="8" symbolic="YES" id="a8V-Vy-u5E"/>
                     <constraint firstItem="TmF-MX-c9k" firstAttribute="top" secondItem="Amx-X8-vE2" secondAttribute="top" id="bkX-fa-8n2"/>
                     <constraint firstItem="jD4-nN-mO2" firstAttribute="trailing" secondItem="oGg-Qy-VTK" secondAttribute="trailing" id="dKx-Ji-x2v"/>
+                    <constraint firstItem="oGg-Qy-VTK" firstAttribute="bottom" secondItem="pyV-ND-Tkk" secondAttribute="bottom" id="fRq-Of-YD9"/>
                     <constraint firstAttribute="trailing" secondItem="oGg-Qy-VTK" secondAttribute="trailing" constant="15" id="kAh-gS-nA3"/>
                     <constraint firstItem="jD4-nN-mO2" firstAttribute="leading" secondItem="TmF-MX-c9k" secondAttribute="leading" id="njR-ME-GNR"/>
                     <constraint firstItem="Amx-X8-vE2" firstAttribute="top" secondItem="oGg-Qy-VTK" secondAttribute="bottom" constant="10" id="r5Z-AN-pIt"/>
@@ -126,6 +139,8 @@
             <connections>
                 <outlet property="areaLabel" destination="TmF-MX-c9k" id="py6-X0-RjW"/>
                 <outlet property="castLabel" destination="jD4-nN-mO2" id="8yk-cP-0nC"/>
+                <outlet property="dateLabel" destination="pyV-ND-Tkk" id="8uC-4G-yA3"/>
+                <outlet property="dateLabelWidth" destination="3a1-YC-ms7" id="3hg-8p-AOv"/>
                 <outlet property="eventImageView" destination="Amx-X8-vE2" id="iJw-fw-dKF"/>
                 <outlet property="eventNameLabel" destination="oGg-Qy-VTK" id="45C-Ku-3DZ"/>
                 <outlet property="eventReferenceLabel" destination="fGl-xh-vWO" id="gux-YE-4ki"/>

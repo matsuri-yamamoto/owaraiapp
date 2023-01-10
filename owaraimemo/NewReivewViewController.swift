@@ -19,15 +19,23 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     var actionDate :String = ""
     
     @IBOutlet weak var popupButton: UIButton!
-    @IBOutlet weak var popupButtonOption: UIButton!
+    @IBOutlet weak var popupOptionButton: UIButton!
     @IBOutlet weak var popupCloseButton: UIButton!
-    @IBOutlet weak var promotionButton: UIButton!
     
+    @IBOutlet weak var bannerButton: UIButton!
+    @IBOutlet weak var bannerButtonHeight: NSLayoutConstraint!
+    @IBOutlet weak var bannerOptionButton: UIButton!
+
+    var popupImageUrl :String = ""
+    var popupMainUrl :String = ""
+    var popupOptionalImageUrl :String = ""
+    var popupOptionalUrl :String = ""
+    var popupCloseImageUrl :String = ""
+
     
-    var promoImageUrl :String = ""
+    var bannerImageUrl :String = ""
     var promoMainUrl :String = ""
     var promoOptionalUrl :String = ""
-
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -90,7 +98,6 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         self.tableView.refreshControl?.addTarget(self, action: #selector(dataRefresh), for: .valueChanged)
         self.tableView.refreshControl?.addTarget(self, action: #selector(createRefreshLog), for: .valueChanged)
         
-        self.setPromotion()
         
         
     }
@@ -111,90 +118,9 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         
         print("actionDate:\(self.actionDate)")
         
+        setPromotion()
+        self.pageViewLog()
 
-        
-        if self.currentUser?.uid == nil {
-            
-            let popupImage = UIImage(named: "いぬ様_単独ライブ_フライヤー.jpg")
-            self.popupButton.imageView?.contentMode = .scaleAspectFit
-            self.popupButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
-            self.popupButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
-            
-            self.popupButton.setImage(popupImage, for: .normal)
-            
-            let popupOptionImage = UIImage(named: "いぬ様単独_ポップアップ用ボタン.png")
-            self.popupButtonOption.imageView?.contentMode = .scaleAspectFill
-            self.popupButtonOption.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
-            self.popupButtonOption.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
-            
-            self.popupButtonOption.setImage(popupOptionImage, for: .normal)
-            
-            let closeImage = UIImage(named: "いぬ様単独_ポップアップ用クローズボタン2.png")
-            self.popupCloseButton.imageView?.contentMode = .scaleAspectFit
-            self.popupCloseButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
-            self.popupCloseButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
-            
-            self.popupCloseButton.setImage(closeImage, for: .normal)
-
-            self.pageViewLog()
-            
-        } else {
-            
-            
-            self.db.collection("logs").whereField("action_user_id", isEqualTo: self.currentUser?.uid).whereField("delete_flag", isEqualTo: false).whereField("action_date", isEqualTo: self.actionDate).getDocuments() { [self] (querySnapshot, err) in
-                
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                    return
-                    
-                } else {
-                    
-                    if (querySnapshot?.documents.count)! > 0 {
-                        
-                        self.popupButton.isHidden = true
-                        self.popupButton.isEnabled = true
-                        
-                        self.popupButtonOption.isHidden = true
-                        self.popupButtonOption.isEnabled = true
-                        
-                        self.popupCloseButton.isHidden = true
-                        self.popupCloseButton.isEnabled = true
-
-
-                        
-                    } else {
-                        
-                        let popupImage = UIImage(named: "いぬ様_単独ライブ_フライヤー.jpg")
-                        self.popupButton.imageView?.contentMode = .scaleAspectFit
-                        self.popupButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
-                        self.popupButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
-                        
-                        self.popupButton.setImage(popupImage, for: .normal)
-                        
-                        let popupOptionImage = UIImage(named: "いぬ様単独_ポップアップ用ボタン.png")
-                        self.popupButtonOption.imageView?.contentMode = .scaleAspectFill
-                        self.popupButtonOption.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
-                        self.popupButtonOption.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
-                        
-                        self.popupButtonOption.setImage(popupOptionImage, for: .normal)
-
-                        let closeImage = UIImage(named: "いぬ様単独_ポップアップ用クローズボタン2.png")
-                        self.popupCloseButton.imageView?.contentMode = .scaleAspectFit
-                        self.popupCloseButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
-                        self.popupCloseButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
-                        
-                        self.popupCloseButton.setImage(closeImage, for: .normal)
-                        
-                    }
-                    
-                    self.pageViewLog()
-                    
-                }
-            }
-            
-            
-        }
-            
         
     }
     
@@ -202,6 +128,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     func pageViewLog() {
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
@@ -235,14 +162,8 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     
     
     func setPromotion() {
-        
-        let bannerImage = UIImage(named: "いぬ様単独_バナー (1).png")
-        self.promotionButton.setImage(bannerImage, for: .normal)
-        
-        self.promotionButton.imageView?.contentMode = .scaleAspectFit
-        self.promotionButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
-        self.promotionButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
-        
+
+        //掲載期間中の広告有無を見に行く
         self.db.collection("promotion").whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() { [self] (querySnapshot, err) in
             
             if let err = err {
@@ -251,56 +172,150 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
                 
             } else {
                 
-//                self.promotionButton.translatesAutoresizingMaskIntoConstraints = false
-//                self.promotionButton.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
-//                self.promotionButton.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-//                self.promotionButton.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-//                self.promotionButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+                //掲載中の広告がない場合
+                if (querySnapshot?.documents.count)! == 0 {
+                    
+                    //ポップアップ（メイン・オプション・クローズボタン）を非表示にする
+                    self.popupButton.isHidden = true
+                    self.popupOptionButton.isHidden = true
+                    self.popupCloseButton.isHidden = true
 
-                
-                
-                if querySnapshot?.documents.count == 0 {
-                    
-                    
-//                    self.promotionButton.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 0)
-//                    self.promotionButton.isEnabled = true
-//                    self.view.addSubview(self.promotionButton)
-                    
-//                    self.tableView.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: view.frame.size.height)
-//                    self.view.addSubview(self.tableView)
-//
-                    
+                    //バナーの高さを0に指定する
+                    self.bannerButtonHeight.constant = CGFloat(0)
+                    //ボタンを無効化する
+                    self.bannerButton.isEnabled = true
+                    self.bannerOptionButton.isEnabled = true
                     
                 }
                 
+                //掲載中の広告がある場合
                 if (querySnapshot?.documents.count)! > 0 {
-                    
-//                    let promoButtonHeight = self.view.frame.size.height/4
-                    
-//                    self.promotionButton.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: promoButtonHeight)
-//
-//                    print("self.view.frame.size.width:\(self.view.frame.size.width)")
-//                    print("self.view.frame.size.height/4:\(self.view.frame.size.height/4)")
-//                    self.view.addSubview(self.promotionButton)
-                    
-
-//                    self.tableView.frame = CGRect(x: 0, y: 90, width: self.view.frame.size.width, height: view.frame.size.height - 90)
-//                    self.view.addSubview(self.tableView)
-                    
+                
+                    //ポップアップ・バナーにセットするデータを呼んで画像をセットする
                     for document in querySnapshot!.documents {
-                        
-//                        self.promoImageUrl = document.data()["timeline_image_url"] as! String
-                        
-//                        self.promoImageView.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: promoButtonHeight)
-//                        self.promoImageView.image = image
 
+                        //ポップアップ画像（一旦データを呼ぶだけでセットはここではしない）
+                        self.popupImageUrl = document.data()["startup_image_url"] as! String
+                        self.popupOptionalImageUrl = document.data()["startup_optional_image_url"] as! String
+                        self.popupCloseImageUrl = document.data()["startup_close_image_url"] as! String
 
+                        
+                        //バナー画像（一旦データを呼ぶだけでセットはここではしない）
+                        self.bannerImageUrl = document.data()["timeline_image_url"] as! String
+
+                        //遷移先URL（ポップアップ・バナー共通）
                         self.promoMainUrl = document.data()["main_tapped_url"] as! String
                         self.promoOptionalUrl = document.data()["optional_tapped_url"] as! String
+        
+                        
+                    }
 
+                    
+                    //未ログインユーザーの場合、常にポップアップを表示させる
+                    if self.currentUser?.uid == nil {
+                        
+                        
+                        //メイン
+                        self.popupButton.imageView?.contentMode = .scaleAspectFill
+                        self.popupButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+                        self.popupButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+                        self.popupButton.setImage(UIImage(url: self.popupImageUrl), for: .normal)
+
+                        //オプション
+                        self.popupOptionButton.imageView?.contentMode = .scaleAspectFill
+                        self.popupOptionButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+                        self.popupOptionButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+                        self.popupOptionButton.setImage(UIImage(url: self.popupOptionalImageUrl), for: .normal)
+
+
+                        //クローズ
+                        self.popupCloseButton.imageView?.contentMode = .scaleAspectFill
+                        self.popupCloseButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+                        self.popupCloseButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+                        self.popupCloseButton.setImage(UIImage(url: self.popupCloseImageUrl), for: .normal)
+                        
+                        
+                        //バナーの画像をバナーに合わせてサイジングする
+                        self.bannerButton.imageView?.contentMode = .scaleAspectFill
+                        self.bannerButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+                        self.bannerButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+                        //バナーのサイズを指定する
+                        self.bannerButtonHeight.constant = CGFloat(self.view.frame.width*0.2)
+                        
+                        
+
+
+                        
+                    } else {
+                        
+                        //ログイン済みの場合、当日のNewReviewログがない場合のみポップアップを表示させる
+                        self.db.collection("logs").whereField("action_user_id", isEqualTo: self.currentUser?.uid).whereField("delete_flag", isEqualTo: false).whereField("action_date", isEqualTo: self.actionDate).getDocuments() { [self] (querySnapshot, err) in
+                            
+                            if let err = err {
+                                print("Error getting documents: \(err)")
+                                return
+                                
+                            } else {
+                                
+                                if (querySnapshot?.documents.count)! > 0 {
+                                    
+                                    self.popupButton.isHidden = true
+                                    self.popupOptionButton.isHidden = true
+                                    self.popupCloseButton.isHidden = true
+                                    
+                                    //バナーの画像をバナーに合わせてサイジングする
+                                    self.bannerButton.imageView?.contentMode = .scaleAspectFill
+                                    self.bannerButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+                                    self.bannerButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+                                    //バナーのサイズを指定する
+                                    self.bannerButtonHeight.constant = CGFloat(self.view.frame.width*0.2)
+                                    
+                                    //バナーに画像をセットする
+                                    self.bannerButton.setImage(UIImage(url: self.bannerImageUrl), for: .normal)
+
+                                    
+                                } else {
+                                    
+                                    //メイン
+                                    self.popupButton.imageView?.contentMode = .scaleAspectFill
+                                    self.popupButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+                                    self.popupButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+                                    self.popupButton.setImage(UIImage(url: self.popupImageUrl), for: .normal)
+
+                                    //オプション
+                                    self.popupOptionButton.imageView?.contentMode = .scaleAspectFill
+                                    self.popupOptionButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+                                    self.popupOptionButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+                                    self.popupOptionButton.setImage(UIImage(url: self.popupOptionalImageUrl), for: .normal)
+
+
+                                    //クローズ
+                                    self.popupCloseButton.imageView?.contentMode = .scaleAspectFill
+                                    self.popupCloseButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+                                    self.popupCloseButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+                                    self.popupCloseButton.setImage(UIImage(url: self.popupCloseImageUrl), for: .normal)
+                                    
+                                    //バナーの画像をバナーに合わせてサイジングする
+                                    self.bannerButton.imageView?.contentMode = .scaleAspectFill
+                                    self.bannerButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+                                    self.bannerButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+                                    //バナーのサイズを指定する
+                                    self.bannerButtonHeight.constant = CGFloat(self.view.frame.width*0.2)
+
+
+
+
+                                }
+                                
+
+
+                            }
+                        }
+                        
                         
                     }
                     
+
                 }
                 
             }
@@ -595,6 +610,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     @objc func createRefreshLog() {
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
@@ -632,6 +648,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
@@ -656,7 +673,6 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
             ] as [String : Any]
             logRef.setData(logDic)
         }
-        
     }
     
     @IBAction func tappedPopupOption(_ sender: Any) {
@@ -668,6 +684,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
             && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
@@ -699,15 +716,19 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     
     @IBAction func tappedPopupCloseButton(_ sender: Any) {
         
+
         self.popupButton.isHidden = true
         self.popupButton.isEnabled = true
         
-        self.popupButtonOption.isHidden = true
-        self.popupButtonOption.isEnabled = true
+        self.popupOptionButton.isHidden = true
+        self.popupOptionButton.isEnabled = true
         
         self.popupCloseButton.isHidden = true
         self.popupCloseButton.isEnabled = true
         
+        //バナーに画像をセットする（ポップアップよりも後にしたいのでこのタイミング）
+        self.bannerButton.setImage(UIImage(url: self.bannerImageUrl), for: .normal)
+
     }
     
     
@@ -720,6 +741,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
@@ -756,6 +778,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
@@ -1284,6 +1307,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         self.navigationController?.pushViewController(comedianVC, animated: true)
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
@@ -1363,6 +1387,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
@@ -1424,50 +1449,6 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
         
     }
     
-    
-    
-    
-    
-    
-    //    @objc func tapReviewLinkGesture(sender: UILabel, gestureRecognizer: UITapGestureRecognizer) {
-    //
-    //        let tag = sender.tag
-    ////        let tappedCommentLabel = self.reviewCommentArray[tag]
-    //        let tappedLinkLavel = self.reviewLinkArray[tag]
-    //
-    //        let label = sender
-    //        let cell = label.superview?.superview as! NewReviewTableViewCell
-    //        cell.tag = tag
-    //
-    //
-    //        guard let text = cell.commentLabel.text else { return }
-    //        let touchPoint = gestureRecognizer.location(in: cell.commentLabel)
-    //        let textStorage = NSTextStorage(attributedString: NSAttributedString(string: tappedLinkLavel))
-    //        let layoutManager = NSLayoutManager()
-    //        textStorage.addLayoutManager(layoutManager)
-    //        let textContainer = NSTextContainer(size: cell.commentLabel.frame.size)
-    //        layoutManager.addTextContainer(textContainer)
-    //        textContainer.lineFragmentPadding = 0
-    //        let toRange = (text as NSString).range(of: tappedLinkLavel)
-    //        let glyphRange = layoutManager.glyphRange(forCharacterRange: toRange, actualCharacterRange: nil)
-    //        let glyphRect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
-    //        if glyphRect.contains(touchPoint) {
-    //            print("Tapped")
-    //        }
-    //    }
-    
-    
-    
-    //    //コメントからURLを識別する
-    //    func getLinkTextList(text: String) -> [String] {
-    //        guard let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) else {
-    //            return []
-    //        }
-    //        let enableLinkTuples = detector.matches(in: text, range: NSRange(location: 0, length: text.count))
-    //        return enableLinkTuples.map { checkingResult -> String in
-    //            return (text as NSString).substring(with: checkingResult.range)
-    //        }
-    //    }
     
 }
 

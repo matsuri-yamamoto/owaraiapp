@@ -110,40 +110,41 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     
     
-//    override func viewDidAppear(_ animated: Bool) {
-//
-//
-//        //pvログ
-//        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .firstTabVC))
-//
-//        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
-//            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
-//            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
-//            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
-//            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
-//            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
-//            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
-//            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
-//            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
-//            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
-//
-//            //pvログを取得
-//            let logRef = Firestore.firestore().collection("logs").document()
-//            let logDic = [
-//                "action_user_id": self.currentUser?.uid,
-//                "page": "FirstTab",
-//                "action_type": "pv",
-//                "tapped_comedian_id": "",
-//                "tapped_user_id": "",
-//                "create_datetime": FieldValue.serverTimestamp(),
-//                "update_datetime": FieldValue.serverTimestamp(),
-//                "delete_flag": false,
-//                "delete_datetime": nil,
-//            ] as [String : Any]
-//            logRef.setData(logDic)
-//
-//        }
-//    }
+    override func viewDidAppear(_ animated: Bool) {
+
+
+        //pvログ
+        AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .firstTabVC))
+
+        if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
+            && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+            && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+            && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+            && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+            && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+            && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+            && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+            && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+            && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+
+            //pvログを取得
+            let logRef = Firestore.firestore().collection("logs").document()
+            let logDic = [
+                "action_user_id": self.currentUser?.uid,
+                "page": "FirstTab",
+                "action_type": "pv",
+                "tapped_comedian_id": "",
+                "tapped_user_id": "",
+                "create_datetime": FieldValue.serverTimestamp(),
+                "update_datetime": FieldValue.serverTimestamp(),
+                "delete_flag": false,
+                "delete_datetime": nil,
+            ] as [String : Any]
+            logRef.setData(logDic)
+
+        }
+    }
     
     @objc func cellComedianNameData() {
         
@@ -529,6 +530,7 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
                                              actionLabel: .template(ActionLabelTemplate.cellTap)))
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+            && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
             && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
             && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"

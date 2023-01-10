@@ -38,6 +38,8 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     @IBOutlet weak var scoreImageView: UIImageView!
     @IBOutlet weak var averageScoreLabel: UILabel!
     
+    @IBOutlet weak var scheduleButton: UIButton!
+    
     
     @IBOutlet weak var mediaButton1: UIButton!
     @IBOutlet weak var mediaButton2: UIButton!
@@ -158,13 +160,24 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         // インジケーターを View に追加
         view.addSubview(indicator)
         
+
+        
+        self.scheduleButton.layer.cornerRadius = 7
+        self.scheduleButton.clipsToBounds = true
+        
+        self.scheduleButton.imageView?.contentMode = .scaleAspectFill
+        self.scheduleButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
+        self.scheduleButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+
+
+        
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
-        
+                
         self.indicator.startAnimating()
-        
+
         self.reviewIdArray = []
         self.reviewUserNameArray = []
         self.reviewDisplayIdArray = []
@@ -208,7 +221,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
             }
         }
         
-        
+        //セルの高さを可変にするやつ（現状機能していないけど）
         self.tableView.rowHeight = UITableView.automaticDimension;
         // set estimatedRowHeight to whatever is the fallBack rowHeight
         
@@ -644,7 +657,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     //レビューの件数に応じたcontentViewのheightになるように設定(レビュー1件あたりheight=300)
                                     print("self.reviewIdArray.count:\(reviewCount!)")
                                     
-                                    self.contentViewHight.constant = CGFloat(250*reviewCount! + 870)
+                                    self.contentViewHight.constant = CGFloat(250*reviewCount! + 930)
                                     
                                     print("contentViewHight.constant:\(self.contentViewHight.constant)")
                                     
@@ -654,7 +667,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     
                                     //参考：https://dev.classmethod.jp/articles/youtube-player-ios-helper/
                                     //動画の見出しをセットする
-                                    let movieLabel = UILabel(frame: CGRect(x: 0, y: 330, width: self.contentView.frame.width, height: 25))
+                                    let movieLabel = UILabel(frame: CGRect(x: 0, y: 390, width: self.contentView.frame.width, height: 25))
                                     movieLabel.text = "　ネタ動画"
                                     movieLabel.font = UIFont.systemFont(ofSize: 12)
                                     movieLabel.textColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
@@ -665,7 +678,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     
                                     
                                     //1つ目の動画をセットする
-                                    let youtubeView1 = YTPlayerView(frame: CGRect(x: self.contentView.frame.width/2 - (self.contentView.frame.width*0.9)/2, y: 370, width: self.contentView.frame.width*0.9, height: 200))
+                                    let youtubeView1 = YTPlayerView(frame: CGRect(x: self.contentView.frame.width/2 - (self.contentView.frame.width*0.9)/2, y: 430, width: self.contentView.frame.width*0.9, height: 200))
                                     
                                     youtubeView1.load(withVideoId: "\(self.movieId1!)", playerVars: ["playsinline":1])
                                     youtubeView1.delegate = self;
@@ -674,7 +687,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     
                                     //2つ目の動画を作成し埋め込む
                                     
-                                    let youtubeView2 = YTPlayerView(frame: CGRect(x: self.contentView.frame.width/2 - (self.contentView.frame.width*0.9)/2, y: 590, width: self.contentView.frame.width*0.9, height: 200))
+                                    let youtubeView2 = YTPlayerView(frame: CGRect(x: self.contentView.frame.width/2 - (self.contentView.frame.width*0.9)/2, y: 650, width: self.contentView.frame.width*0.9, height: 200))
                                     
                                     youtubeView2.load(withVideoId: "\(self.movieId2!)", playerVars: ["playsinline":1])
                                     youtubeView2.delegate = self;
@@ -682,7 +695,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     
                                     
                                     //レビューの見出しをセットする
-                                    let reviewLabel = UILabel(frame: CGRect(x: 0, y: 815, width: self.contentView.frame.width, height: 25))
+                                    let reviewLabel = UILabel(frame: CGRect(x: 0, y: 875, width: self.contentView.frame.width, height: 25))
                                     reviewLabel.text = "　みんなの感想"
                                     reviewLabel.font = UIFont.systemFont(ofSize: 12)
                                     reviewLabel.textColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
@@ -696,7 +709,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     self.tableView.backgroundColor = #colorLiteral(red: 0.9694761634, green: 0.9694761634, blue: 0.9694761634, alpha: 1)
                                     
                                     self.tableView.translatesAutoresizingMaskIntoConstraints = false
-                                    self.tableView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 840.0).isActive = true
+                                    self.tableView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 900.0).isActive = true
                                     self.tableView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor).isActive = true
                                     self.tableView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
                                     self.tableView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
@@ -715,7 +728,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     //レビューの件数に応じたcontentViewのheightになるように設定(レビュー1件あたりheight=300)
                                     print("self.reviewIdArray.count:\(reviewCount!)")
                                     
-                                    self.contentViewHight.constant = CGFloat(250*reviewCount! + 670)
+                                    self.contentViewHight.constant = CGFloat(250*reviewCount! + 730)
                                     
                                     print("contentViewHight.constant:\(self.contentViewHight.constant)")
                                     
@@ -724,7 +737,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     
                                     
                                     //動画の見出しをセットする
-                                    let movieLabel = UILabel(frame: CGRect(x: 0, y: 330, width: self.contentView.frame.width, height: 25))
+                                    let movieLabel = UILabel(frame: CGRect(x: 0, y: 390, width: self.contentView.frame.width, height: 25))
                                     movieLabel.text = "　ネタ動画"
                                     movieLabel.font = UIFont.systemFont(ofSize: 12)
                                     movieLabel.textColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
@@ -734,7 +747,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     
                                     
                                     //1つ目の動画をセットする
-                                    let youtubeView1 = YTPlayerView(frame: CGRect(x: self.contentView.frame.width/2 - (self.contentView.frame.width*0.9)/2, y: 370, width: self.contentView.frame.width*0.9, height: 200))
+                                    let youtubeView1 = YTPlayerView(frame: CGRect(x: self.contentView.frame.width/2 - (self.contentView.frame.width*0.9)/2, y: 430, width: self.contentView.frame.width*0.9, height: 200))
                                     
                                     youtubeView1.load(withVideoId: "\(self.movieId1!)", playerVars: ["playsinline":1])
                                     youtubeView1.delegate = self;
@@ -742,7 +755,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     
                                     
                                     //レビューの見出しをセットする
-                                    let reviewLabel = UILabel(frame: CGRect(x: 0, y: 600, width: self.contentView.frame.width, height: 25))
+                                    let reviewLabel = UILabel(frame: CGRect(x: 0, y: 660, width: self.contentView.frame.width, height: 25))
                                     reviewLabel.text = "　みんなの感想"
                                     reviewLabel.font = UIFont.systemFont(ofSize: 12)
                                     reviewLabel.textColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
@@ -756,7 +769,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     self.tableView.backgroundColor = #colorLiteral(red: 0.9694761634, green: 0.9694761634, blue: 0.9694761634, alpha: 1)
                                     
                                     self.tableView.translatesAutoresizingMaskIntoConstraints = false
-                                    self.tableView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 625.0).isActive = true
+                                    self.tableView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 685.0).isActive = true
                                     self.tableView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor).isActive = true
                                     self.tableView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
                                     self.tableView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
@@ -775,7 +788,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     //レビューの件数に応じたcontentViewのheightになるように設定(レビュー1件あたりheight=300)
                                     print("self.reviewIdArray.count:\(reviewCount!)")
                                     
-                                    self.contentViewHight.constant = CGFloat(250*reviewCount! + 395)
+                                    self.contentViewHight.constant = CGFloat(250*reviewCount! + 455)
                                     
                                     print("contentViewHight.constant:\(self.contentViewHight.constant)")
                                     
@@ -784,7 +797,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     
                                     
                                     //レビューの見出しをセットする
-                                    let reviewLabel = UILabel(frame: CGRect(x: 0, y: 370, width: self.contentView.frame.width, height: 25))
+                                    let reviewLabel = UILabel(frame: CGRect(x: 0, y: 430, width: self.contentView.frame.width, height: 25))
                                     reviewLabel.text = "　みんなの感想"
                                     reviewLabel.font = UIFont.systemFont(ofSize: 12)
                                     reviewLabel.textColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
@@ -799,7 +812,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                     
                                     
                                     self.tableView.translatesAutoresizingMaskIntoConstraints = false
-                                    self.tableView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 395.0).isActive = true
+                                    self.tableView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 455.0).isActive = true
                                     self.tableView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor).isActive = true
                                     self.tableView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
                                     self.tableView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
@@ -835,7 +848,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                 
                                 
                                 //レビューの見出しをセットする
-                                let reviewLabel = UILabel(frame: CGRect(x: 0, y: 370, width: self.contentView.frame.width, height: 25))
+                                let reviewLabel = UILabel(frame: CGRect(x: 0, y: 430, width: self.contentView.frame.width, height: 25))
                                 reviewLabel.text = "　みんなの感想"
                                 reviewLabel.font = UIFont.systemFont(ofSize: 12)
                                 reviewLabel.textColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
@@ -849,7 +862,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                 self.tableView.backgroundColor = #colorLiteral(red: 0.9694761634, green: 0.9694761634, blue: 0.9694761634, alpha: 1)
                                 
                                 self.tableView.translatesAutoresizingMaskIntoConstraints = false
-                                self.tableView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 395.0).isActive = true
+                                self.tableView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 455.0).isActive = true
                                 self.tableView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor).isActive = true
                                 self.tableView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
                                 self.tableView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
@@ -916,7 +929,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                 //レビューの件数に応じたcontentViewのheightになるように設定(レビュー1件あたりheight=300)
                                 print("self.reviewIdArray.count:\(reviewCount!)")
                                 
-                                self.contentViewHight.constant = CGFloat(250*reviewCount! + 395)
+                                self.contentViewHight.constant = CGFloat(250*reviewCount! + 455)
                                 
                                 print("contentViewHight.constant:\(self.contentViewHight.constant)")
                                 
@@ -925,7 +938,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                 
                                 
                                 //レビューの見出しをセットする
-                                let reviewLabel = UILabel(frame: CGRect(x: 0, y: 370, width: self.contentView.frame.width, height: 25))
+                                let reviewLabel = UILabel(frame: CGRect(x: 0, y: 430, width: self.contentView.frame.width, height: 25))
                                 reviewLabel.text = "　みんなの感想"
                                 reviewLabel.font = UIFont.systemFont(ofSize: 12)
                                 reviewLabel.textColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
@@ -939,7 +952,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                                 self.tableView.backgroundColor = #colorLiteral(red: 0.9694761634, green: 0.9694761634, blue: 0.9694761634, alpha: 1)
                                 
                                 self.tableView.translatesAutoresizingMaskIntoConstraints = false
-                                self.tableView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 395.0).isActive = true
+                                self.tableView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 455.0).isActive = true
                                 self.tableView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor).isActive = true
                                 self.tableView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
                                 self.tableView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
@@ -1126,6 +1139,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                 }
                 
                 if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+                    && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
                     && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
                     && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
                     && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
@@ -1195,11 +1209,11 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         self.followButton.clipsToBounds = true
         
         
-        self.indicator.stopAnimating()
         
         //pvログ
         AnalyticsUtil.sendScreenName(ScreenEvent(screenName: .comedianDetailVC))
         
+        self.indicator.stopAnimating()
         
         
     }
@@ -1260,7 +1274,9 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
                     
                 }
             }
+
         }
+
     }
     
     
@@ -1673,6 +1689,47 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         
         self.indicator.stopAnimating()
         
+        
+    }
+    
+    
+    @IBAction func tappedScheduleButton(_ sender: Any) {
+        
+        //scheduleVCに遷移
+        let scheduleVC = storyboard?.instantiateViewController(withIdentifier: "ComedianSchedule") as! ComedianScheduleViewController
+        scheduleVC.comedianId = self.comedianId
+        self.navigationController?.pushViewController(scheduleVC, animated: true)
+
+            
+            if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
+                && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
+                && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
+                && self.currentUser?.uid != "BvNA6PJte0cj2u3FISymhnrBxCf2"
+                && self.currentUser?.uid != "uHOTLNXbk8QyFPIoqAapj4wQUwF2"
+                && self.currentUser?.uid != "z9fKAXmScrMTolTApapJyHyCfEg2"
+                && self.currentUser?.uid != "jjF5m3lbU4bU0LKBgOTf0Hzs5RI3"
+                && self.currentUser?.uid != "bjOQykO7RxPO8j1SdN88Z3Q8ELM2"
+                && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
+                && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
+                && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
+                
+                //pvログを取得
+                let logRef = Firestore.firestore().collection("logs").document()
+                let logDic = [
+                    "action_user_id": self.currentUser?.uid,
+                    "page": "ComedianDetail",
+                    "action_type": "tap_schedule_button",
+                    "tapped_comedian_id": self.comedianId,
+                    "tapped_user_id": "",
+                    "action_date": "",
+                    "create_datetime": FieldValue.serverTimestamp(),
+                    "update_datetime": FieldValue.serverTimestamp(),
+                    "delete_flag": false,
+                    "delete_datetime": nil,
+                ] as [String : Any]
+                logRef.setData(logDic)
+                
+            }
         
     }
     
