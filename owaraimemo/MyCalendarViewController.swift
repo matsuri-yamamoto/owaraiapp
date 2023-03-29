@@ -21,31 +21,31 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     
     
     let df = DateFormatter()
-
+    
     let db = Firestore.firestore()
     let currentUser = Auth.auth().currentUser
     
     // インジゲーターの設定
     var indicator = UIActivityIndicatorView()
-
+    
     //画像のパス
     let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
-
+    
     
     
     var followComedianIdArray: [String] = []
-
+    
     var eventDate :String = ""
     
     var allEventDateArray: [String] = []
     var uniqueAllEventDateArray: [String] = []
-
+    
     
     var eventIdArray: [String] = []
     var eventDateArray: [String] = []
     var uniqueEventIdArray: [String] = []
     var uniqueEventDateArray: [String] = []
-
+    
     
     //表示させるeventIdのイベント名、エリア、配信有無、時間、会場を格納
     var eventNameArray: [String] = []
@@ -57,7 +57,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     var eventUrlArray: [String] = []
     var eventImageUrlArray: [String] = []
     var eventReferenceArray: [String] = []
-
+    
     
     override func viewDidLoad() {
         
@@ -70,7 +70,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         self.calendar.delegate = self
         
         self.calendar.setScope(.week, animated: false)
-
+        
         
         // gesture settings
         let swipUpGesture:UISwipeGestureRecognizer = UISwipeGestureRecognizer(
@@ -126,11 +126,11 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                     let updateInfo  = document.get("text") as! String
                     print("updateInfo:\(updateInfo)")
                     self.updateInfoLabel.text = updateInfo
-
+                    
                 }
             }
         }
-
+        
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
             && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
@@ -210,8 +210,8 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                 }
                 
                 print("followComedianIdArray:\(self.followComedianIdArray)")
-        
-
+                
+                
                 print("getSchedule_followComedianIdArray:\(self.followComedianIdArray)")
                 
                 for comedianId in self.followComedianIdArray {
@@ -228,7 +228,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                             for document in querySnapshot!.documents {
                                 
                                 self.allEventDateArray.append(document.data()["event_date"] as! String)
-
+                                
                                 
                             }
                         }
@@ -236,7 +236,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                 }
                 
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
                     
                     //aleventDateArrayをユニークにする
                     var eventDate = Set<String>()
@@ -244,15 +244,16 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                     
                     print("uniqueEventDateArray:\(self.uniqueAllEventDateArray)")
                     
+                    
                 }
                 
             }
-                
+            
         }
     }
-            
-
-                
+    
+    
+    
     //カレンダーのheightにスワイプによる表示切り替えを反映させる
     func calendar(_ calendar: FSCalendar, boundingRectWillChange bounds: CGRect, animated: Bool) {
         print(bounds)
@@ -326,7 +327,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         self.eventUrlArray = []
         self.eventImageUrlArray = []
         self.eventReferenceArray = []
-
+        
         print("getSchedule_followComedianIdArray:\(self.followComedianIdArray)")
         print("self.eventDate:\(self.eventDate)")
         
@@ -345,7 +346,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                         
                         self.eventIdArray.append(document.data()["event_id"] as! String)
                         self.eventDateArray.append(document.data()["event_date"] as! String)
-
+                        
                         
                     }
                 }
@@ -364,11 +365,11 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
             self.uniqueEventDateArray = self.eventDateArray.filter { eventDate.insert($0).inserted }
             
             print("getschedule_eventIdArray:\(self.eventIdArray)")
-
+            
             //ユニークのeventIdのevent_name、event_start、event_placeを取得
             print("getEvent")
             self.getEvent()
-
+            
             
         }
     }
@@ -397,8 +398,8 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                         self.eventUrlArray.append(document.data()["url"] as! String)
                         self.eventImageUrlArray.append(document.data()["image_url"] as! String)
                         self.eventReferenceArray.append(document.data()["event_reference"] as! String)
-
-
+                        
+                        
                     }
                 }
             }
@@ -408,22 +409,23 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         self.indicator.stopAnimating()
         self.tableView.reloadData()
         
+        
     }
     
     
     
     func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
         
+
         df.dateFormat = "yyyy/MM/dd"
         if uniqueAllEventDateArray.first(where: { $0 == df.string(from: date) }) != nil {
-                return 1
+            return 1
         }
         return 0
-    }
 
+    }
     
-    
-    
+        
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         return 200
@@ -449,8 +451,8 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         
         cell.areaLabel.layer.cornerRadius = 10
         cell.areaLabel.clipsToBounds = true
-
-
+        
+        
         
         if self.eventNameArray == [] {
             
@@ -464,22 +466,22 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                 let image :UIImage = UIImage(url: "\(self.eventImageUrlArray[indexPath.row])")
                 cell.eventImageView.image = image
                 
-//                let imageRef = self.storage.child("event_image/\(self.uniqueEventIdArray[indexPath.row]).jpg")
-//                cell.eventImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
-
+                //                let imageRef = self.storage.child("event_image/\(self.uniqueEventIdArray[indexPath.row]).jpg")
+                //                cell.eventImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+                
                 if self.eventAreaArray[indexPath.row] == "東京" {
                     
                     cell.areaLabel.backgroundColor = #colorLiteral(red: 0.1848421342, green: 0.2122759584, blue: 0.7568627596, alpha: 1)
                     cell.areaLabel.tintColor = UIColor.white
-//                    cell.areaLabel.layer.borderWidth = 2.0
-//                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
+                    //                    cell.areaLabel.layer.borderWidth = 2.0
+                    //                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
                     
                 } else if self.eventAreaArray[indexPath.row] == "大阪" {
                     
                     cell.areaLabel.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
                     cell.areaLabel.tintColor = UIColor.white
-//                    cell.areaLabel.layer.borderWidth = 2.0
-//                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
+                    //                    cell.areaLabel.layer.borderWidth = 2.0
+                    //                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
                     
                 } else {
                     
@@ -493,7 +495,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                 cell.onlineFlagLabel.textColor = UIColor.black
                 cell.onlineFlagLabel.layer.borderWidth = 1.0
                 cell.onlineFlagLabel.layer.borderColor = UIColor.black.cgColor
-
+                
                 
                 if self.eventOnlineFlagArray[indexPath.row] == "true" {
                     
@@ -512,45 +514,45 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                     cell.onlineFlagLabel.isHidden = true
                 }
                 
-                cell.eventStartLabel.text = "開演：" + self.eventStartArray[indexPath.row]
+                cell.eventStartLabel.text = "開場：" + self.eventStartArray[indexPath.row]
                 cell.placeLabel.text = "会場：" + self.eventPlaceArray[indexPath.row]
                 
                 cell.castLabel.text = self.eventCastArray[indexPath.row]
                 
                 cell.eventReferenceLabel.text = self.eventReferenceArray[indexPath.row]
-
-                                
+                
+                
             }
             
             return cell
             
         } else {
             
-
+            
             cell.eventNameLabel.text = "　" + self.eventNameArray[indexPath.row]
             cell.areaLabel.text = self.eventAreaArray[indexPath.row]
             
             let image :UIImage = UIImage(url: "\(self.eventImageUrlArray[indexPath.row])")
             cell.eventImageView.image = image
-
             
-//            let imageRef = self.storage.child("event_image/\(self.uniqueEventIdArray[indexPath.row]).jpg")
-//            cell.eventImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
-
+            
+            //            let imageRef = self.storage.child("event_image/\(self.uniqueEventIdArray[indexPath.row]).jpg")
+            //            cell.eventImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
+            
             
             if self.eventAreaArray[indexPath.row] == "東京" {
                 
                 cell.areaLabel.backgroundColor = #colorLiteral(red: 0.1848421342, green: 0.2122759584, blue: 0.7568627596, alpha: 1)
                 cell.areaLabel.tintColor = UIColor.white
-//                    cell.areaLabel.layer.borderWidth = 2.0
-//                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
+                //                    cell.areaLabel.layer.borderWidth = 2.0
+                //                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
                 
             } else if self.eventAreaArray[indexPath.row] == "大阪" {
                 
                 cell.areaLabel.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
                 cell.areaLabel.tintColor = UIColor.white
-//                    cell.areaLabel.layer.borderWidth = 2.0
-//                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
+                //                    cell.areaLabel.layer.borderWidth = 2.0
+                //                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
                 
             } else {
                 
@@ -564,7 +566,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
             cell.onlineFlagLabel.textColor = UIColor.black
             cell.onlineFlagLabel.layer.borderWidth = 1.0
             cell.onlineFlagLabel.layer.borderColor = UIColor.black.cgColor
-
+            
             
             if self.eventOnlineFlagArray[indexPath.row] == "true" {
                 
@@ -575,14 +577,14 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
             if self.eventOnlineFlagArray[indexPath.row] == "false" {
                 
                 cell.onlineFlagLabel.text = "配信なし"
-
+                
             }
             
             if self.eventOnlineFlagArray[indexPath.row] == "" {
                 
                 cell.onlineFlagLabel.isHidden = true
             }
-
+            
             
             
             cell.eventStartLabel.text = "開演：" + self.eventStartArray[indexPath.row]
@@ -591,7 +593,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
             cell.castLabel.text = self.eventCastArray[indexPath.row]
             
             cell.eventReferenceLabel.text = self.eventReferenceArray[indexPath.row]
-
+            
             return cell
             
         }
@@ -601,7 +603,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         self.tableView.deselectRow(at: indexPath, animated: true)
-
+        
         let urlString = self.eventUrlArray[indexPath.row]
         let url = URL(string: "\(urlString)")
         
@@ -642,7 +644,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
             logRef.setData(logDic)
             
         }
-     
+        
         
     }
     

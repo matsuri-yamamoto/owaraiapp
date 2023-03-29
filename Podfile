@@ -27,6 +27,7 @@ target 'owaraimemo' do
   pod 'FirebaseStorageUI'
   pod 'MXParallaxHeader'
   pod 'FSCalendar'
+  pod 'PromiseKit'
 
 
 
