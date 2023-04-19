@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		506972D7748EC2B1D1651563 /* Pods_owaraimemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 013C498947B8F64B7B6FED63 /* Pods_owaraimemo.framework */; };
 		6301AE2A28B494E1001B03E5 /* InquiryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6301AE2928B494E1001B03E5 /* InquiryViewController.swift */; };
 		630964B7281EDB32006F211B /* TermViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630964B6281EDB32006F211B /* TermViewController.swift */; };
 		630964B9281EDBA3006F211B /* PrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630964B8281EDBA3006F211B /* PrivacyPolicyViewController.swift */; };
@@ -82,10 +81,12 @@
 		63E81FAE28F5BBCE00EA113C /* OnboardingReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E81FAD28F5BBCE00EA113C /* OnboardingReviewViewController.swift */; };
 		63E81FB328F66FE700EA113C /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E81FB228F66FE700EA113C /* OnboardingPageViewController.swift */; };
 		63FB59962849EA8D00497210 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FB59952849EA8D00497210 /* TabViewController.swift */; };
+		7AF17F2E996A8C9E9B3BAB2F /* Pods_owaraimemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8DED643A674885131366B67 /* Pods_owaraimemo.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		013C498947B8F64B7B6FED63 /* Pods_owaraimemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_owaraimemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0BDC4758B4546C4F4934B7E4 /* Pods-owaraimemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-owaraimemo.release.xcconfig"; path = "Target Support Files/Pods-owaraimemo/Pods-owaraimemo.release.xcconfig"; sourceTree = "<group>"; };
+		42E60BF0F74CA5C547575A05 /* Pods-owaraimemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-owaraimemo.debug.xcconfig"; path = "Target Support Files/Pods-owaraimemo/Pods-owaraimemo.debug.xcconfig"; sourceTree = "<group>"; };
 		6301AE2928B494E1001B03E5 /* InquiryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquiryViewController.swift; sourceTree = "<group>"; };
 		630964B6281EDB32006F211B /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
 		630964B8281EDBA3006F211B /* PrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyViewController.swift; sourceTree = "<group>"; };
@@ -166,8 +167,7 @@
 		63E81FAD28F5BBCE00EA113C /* OnboardingReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingReviewViewController.swift; sourceTree = "<group>"; };
 		63E81FB228F66FE700EA113C /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		63FB59952849EA8D00497210 /* TabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
-		7812F7A987490B3A5CD2091A /* Pods-owaraimemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-owaraimemo.debug.xcconfig"; path = "Target Support Files/Pods-owaraimemo/Pods-owaraimemo.debug.xcconfig"; sourceTree = "<group>"; };
-		91BD7D492DEC08C24EC8D8EC /* Pods-owaraimemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-owaraimemo.release.xcconfig"; path = "Target Support Files/Pods-owaraimemo/Pods-owaraimemo.release.xcconfig"; sourceTree = "<group>"; };
+		E8DED643A674885131366B67 /* Pods_owaraimemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_owaraimemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,8 +175,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				506972D7748EC2B1D1651563 /* Pods_owaraimemo.framework in Frameworks */,
 				631590EC289B95E8001FFDA0 /* AdSupport.framework in Frameworks */,
+				7AF17F2E996A8C9E9B3BAB2F /* Pods_owaraimemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -186,8 +186,8 @@
 		5C389A654E79E1BD6CF35195 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				7812F7A987490B3A5CD2091A /* Pods-owaraimemo.debug.xcconfig */,
-				91BD7D492DEC08C24EC8D8EC /* Pods-owaraimemo.release.xcconfig */,
+				42E60BF0F74CA5C547575A05 /* Pods-owaraimemo.debug.xcconfig */,
+				0BDC4758B4546C4F4934B7E4 /* Pods-owaraimemo.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -297,7 +297,7 @@
 			children = (
 				631590EB289B95E8001FFDA0 /* AdSupport.framework */,
 				632A473C2868400100FB28EA /* Carthage */,
-				013C498947B8F64B7B6FED63 /* Pods_owaraimemo.framework */,
+				E8DED643A674885131366B67 /* Pods_owaraimemo.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -309,11 +309,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6381D14127E7319D005BDBE2 /* Build configuration list for PBXNativeTarget "owaraimemo" */;
 			buildPhases = (
-				EAFB05954BB74871C5FA9A8C /* [CP] Check Pods Manifest.lock */,
+				9EC4A908A17DC7B37AB6C7B3 /* [CP] Check Pods Manifest.lock */,
 				6381D12927E7319A005BDBE2 /* Sources */,
 				6381D12A27E7319A005BDBE2 /* Frameworks */,
 				6381D12B27E7319A005BDBE2 /* Resources */,
-				C05FFB6BEAD934FB0AB4CA60 /* [CP] Embed Pods Frameworks */,
+				5F54492D0DD4EC23682B7A7B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -381,7 +381,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		C05FFB6BEAD934FB0AB4CA60 /* [CP] Embed Pods Frameworks */ = {
+		5F54492D0DD4EC23682B7A7B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -398,7 +398,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-owaraimemo/Pods-owaraimemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EAFB05954BB74871C5FA9A8C /* [CP] Check Pods Manifest.lock */ = {
+		9EC4A908A17DC7B37AB6C7B3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -552,6 +552,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -614,6 +615,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -634,7 +636,7 @@
 		};
 		6381D14227E7319D005BDBE2 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7812F7A987490B3A5CD2091A /* Pods-owaraimemo.debug.xcconfig */;
+			baseConfigurationReference = 42E60BF0F74CA5C547575A05 /* Pods-owaraimemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -648,7 +650,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3;
+				MARKETING_VERSION = 2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.owaraiapp.rino.yamamoto.owaraimemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -658,7 +660,7 @@
 		};
 		6381D14327E7319D005BDBE2 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 91BD7D492DEC08C24EC8D8EC /* Pods-owaraimemo.release.xcconfig */;
+			baseConfigurationReference = 0BDC4758B4546C4F4934B7E4 /* Pods-owaraimemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -672,7 +674,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3;
+				MARKETING_VERSION = 2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.owaraiapp.rino.yamamoto.owaraimemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

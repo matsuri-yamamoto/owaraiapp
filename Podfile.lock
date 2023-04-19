@@ -794,7 +794,23 @@ PODS:
   - nanopb/decode (2.30909.0)
   - nanopb/encode (2.30909.0)
   - OAuthSwift (2.2.0)
+  - Onboard (2.3.3)
   - Pageboy (3.7.0)
+  - PINCache (3.0.3):
+    - PINCache/Arc-exception-safe (= 3.0.3)
+    - PINCache/Core (= 3.0.3)
+  - PINCache/Arc-exception-safe (3.0.3):
+    - PINCache/Core
+  - PINCache/Core (3.0.3):
+    - PINOperation (~> 1.2.1)
+  - PINOperation (1.2.2)
+  - PINRemoteImage (3.0.3):
+    - PINRemoteImage/PINCache (= 3.0.3)
+  - PINRemoteImage/Core (3.0.3):
+    - PINOperation
+  - PINRemoteImage/PINCache (3.0.3):
+    - PINCache (~> 3.0.3)
+    - PINRemoteImage/Core
   - PromiseKit (6.18.1):
     - PromiseKit/CorePromise (= 6.18.1)
     - PromiseKit/Foundation (= 6.18.1)
@@ -829,6 +845,8 @@ DEPENDENCIES:
   - MultiAutoCompleteTextSwift
   - MXParallaxHeader
   - OAuthSwift (~> 2.2.0)
+  - Onboard
+  - PINRemoteImage
   - PromiseKit
   - Tabman (~> 2.12)
   - TabPageViewController
@@ -866,7 +884,11 @@ SPEC REPOS:
     - MXParallaxHeader
     - nanopb
     - OAuthSwift
+    - Onboard
     - Pageboy
+    - PINCache
+    - PINOperation
+    - PINRemoteImage
     - PromiseKit
     - PromisesObjC
     - SDWebImage
@@ -905,7 +927,11 @@ SPEC CHECKSUMS:
   MXParallaxHeader: de3c867e10ba46e8f6e20c8ee1f2a910372b3b94
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   OAuthSwift: 75efbb5bd9a4b2b71a37bd7e986bf3f55ddd54c6
+  Onboard: 4d6e943e20bdd6bc229df967a347dd7514bc2a6f
   Pageboy: fe646118f7168960058bea7a96038386aa7c0da8
+  PINCache: 7a8fc1a691173d21dbddbf86cd515de6efa55086
+  PINOperation: daa34d4aa1d8449089be7d405b9d974abc4724c6
+  PINRemoteImage: f1295b29f8c5e640e25335a1b2bd9d805171bd01
   PromiseKit: 49d70c53d5d20e346beaea4b276b5dd2ab446bb4
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   SDWebImage: 8ab87d4b3e5cc4927bd47f78db6ceb0b94442577
@@ -913,6 +939,6 @@ SPEC CHECKSUMS:
   TabPageViewController: 8bd4104909754416b35a98f3b72a5b674ab20dd5
   youtube-ios-player-helper: e9b97535e816db3152179d84d999bc1807ecd689
 
-PODFILE CHECKSUM: 0433e85f2e8579307779b2f8f34dff89d0e4cfaa
+PODFILE CHECKSUM: 852ffb278bc5d4dff217a4e646b83ea415ab10f2
 
 COCOAPODS: 1.11.2

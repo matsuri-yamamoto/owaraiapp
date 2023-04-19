@@ -10,6 +10,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseStorageUI
 import FSCalendar
+import PINRemoteImage
 
 class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalendarDelegate, FSCalendarDelegateAppearance, UITableViewDelegate, UITableViewDataSource {
     
@@ -446,10 +447,10 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         //scheduleVC用の日付ラベルをの横幅を0にする
         cell.dateLabelWidth.constant = CGFloat(0)
         
-        cell.onlineFlagLabel.layer.cornerRadius = 10
+//        cell.onlineFlagLabel.layer.cornerRadius = 10
         cell.onlineFlagLabel.clipsToBounds = true
         
-        cell.areaLabel.layer.cornerRadius = 10
+//        cell.areaLabel.layer.cornerRadius = 10
         cell.areaLabel.clipsToBounds = true
         
         
@@ -462,12 +463,9 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                 cell.eventNameLabel.text = "　" + self.eventNameArray[indexPath.row]
                 cell.areaLabel.text = self.eventAreaArray[indexPath.row]
                 
+                cell.eventImageView.pin_updateWithProgress = true
+                cell.eventImageView.pin_setImage(from: URL(string: "\(self.eventImageUrlArray[indexPath.row])")!)
                 
-                let image :UIImage = UIImage(url: "\(self.eventImageUrlArray[indexPath.row])")
-                cell.eventImageView.image = image
-                
-                //                let imageRef = self.storage.child("event_image/\(self.uniqueEventIdArray[indexPath.row]).jpg")
-                //                cell.eventImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
                 
                 if self.eventAreaArray[indexPath.row] == "東京" {
                     
@@ -493,8 +491,8 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                 
                 cell.onlineFlagLabel.backgroundColor = #colorLiteral(red: 0.9294985734, green: 0.9294985734, blue: 0.9294985734, alpha: 1)
                 cell.onlineFlagLabel.textColor = UIColor.black
-                cell.onlineFlagLabel.layer.borderWidth = 1.0
-                cell.onlineFlagLabel.layer.borderColor = UIColor.black.cgColor
+//                cell.onlineFlagLabel.layer.borderWidth = 1.0
+//                cell.onlineFlagLabel.layer.borderColor = UIColor.black.cgColor
                 
                 
                 if self.eventOnlineFlagArray[indexPath.row] == "true" {
@@ -514,7 +512,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                     cell.onlineFlagLabel.isHidden = true
                 }
                 
-                cell.eventStartLabel.text = "開場：" + self.eventStartArray[indexPath.row]
+                cell.eventStartLabel.text = "開演：" + self.eventStartArray[indexPath.row]
                 cell.placeLabel.text = "会場：" + self.eventPlaceArray[indexPath.row]
                 
                 cell.castLabel.text = self.eventCastArray[indexPath.row]
@@ -532,13 +530,9 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
             cell.eventNameLabel.text = "　" + self.eventNameArray[indexPath.row]
             cell.areaLabel.text = self.eventAreaArray[indexPath.row]
             
-            let image :UIImage = UIImage(url: "\(self.eventImageUrlArray[indexPath.row])")
-            cell.eventImageView.image = image
-            
-            
-            //            let imageRef = self.storage.child("event_image/\(self.uniqueEventIdArray[indexPath.row]).jpg")
-            //            cell.eventImageView.sd_setImage(with: imageRef, placeholderImage: UIImage(named: "noImage"))
-            
+            cell.eventImageView.pin_updateWithProgress = true
+            cell.eventImageView.pin_setImage(from: URL(string: "\(self.eventImageUrlArray[indexPath.row])")!)
+
             
             if self.eventAreaArray[indexPath.row] == "東京" {
                 
@@ -564,8 +558,8 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
             
             cell.onlineFlagLabel.backgroundColor = #colorLiteral(red: 0.9294985734, green: 0.9294985734, blue: 0.9294985734, alpha: 1)
             cell.onlineFlagLabel.textColor = UIColor.black
-            cell.onlineFlagLabel.layer.borderWidth = 1.0
-            cell.onlineFlagLabel.layer.borderColor = UIColor.black.cgColor
+//            cell.onlineFlagLabel.layer.borderWidth = 1.0
+//            cell.onlineFlagLabel.layer.borderColor = UIColor.black.cgColor
             
             
             if self.eventOnlineFlagArray[indexPath.row] == "true" {
@@ -606,13 +600,14 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         
         let urlString = self.eventUrlArray[indexPath.row]
         let url = URL(string: "\(urlString)")
+        UIApplication.shared.open(url!)
+
         
-        
-        let wkVC = storyboard?.instantiateViewController(withIdentifier: "WebView") as! WKWebViewController
-        
-        wkVC.url = url
-        
-        self.navigationController?.pushViewController(wkVC, animated: true)
+//        let wkVC = storyboard?.instantiateViewController(withIdentifier: "WebView") as! WKWebViewController
+//
+//        wkVC.url = url
+//
+//        self.navigationController?.pushViewController(wkVC, animated: true)
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
             && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"

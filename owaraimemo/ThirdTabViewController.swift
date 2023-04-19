@@ -1,8 +1,6 @@
 
 import UIKit
 import Firebase
-import FirebaseFirestore
-import FirebaseStorage
 
 
 class ThirdTabViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

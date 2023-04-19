@@ -8,6 +8,7 @@
 import Foundation
 import Firebase
 import FirebaseAuth
+import PINRemoteImage
 
 class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -40,6 +41,9 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
         
         super.viewDidLoad()
         
+        //芸人さんのイベントのArrayを取得
+        self.getSchedule()
+
         // 表示位置を設定（画面中央）
         self.indicator.center = view.center
         // インジケーターのスタイルを指定（白色＆大きいサイズ）
@@ -48,7 +52,6 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
         self.indicator.color = UIColor.darkGray
         // インジケーターを View に追加
         view.addSubview(indicator)
-        
 
         
         self.tableView.dataSource = self
@@ -57,10 +60,7 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
         let nib = UINib(nibName: "MyCalendarTableViewCell", bundle: nil)
         self.tableView.register(nib, forCellReuseIdentifier: "MyCalendarCell")
         
-        //芸人さんのイベントのArrayを取得
-        self.getSchedule()
-
-
+        
 
     }
     
@@ -148,6 +148,8 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
                     }
                     
                     print("eventNameArray:\(self.eventNameArray)")
+                    print("eventDateArray:\(self.eventDateArray)")
+
 
                                         
                 }
@@ -164,9 +166,9 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
         
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
+
         return 200
-        
+
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -181,20 +183,20 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCalendarCell", for: indexPath) as! MyCalendarTableViewCell
         
-        cell.dateLabel.layer.cornerRadius = 10
-        cell.dateLabel.clipsToBounds = true
-
-        cell.onlineFlagLabel.layer.cornerRadius = 10
-        cell.onlineFlagLabel.clipsToBounds = true
-        
-        cell.areaLabel.layer.cornerRadius = 10
-        cell.areaLabel.clipsToBounds = true
+//        cell.dateLabel.layer.cornerRadius = 10
+//        cell.dateLabel.clipsToBounds = true
+//
+//        cell.onlineFlagLabel.layer.cornerRadius = 10
+//        cell.onlineFlagLabel.clipsToBounds = true
+//
+//        cell.areaLabel.layer.cornerRadius = 10
+//        cell.areaLabel.clipsToBounds = true
 
 
         
         if self.eventNameArray == [] {
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 
                 cell.dateLabelWidth.constant = CGFloat(self.view.frame.width*0.22)
                 cell.dateLabel.text = self.eventDateArray[indexPath.row]
@@ -203,8 +205,12 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
                 cell.areaLabel.text = self.eventAreaArray[indexPath.row]
                 
                 
-                let image :UIImage = UIImage(url: "\(self.eventImageUrlArray[indexPath.row])")
-                cell.eventImageView.image = image
+//                let image :UIImage = UIImage(url: "\(self.eventImageUrlArray[indexPath.row])")
+//                cell.eventImageView.image = image
+            
+                cell.eventImageView.pin_updateWithProgress = true
+                cell.eventImageView.pin_setImage(from: URL(string: "\(self.eventImageUrlArray[indexPath.row])")!)
+
                 
 
                 if self.eventAreaArray[indexPath.row] == "東京" {
@@ -231,8 +237,8 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
                 
                 cell.onlineFlagLabel.backgroundColor = #colorLiteral(red: 0.9294985734, green: 0.9294985734, blue: 0.9294985734, alpha: 1)
                 cell.onlineFlagLabel.textColor = UIColor.black
-                cell.onlineFlagLabel.layer.borderWidth = 1.0
-                cell.onlineFlagLabel.layer.borderColor = UIColor.black.cgColor
+//                cell.onlineFlagLabel.layer.borderWidth = 1.0
+//                cell.onlineFlagLabel.layer.borderColor = UIColor.black.cgColor
 
                 
                 if self.eventOnlineFlagArray[indexPath.row] == "true" {
@@ -273,67 +279,71 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
 
             cell.eventNameLabel.text = "　" + self.eventNameArray[indexPath.row]
             cell.areaLabel.text = self.eventAreaArray[indexPath.row]
+
+//            let image :UIImage = UIImage(url: "\(self.eventImageUrlArray[indexPath.row])")
+//            cell.eventImageView.image = image
             
-            let image :UIImage = UIImage(url: "\(self.eventImageUrlArray[indexPath.row])")
-            cell.eventImageView.image = image
-            
+            cell.eventImageView.pin_updateWithProgress = true
+            cell.eventImageView.pin_setImage(from: URL(string: "\(self.eventImageUrlArray[indexPath.row])")!)
+
+
             if self.eventAreaArray[indexPath.row] == "東京" {
-                
+
                 cell.areaLabel.backgroundColor = #colorLiteral(red: 0.1848421342, green: 0.2122759584, blue: 0.7568627596, alpha: 1)
                 cell.areaLabel.tintColor = UIColor.white
 //                    cell.areaLabel.layer.borderWidth = 2.0
 //                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
-                
+
             } else if self.eventAreaArray[indexPath.row] == "大阪" {
-                
+
                 cell.areaLabel.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
                 cell.areaLabel.tintColor = UIColor.white
 //                    cell.areaLabel.layer.borderWidth = 2.0
 //                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
-                
+
             } else {
-                
+
                 cell.areaLabel.backgroundColor = #colorLiteral(red: 0.5058823824, green: 0.3372549117, blue: 0.06666667014, alpha: 1)
                 cell.areaLabel.tintColor = UIColor.white
-                
-                
+
+
             }
-            
+
             cell.onlineFlagLabel.backgroundColor = #colorLiteral(red: 0.9294985734, green: 0.9294985734, blue: 0.9294985734, alpha: 1)
             cell.onlineFlagLabel.textColor = UIColor.black
-            cell.onlineFlagLabel.layer.borderWidth = 1.0
-            cell.onlineFlagLabel.layer.borderColor = UIColor.black.cgColor
+//            cell.onlineFlagLabel.layer.borderWidth = 1.0
+//            cell.onlineFlagLabel.layer.borderColor = UIColor.black.cgColor
 
-            
+
             if self.eventOnlineFlagArray[indexPath.row] == "true" {
-                
+
                 cell.onlineFlagLabel.text = "配信あり"
-                
+
             }
-            
+
             if self.eventOnlineFlagArray[indexPath.row] == "false" {
-                
+
                 cell.onlineFlagLabel.text = "配信なし"
 
             }
-            
+
             if self.eventOnlineFlagArray[indexPath.row] == "" {
-                
+
                 cell.onlineFlagLabel.isHidden = true
             }
 
-            
-            
+
+
             cell.eventStartLabel.text = "開演：" + self.eventStartArray[indexPath.row]
             cell.placeLabel.text = "会場：" + self.eventPlaceArray[indexPath.row]
-            
+
             cell.castLabel.text = self.eventCastArray[indexPath.row]
-            
+
             cell.eventReferenceLabel.text = self.eventReferenceArray[indexPath.row]
 
             self.indicator.stopAnimating()
             return cell
-            
+
         }
         
     }
@@ -341,16 +351,21 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         self.tableView.deselectRow(at: indexPath, animated: true)
+        
+        print("eventUrlArray:\(self.eventUrlArray)")
 
         let urlString = self.eventUrlArray[indexPath.row]
+        print("urlString:\(urlString)")
         let url = URL(string: "\(urlString)")
+        print("url:\(url)")
+        UIApplication.shared.open(url!)
+
         
-        
-        let wkVC = storyboard?.instantiateViewController(withIdentifier: "WebView") as! WKWebViewController
-        
-        wkVC.url = url
-        
-        self.navigationController?.pushViewController(wkVC, animated: true)
+//        let wkVC = storyboard?.instantiateViewController(withIdentifier: "WebView") as! WKWebViewController
+//
+//        wkVC.url = url
+//
+//        self.navigationController?.pushViewController(wkVC, animated: true)
         
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
             && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
@@ -386,4 +401,6 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
         
     }
     
+    
 }
+
