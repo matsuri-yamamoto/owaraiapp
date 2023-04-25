@@ -2547,9 +2547,6 @@
                             <constraint firstItem="t1R-Fp-c2N" firstAttribute="leading" secondItem="Xgh-gR-i5Y" secondAttribute="leading" constant="10" id="uHV-je-CGG"/>
                         </constraints>
                     </view>
-                    <connections>
-                        <outlet property="collectionView" destination="t1R-Fp-c2N" id="KrF-cF-hnX"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dc5-eq-Sco" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

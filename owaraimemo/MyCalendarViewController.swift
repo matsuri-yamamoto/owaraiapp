@@ -13,41 +13,41 @@ import FSCalendar
 import PINRemoteImage
 
 class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalendarDelegate, FSCalendarDelegateAppearance, UITableViewDelegate, UITableViewDataSource {
-    
-    
+
+
     @IBOutlet weak var calendar: FSCalendar!
     @IBOutlet weak var calendarHeight: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var updateInfoLabel: UILabel!
-    
-    
+
+
     let df = DateFormatter()
-    
+
     let db = Firestore.firestore()
     let currentUser = Auth.auth().currentUser
-    
+
     // インジゲーターの設定
     var indicator = UIActivityIndicatorView()
-    
+
     //画像のパス
     let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
-    
-    
-    
+
+
+
     var followComedianIdArray: [String] = []
-    
+
     var eventDate :String = ""
-    
+
     var allEventDateArray: [String] = []
     var uniqueAllEventDateArray: [String] = []
-    
-    
+
+
     var eventIdArray: [String] = []
     var eventDateArray: [String] = []
     var uniqueEventIdArray: [String] = []
     var uniqueEventDateArray: [String] = []
-    
-    
+
+
     //表示させるeventIdのイベント名、エリア、配信有無、時間、会場を格納
     var eventNameArray: [String] = []
     var eventAreaArray: [String] = []
@@ -58,21 +58,21 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     var eventUrlArray: [String] = []
     var eventImageUrlArray: [String] = []
     var eventReferenceArray: [String] = []
-    
-    
+
+
     override func viewDidLoad() {
-        
+
         super.viewDidLoad()
-        
+
         let nib = UINib(nibName: "MyCalendarTableViewCell", bundle: nil)
         self.tableView.register(nib, forCellReuseIdentifier: "MyCalendarCell")
-        
+
         self.calendar.dataSource = self
         self.calendar.delegate = self
-        
+
         self.calendar.setScope(.week, animated: false)
-        
-        
+
+
         // gesture settings
         let swipUpGesture:UISwipeGestureRecognizer = UISwipeGestureRecognizer(
             target: self,
@@ -84,16 +84,16 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         swipDownGesture.direction = .down
         self.calendar.addGestureRecognizer(swipUpGesture)
         self.calendar.addGestureRecognizer(swipDownGesture)
-        
+
         self.calendar.locale = Locale(identifier: "ja")
         self.calendar.appearance.calendar.firstWeekday = 2 //月曜からに変更
         self.calendar.appearance.headerTitleFont = UIFont.boldSystemFont(ofSize: 15)
         self.calendar.appearance.headerDateFormat = "yyyy年MM月"
         self.calendar.appearance.headerTitleColor = UIColor.black
-        
+
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        
+
         // 表示位置を設定（画面中央）
         self.indicator.center = view.center
         // インジケーターのスタイルを指定（白色＆大きいサイズ）
@@ -102,37 +102,37 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         self.indicator.color = UIColor.darkGray
         // インジケーターを View に追加
         view.addSubview(indicator)
-        
+
         //フォロー中の芸人さんとそのイベントのArrayを取得
         self.getFollowComedian()
-        
+
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
-        
-        
+
+
         //フォロー中の芸人さんとそのイベントのArrayを取得
         self.getFollowComedian()
-        
+
         //更新日を表示
         self.db.collection("info").whereField(FieldPath.documentID(), isEqualTo: "event_latest_date").getDocuments() { (querySnapshot, err) in
-            
+
             if let err = err {
                 print("Error getting documents: \(err)")
                 return
-                
+
             } else {
                 for document in querySnapshot!.documents {
-                    
+
                     let updateInfo  = document.get("text") as! String
                     print("updateInfo:\(updateInfo)")
                     self.updateInfoLabel.text = updateInfo
-                    
+
                 }
             }
         }
-        
-        
+
+
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
             && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
@@ -144,7 +144,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
             && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
             && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
             && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
-            
+
             //pvログを取得
             let logRef = Firestore.firestore().collection("logs").document()
             let logDic = [
@@ -162,26 +162,26 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                 "delete_datetime": nil,
             ] as [String : Any]
             logRef.setData(logDic)
-            
+
         }
-        
+
     }
-    
+
     @objc func swipUp() {
         print("swiped up")
         self.calendar.setScope(.week, animated: true)
     }
-    
+
     @objc func swipDown() {
         print("swiped down")
         self.calendar.setScope(.month, animated: true)
     }
-    
+
     func getFollowComedian() {
-        
+
         self.followComedianIdArray = []
         self.allEventDateArray = []
-        
+
         self.eventIdArray = []
         self.eventDateArray = []
         self.uniqueEventIdArray = []
@@ -195,73 +195,73 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         self.eventUrlArray = []
         self.eventImageUrlArray = []
         self.eventReferenceArray = []
-        
-        
+
+
         self.db.collection("follow_comedian").whereField("user_id", isEqualTo: self.currentUser?.uid).whereField("valid_flag", isEqualTo: true).whereField("delete_flag", isEqualTo: false).getDocuments() { [self] (querySnapshot, err) in
-            
+
             if let err = err {
                 print("Error getting documents: \(err)")
                 return
-                
+
             } else {
                 for document in querySnapshot!.documents {
-                    
+
                     self.followComedianIdArray.append(document.data()["comedian_id"] as! String)
-                    
+
                 }
-                
+
                 print("followComedianIdArray:\(self.followComedianIdArray)")
-                
-                
+
+
                 print("getSchedule_followComedianIdArray:\(self.followComedianIdArray)")
-                
+
                 for comedianId in self.followComedianIdArray {
-                    
+
                     //フォロー芸人さんのすべてのイベントを取得する
                     self.db.collection("schedule").whereField("comedian_id", isEqualTo: comedianId).whereField("delete_flag", isEqualTo: "false").getDocuments() { [self] (querySnapshot, err) in
-                        
+
                         if let err = err {
                             print("Error getting documents: \(err)")
                             return
-                            
+
                         } else {
-                            
+
                             for document in querySnapshot!.documents {
-                                
+
                                 self.allEventDateArray.append(document.data()["event_date"] as! String)
-                                
-                                
+
+
                             }
                         }
                     }
                 }
-                
-                
+
+
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                    
+
                     //aleventDateArrayをユニークにする
                     var eventDate = Set<String>()
                     self.uniqueAllEventDateArray = self.allEventDateArray.filter { eventDate.insert($0).inserted }
-                    
+
                     print("uniqueEventDateArray:\(self.uniqueAllEventDateArray)")
-                    
-                    
+
+
                 }
-                
+
             }
-            
+
         }
     }
-    
-    
-    
+
+
+
     //カレンダーのheightにスワイプによる表示切り替えを反映させる
     func calendar(_ calendar: FSCalendar, boundingRectWillChange bounds: CGRect, animated: Bool) {
         print(bounds)
         self.calendarHeight.constant = bounds.height
         self.view.layoutIfNeeded()
     }
-    
+
     //日付がタップされたときの処理
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
         // 処理
@@ -269,15 +269,15 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         let year = tmpDate.component(.year, from: date)
         let month = tmpDate.component(.month, from: date)
         let day = tmpDate.component(.day, from: date)
-        
+
         self.eventDate = "\(year)" + "/" + "\(month)" + "/" + "\(day)"
-        
+
         print("tappedDate:\(self.eventDate)")
-        
+
         //フォロー中の芸人さんかつ日付=タップされた日付のscheduleのeventIdを取得しユニークにする（フォロー芸人さんが複数出演するeventが重複するため）
-        
+
         getSchedule()
-        
+
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
             && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
@@ -289,7 +289,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
             && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
             && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
             && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
-            
+
             //ログを取得
             let logRef = Firestore.firestore().collection("logs").document()
             let logDic = [
@@ -305,16 +305,16 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                 "delete_datetime": nil,
             ] as [String : Any]
             logRef.setData(logDic)
-            
+
         }
-        
-        
+
+
     }
-    
+
     func getSchedule() {
-        
+
         self.indicator.startAnimating()
-        
+
         self.eventIdArray = []
         self.eventDateArray = []
         self.uniqueEventIdArray = []
@@ -328,68 +328,68 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         self.eventUrlArray = []
         self.eventImageUrlArray = []
         self.eventReferenceArray = []
-        
+
         print("getSchedule_followComedianIdArray:\(self.followComedianIdArray)")
         print("self.eventDate:\(self.eventDate)")
-        
-        
+
+
         for comedianId in self.followComedianIdArray {
-            
+
             self.db.collection("schedule").whereField("event_date_for_array", isEqualTo: self.eventDate).whereField("comedian_id", isEqualTo: comedianId).whereField("delete_flag", isEqualTo: "false").order(by: "create_date", descending: true).getDocuments() { [self] (querySnapshot, err) in
-                
+
                 if let err = err {
                     print("Error getting documents: \(err)")
                     return
-                    
+
                 } else {
-                    
+
                     for document in querySnapshot!.documents {
-                        
+
                         self.eventIdArray.append(document.data()["event_id"] as! String)
                         self.eventDateArray.append(document.data()["event_date"] as! String)
-                        
-                        
+
+
                     }
                 }
             }
         }
-        
-        
+
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            
+
             print("getschedule_eventIdArray:\(self.eventIdArray)")
             //eventIdArrayをユニークにする
             var eventId = Set<String>()
             self.uniqueEventIdArray = self.eventIdArray.filter { eventId.insert($0).inserted }
-            
+
             var eventDate = Set<String>()
             self.uniqueEventDateArray = self.eventDateArray.filter { eventDate.insert($0).inserted }
-            
+
             print("getschedule_eventIdArray:\(self.eventIdArray)")
-            
+
             //ユニークのeventIdのevent_name、event_start、event_placeを取得
             print("getEvent")
             self.getEvent()
-            
-            
+
+
         }
     }
-    
+
     func getEvent() {
-        
+
         //対象eventIdのイベント名、エリア、配信有無、時間、会場を取得
-        
+
         for eventId in self.uniqueEventIdArray {
-            
+
             self.db.collection("event").whereField(FieldPath.documentID(), isEqualTo: eventId).whereField("delete_flag", isEqualTo: "false").getDocuments() { [self] (querySnapshot, err) in
-                
+
                 if let err = err {
                     print("Error getting documents: \(err)")
                     return
-                    
+
                 } else {
                     for document in querySnapshot!.documents {
-                        
+
                         self.eventNameArray.append(document.data()["event_name"] as! String)
                         self.eventAreaArray.append(document.data()["event_area"] as! String)
                         self.eventOnlineFlagArray.append(document.data()["online_flag"] as! String)
@@ -399,24 +399,24 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                         self.eventUrlArray.append(document.data()["url"] as! String)
                         self.eventImageUrlArray.append(document.data()["image_url"] as! String)
                         self.eventReferenceArray.append(document.data()["event_reference"] as! String)
-                        
-                        
+
+
                     }
                 }
             }
-            
+
         }
-        
+
         self.indicator.stopAnimating()
         self.tableView.reloadData()
-        
-        
+
+
     }
-    
-    
-    
+
+
+
     func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
-        
+
 
         df.dateFormat = "yyyy/MM/dd"
         if uniqueAllEventDateArray.first(where: { $0 == df.string(from: date) }) != nil {
@@ -425,190 +425,190 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         return 0
 
     }
-    
-        
+
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
+
         return 200
-        
+
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        
-        
+
+
+
         return self.uniqueEventIdArray.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCalendarCell", for: indexPath) as! MyCalendarTableViewCell
-        
+
         //scheduleVC用の日付ラベルをの横幅を0にする
         cell.dateLabelWidth.constant = CGFloat(0)
-        
+
 //        cell.onlineFlagLabel.layer.cornerRadius = 10
         cell.onlineFlagLabel.clipsToBounds = true
-        
+
 //        cell.areaLabel.layer.cornerRadius = 10
         cell.areaLabel.clipsToBounds = true
-        
-        
-        
+
+
+
         if self.eventNameArray == [] {
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                
-                
+
+
                 cell.eventNameLabel.text = "　" + self.eventNameArray[indexPath.row]
                 cell.areaLabel.text = self.eventAreaArray[indexPath.row]
-                
+
                 cell.eventImageView.pin_updateWithProgress = true
                 cell.eventImageView.pin_setImage(from: URL(string: "\(self.eventImageUrlArray[indexPath.row])")!)
-                
-                
+
+
                 if self.eventAreaArray[indexPath.row] == "東京" {
-                    
+
                     cell.areaLabel.backgroundColor = #colorLiteral(red: 0.1848421342, green: 0.2122759584, blue: 0.7568627596, alpha: 1)
                     cell.areaLabel.tintColor = UIColor.white
                     //                    cell.areaLabel.layer.borderWidth = 2.0
                     //                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
-                    
+
                 } else if self.eventAreaArray[indexPath.row] == "大阪" {
-                    
+
                     cell.areaLabel.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
                     cell.areaLabel.tintColor = UIColor.white
                     //                    cell.areaLabel.layer.borderWidth = 2.0
                     //                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
-                    
+
                 } else {
-                    
+
                     cell.areaLabel.backgroundColor = #colorLiteral(red: 0.5058823824, green: 0.3372549117, blue: 0.06666667014, alpha: 1)
                     cell.areaLabel.tintColor = UIColor.white
-                    
-                    
+
+
                 }
-                
+
                 cell.onlineFlagLabel.backgroundColor = #colorLiteral(red: 0.9294985734, green: 0.9294985734, blue: 0.9294985734, alpha: 1)
                 cell.onlineFlagLabel.textColor = UIColor.black
 //                cell.onlineFlagLabel.layer.borderWidth = 1.0
 //                cell.onlineFlagLabel.layer.borderColor = UIColor.black.cgColor
-                
-                
+
+
                 if self.eventOnlineFlagArray[indexPath.row] == "true" {
-                    
+
                     cell.onlineFlagLabel.text = "配信あり"
-                    
+
                 }
-                
+
                 if self.eventOnlineFlagArray[indexPath.row] == "false" {
-                    
+
                     cell.onlineFlagLabel.text = "配信なし"
-                    
+
                 }
-                
+
                 if self.eventOnlineFlagArray[indexPath.row] == "" {
-                    
+
                     cell.onlineFlagLabel.isHidden = true
                 }
-                
+
                 cell.eventStartLabel.text = "開演：" + self.eventStartArray[indexPath.row]
                 cell.placeLabel.text = "会場：" + self.eventPlaceArray[indexPath.row]
-                
+
                 cell.castLabel.text = self.eventCastArray[indexPath.row]
-                
+
                 cell.eventReferenceLabel.text = self.eventReferenceArray[indexPath.row]
-                
-                
+
+
             }
-            
+
             return cell
-            
+
         } else {
-            
-            
+
+
             cell.eventNameLabel.text = "　" + self.eventNameArray[indexPath.row]
             cell.areaLabel.text = self.eventAreaArray[indexPath.row]
-            
+
             cell.eventImageView.pin_updateWithProgress = true
             cell.eventImageView.pin_setImage(from: URL(string: "\(self.eventImageUrlArray[indexPath.row])")!)
 
-            
+
             if self.eventAreaArray[indexPath.row] == "東京" {
-                
+
                 cell.areaLabel.backgroundColor = #colorLiteral(red: 0.1848421342, green: 0.2122759584, blue: 0.7568627596, alpha: 1)
                 cell.areaLabel.tintColor = UIColor.white
                 //                    cell.areaLabel.layer.borderWidth = 2.0
                 //                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
-                
+
             } else if self.eventAreaArray[indexPath.row] == "大阪" {
-                
+
                 cell.areaLabel.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
                 cell.areaLabel.tintColor = UIColor.white
                 //                    cell.areaLabel.layer.borderWidth = 2.0
                 //                    cell.areaLabel.layer.borderColor = UIColor.darkGray.cgColor
-                
+
             } else {
-                
+
                 cell.areaLabel.backgroundColor = #colorLiteral(red: 0.5058823824, green: 0.3372549117, blue: 0.06666667014, alpha: 1)
                 cell.areaLabel.tintColor = UIColor.white
-                
-                
+
+
             }
-            
+
             cell.onlineFlagLabel.backgroundColor = #colorLiteral(red: 0.9294985734, green: 0.9294985734, blue: 0.9294985734, alpha: 1)
             cell.onlineFlagLabel.textColor = UIColor.black
 //            cell.onlineFlagLabel.layer.borderWidth = 1.0
 //            cell.onlineFlagLabel.layer.borderColor = UIColor.black.cgColor
-            
-            
+
+
             if self.eventOnlineFlagArray[indexPath.row] == "true" {
-                
+
                 cell.onlineFlagLabel.text = "配信あり"
-                
+
             }
-            
+
             if self.eventOnlineFlagArray[indexPath.row] == "false" {
-                
+
                 cell.onlineFlagLabel.text = "配信なし"
-                
+
             }
-            
+
             if self.eventOnlineFlagArray[indexPath.row] == "" {
-                
+
                 cell.onlineFlagLabel.isHidden = true
             }
-            
-            
-            
+
+
+
             cell.eventStartLabel.text = "開演：" + self.eventStartArray[indexPath.row]
             cell.placeLabel.text = "会場：" + self.eventPlaceArray[indexPath.row]
-            
+
             cell.castLabel.text = self.eventCastArray[indexPath.row]
-            
+
             cell.eventReferenceLabel.text = self.eventReferenceArray[indexPath.row]
-            
+
             return cell
-            
+
         }
-        
+
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+
         self.tableView.deselectRow(at: indexPath, animated: true)
-        
+
         let urlString = self.eventUrlArray[indexPath.row]
         let url = URL(string: "\(urlString)")
         UIApplication.shared.open(url!)
 
-        
+
 //        let wkVC = storyboard?.instantiateViewController(withIdentifier: "WebView") as! WKWebViewController
 //
 //        wkVC.url = url
 //
 //        self.navigationController?.pushViewController(wkVC, animated: true)
-        
+
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
             && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
             && self.currentUser?.uid != "QWQcWLgi9AV21qtZRE6cIpgfaVp2"
@@ -620,7 +620,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
             && self.currentUser?.uid != "0GA1hPehpXdE2KKcKj0tPnCiQxA3"
             && self.currentUser?.uid != "i7KQ5WLDt3Q9pw9pSdGG6tCqZoL2"
             && self.currentUser?.uid != "wWgPk67GoIP9aBXrA7SWEccwStx1" {
-            
+
             //pvログを取得
             let logRef = Firestore.firestore().collection("logs").document()
             let logDic = [
@@ -637,14 +637,14 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
                 "delete_datetime": nil,
             ] as [String : Any]
             logRef.setData(logDic)
-            
+
         }
-        
-        
+
+
     }
-    
-    
-    
+
+
+
 }
 
 extension UIImage {
