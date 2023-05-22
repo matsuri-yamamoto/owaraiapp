@@ -10,8 +10,6 @@ import FirebaseFirestore
 import Firebase
 import WebKit
 import youtube_ios_player_helper
-import FirebaseStorage
-import FirebaseStorageUI
 
 
 class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITableViewDelegate, UITableViewDataSource {
@@ -141,7 +139,7 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     let db = Firestore.firestore()
     
     //画像のパス
-    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
+//    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
     
     // インジゲーターの設定
     var indicator = UIActivityIndicatorView()
@@ -2186,42 +2184,42 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
     
 }
 
-extension UIImage {
-    // Firebase URLからUIImage取得
-    static func contentOfFIRStorage(path: String, callback: @escaping (UIImage?) -> Void) {
-        let storage = Storage.storage()
-        let host = "gs://owaraiapp-f80fd.appspot.com/comedian_image/"
-        storage.reference(forURL: host).child(path)
-            .getData(maxSize: 1024 * 1024 * 10) { (data: Data?, error: Error?) in
-                if error != nil {
-                    callback(nil)
-                    return
-                }
-                if let imageData = data {
-                    let image = UIImage(data: imageData)
-                    callback(image)
-                }
-            }
-    }
+//extension UIImage {
+//    // Firebase URLからUIImage取得
+//    static func contentOfFIRStorage(path: String, callback: @escaping (UIImage?) -> Void) {
+//        let storage = Storage.storage()
+//        let host = "gs://owaraiapp-f80fd.appspot.com/comedian_image/"
+//        storage.reference(forURL: host).child(path)
+//            .getData(maxSize: 1024 * 1024 * 10) { (data: Data?, error: Error?) in
+//                if error != nil {
+//                    callback(nil)
+//                    return
+//                }
+//                if let imageData = data {
+//                    let image = UIImage(data: imageData)
+//                    callback(image)
+//                }
+//            }
+//    }
     
-    func resizeUIImageRatio(ratio: CGFloat) -> UIImage! {
-        
-        // 指定された画像の大きさのコンテキストを用意.
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: ratio, height: ratio - 50), false, 0.0)
-        //UIGraphicsBeginImageContext(CGSize(width: ratio, height: ratio - 50))
-        
-        // コンテキストに自身に設定された画像を描画する.
-        self.draw(in: CGRect(x: 0, y: 0, width: ratio, height: ratio - 50))
-        
-        // コンテキストからUIImageを作る.
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        
-        // コンテキストを閉じる.
-        UIGraphicsEndImageContext()
-        
-        return newImage
-    }
-}
+//    func resizeUIImageRatio(ratio: CGFloat) -> UIImage! {
+//
+//        // 指定された画像の大きさのコンテキストを用意.
+//        UIGraphicsBeginImageContextWithOptions(CGSize(width: ratio, height: ratio - 50), false, 0.0)
+//        //UIGraphicsBeginImageContext(CGSize(width: ratio, height: ratio - 50))
+//
+//        // コンテキストに自身に設定された画像を描画する.
+//        self.draw(in: CGRect(x: 0, y: 0, width: ratio, height: ratio - 50))
+//
+//        // コンテキストからUIImageを作る.
+//        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+//
+//        // コンテキストを閉じる.
+//        UIGraphicsEndImageContext()
+//
+//        return newImage
+//    }
+
 
 extension String {
     func attributedString(

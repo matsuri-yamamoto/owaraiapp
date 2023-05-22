@@ -8,7 +8,6 @@
 import UIKit
 import FirebaseFirestore
 import FirebaseAuth
-import FirebaseStorageUI
 
 class ProfileLikeListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -47,7 +46,7 @@ class ProfileLikeListViewController: UIViewController, UITableViewDelegate, UITa
     let unLikeImage = UIImage(systemName: "heart")
     
     //画像のパス
-    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
+//    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
     
     override func viewWillAppear(_ animated: Bool) {
         

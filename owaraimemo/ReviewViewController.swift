@@ -8,7 +8,7 @@
 import UIKit
 import Firebase
 import FirebaseFirestore
-import MultiAutoCompleteTextSwift
+//import MultiAutoCompleteTextSwift
 
 
 
@@ -17,8 +17,8 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
     @IBOutlet weak var textView: PlaceTextView!
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderLabel: UILabel!
-    @IBOutlet weak var comedianTextField: MultiAutoCompleteTextField!
-    @IBOutlet weak var relationalComedianTextField: MultiAutoCompleteTextField!
+    @IBOutlet weak var comedianTextField: UITextField!
+    @IBOutlet weak var relationalComedianTextField: UITextField!
     
     
     @IBOutlet weak var tweetButton: UIButton!
@@ -118,19 +118,19 @@ class ReviewViewController: UIViewController,UITextViewDelegate, UIScrollViewDel
             }
         }
         
-        //comedianTextFieldに候補を表示させる
-        Firestore.firestore().collection("comedian").getDocuments() {(querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-                return
-                
-            } else {
-                for document in querySnapshot!.documents {
-                    self.comedianNameArray.append(document.data()["for_list_name"] as! String)
-                }
-                self.comedianTextField.autoCompleteStrings = self.comedianNameArray
-            }
-        }
+//        //comedianTextFieldに候補を表示させる
+//        Firestore.firestore().collection("comedian").getDocuments() {(querySnapshot, err) in
+//            if let err = err {
+//                print("Error getting documents: \(err)")
+//                return
+//
+//            } else {
+//                for document in querySnapshot!.documents {
+//                    self.comedianNameArray.append(document.data()["for_list_name"] as! String)
+//                }
+//                self.comedianTextField.autoCompleteStrings = self.comedianNameArray
+//            }
+//        }
         
         
         

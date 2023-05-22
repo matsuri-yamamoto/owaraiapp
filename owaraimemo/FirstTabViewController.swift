@@ -8,7 +8,6 @@
 import UIKit
 import Firebase
 import FirebaseFirestore
-import FirebaseStorage
 
 class FirstTabViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
@@ -51,7 +50,7 @@ class FirstTabViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     let db = Firestore.firestore()
     //画像のパス
-    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
+//    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
     
     // インジゲーターの設定
 //    var indicator = UIActivityIndicatorView()

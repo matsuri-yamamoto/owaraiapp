@@ -354,10 +354,10 @@ class ComedianScheduleViewController: UIViewController, UITableViewDelegate, UIT
         
         print("eventUrlArray:\(self.eventUrlArray)")
 
-        let urlString = self.eventUrlArray[indexPath.row]
+        let urlString :String = self.eventUrlArray[indexPath.row] as String
         print("urlString:\(urlString)")
-        let url = URL(string: "\(urlString)")
-        print("url:\(url)")
+        let url = URL(string: urlString)
+        print("url:\(String(describing: url))")
         UIApplication.shared.open(url!)
 
         

@@ -6,12 +6,12 @@
 //
 
 import UIKit
-import MultiAutoCompleteTextSwift
+//import MultiAutoCompleteTextSwift
 import FirebaseFirestore
 
 class OnboardingSearchViewController: UIViewController {
 
-    @IBOutlet weak var comedianTextField: MultiAutoCompleteTextField!
+    @IBOutlet weak var comedianTextField: UITextField!
     @IBOutlet weak var errorLabel1: UILabel!
     @IBOutlet weak var errorLabel2: UILabel!
     @IBOutlet weak var errorLabel3: UILabel!

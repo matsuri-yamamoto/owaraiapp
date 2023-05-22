@@ -8,7 +8,6 @@
 import UIKit
 import Firebase
 import FirebaseFirestore
-import FirebaseStorageUI
 
 
 class ProfileStockViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

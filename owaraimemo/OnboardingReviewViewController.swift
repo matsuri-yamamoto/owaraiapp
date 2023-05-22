@@ -8,7 +8,7 @@
 import UIKit
 import Firebase
 import FirebaseFirestore
-import MultiAutoCompleteTextSwift
+//import MultiAutoCompleteTextSwift
 
 class OnboardingReviewViewController: UIViewController ,UITextViewDelegate, UIScrollViewDelegate {
 

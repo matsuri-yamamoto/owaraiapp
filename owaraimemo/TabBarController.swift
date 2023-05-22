@@ -1,7 +1,6 @@
 
 import UIKit
 import Firebase
-import Firebase
 import FirebaseFirestore
 
 class TabBarController: UITabBarController, UITabBarControllerDelegate {

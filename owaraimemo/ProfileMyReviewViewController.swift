@@ -8,7 +8,6 @@
 import UIKit
 import Firebase
 import FirebaseFirestore
-import FirebaseStorageUI
 
 //ナビゲーションバーのボタンの変数
 
@@ -38,7 +37,7 @@ class ProfileMyReviewViewController: UIViewController, UITableViewDelegate, UITa
     let unLikeImage = UIImage(systemName: "heart")
     
     //画像のパス
-    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
+//    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
     
     
     

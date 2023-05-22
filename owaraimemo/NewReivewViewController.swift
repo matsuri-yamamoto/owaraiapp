@@ -8,7 +8,6 @@
 import UIKit
 import Firebase
 import FirebaseAuth
-import FirebaseStorageUI
 
 
 class NewReivewViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -64,7 +63,7 @@ class NewReivewViewController: UIViewController, UITableViewDelegate, UITableVie
     let unLikeImage = UIImage(systemName: "heart")
     
     //画像のパス
-    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
+//    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
     
     // インジゲーターの設定
     var indicator = UIActivityIndicatorView()

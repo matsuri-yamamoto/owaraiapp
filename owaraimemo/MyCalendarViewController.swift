@@ -8,7 +8,6 @@
 import UIKit
 import Firebase
 import FirebaseAuth
-import FirebaseStorageUI
 import FSCalendar
 import PINRemoteImage
 
@@ -30,7 +29,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     var indicator = UIActivityIndicatorView()
 
     //画像のパス
-    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
+//    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
 
 
 
