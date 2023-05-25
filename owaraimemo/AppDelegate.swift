@@ -10,7 +10,7 @@ import Firebase
 import IQKeyboardManagerSwift
 import OAuthSwift
 import FirebaseDynamicLinks
-
+import FirebaseMessaging
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,6 +22,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //         Override point for customization after application launch.
         IQKeyboardManager.shared.enable = true
         FirebaseApp.configure()
+        
+//        // 通知テストのためのコード
+//        //参考：https://tech.amefure.com/swift-firebase-notification-test
+//        Messaging.messaging().delegate = self
+//
+//
+//        //Firebaseの機能でPush通知を送るための実装
+//        //参考：https://tech.amefure.com/swift-firebase-notification
+//        UNUserNotificationCenter.current().delegate = self // #1
+
+//        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+//        UNUserNotificationCenter.current().requestAuthorization(
+//          options: authOptions,
+//          completionHandler: { _, _ in }
+//        )
+
+//        application.registerForRemoteNotifications() // #1
         
 //        if #available(iOS 10.0, *) {
 //            // For iOS 10 display notification (sent via APNS)
@@ -67,6 +84,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         applicationHandle(url: url)
         return true
     }
+    
+    //通知テストのためのコード
+//    func application(_ application: UIApplication,
+//                      didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+//        Messaging.messaging().apnsToken = deviceToken
+//
+//        Messaging.messaging().token { token, error in
+//          if let error = error {
+//            print("Error fetching FCM registration token: \(error)")
+//          } else if let token = token {
+//            print("FCM registration token: \(token)")
+//    //      self.fcmRegTokenMessage.text  = "Remote FCM registration token: \(token)"
+//          }
+//        }
+//    }
+    
 }
 
 extension AppDelegate {
@@ -93,3 +126,5 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             }
         }
 }
+
+//extension AppDelegate: MessagingDelegate {} // #3

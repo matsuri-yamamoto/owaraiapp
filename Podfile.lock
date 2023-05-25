@@ -618,6 +618,9 @@ PODS:
   - Firebase/Firestore (10.9.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 10.9.0)
+  - Firebase/Messaging (10.9.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 10.9.0)
   - FirebaseAnalytics (10.9.0):
     - FirebaseAnalytics/AdIdSupport (= 10.9.0)
     - FirebaseCore (~> 10.0)
@@ -669,6 +672,15 @@ PODS:
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - PromisesObjC (~> 2.1)
+  - FirebaseMessaging (10.9.0):
+    - FirebaseCore (~> 10.0)
+    - FirebaseInstallations (~> 10.0)
+    - GoogleDataTransport (~> 9.2)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
+    - GoogleUtilities/Environment (~> 7.8)
+    - GoogleUtilities/Reachability (~> 7.8)
+    - GoogleUtilities/UserDefaults (~> 7.8)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
   - FSCalendar (2.8.4)
   - GoogleAppMeasurement (10.9.0):
     - GoogleAppMeasurement/AdIdSupport (= 10.9.0)
@@ -690,6 +702,10 @@ PODS:
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
+  - GoogleDataTransport (9.2.3):
+    - GoogleUtilities/Environment (~> 7.7)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - PromisesObjC (< 3.0, >= 1.2)
   - GoogleUtilities/AppDelegateSwizzler (7.11.1):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -815,6 +831,7 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/DynamicLinks
   - Firebase/Firestore
+  - Firebase/Messaging
   - FirebaseAuth
   - FSCalendar
   - IQKeyboardManagerSwift
@@ -841,8 +858,10 @@ SPEC REPOS:
     - FirebaseDynamicLinks
     - FirebaseFirestore
     - FirebaseInstallations
+    - FirebaseMessaging
     - FSCalendar
     - GoogleAppMeasurement
+    - GoogleDataTransport
     - GoogleUtilities
     - "gRPC-C++"
     - gRPC-Core
@@ -877,8 +896,10 @@ SPEC CHECKSUMS:
   FirebaseDynamicLinks: 8cb66c4f403aa6ddf86ff3bc3c383a652f344ce9
   FirebaseFirestore: 584d0e1b0f7f1666c516c5157ff06e785bd8836f
   FirebaseInstallations: c58489c9caacdbf27d1da60891a87318e20218e0
+  FirebaseMessaging: 6b7052cc3da7bc8e5f72bef871243e8f04a14eed
   FSCalendar: 2d1d0d9398f12d439f55c1fe0f01525b151b8260
   GoogleAppMeasurement: 373bcbead1bb6a85be7a64d5d8f96284b762ea9c
+  GoogleDataTransport: f0308f5905a745f94fb91fea9c6cbaf3831cb1bd
   GoogleUtilities: 9aa0ad5a7bc171f8bae016300bfcfa3fb8425749
   "gRPC-C++": 9675f953ace2b3de7c506039d77be1f2e77a8db2
   gRPC-Core: 943e491cb0d45598b0b0eb9e910c88080369290b
@@ -901,6 +922,6 @@ SPEC CHECKSUMS:
   TabPageViewController: 8bd4104909754416b35a98f3b72a5b674ab20dd5
   youtube-ios-player-helper: e9b97535e816db3152179d84d999bc1807ecd689
 
-PODFILE CHECKSUM: ba7780ee3376c9c385d631dc2bbee3b3d5e7c2c1
+PODFILE CHECKSUM: 75e4763affa5a2794fc595f5956f48333af91f91
 
 COCOAPODS: 1.12.1

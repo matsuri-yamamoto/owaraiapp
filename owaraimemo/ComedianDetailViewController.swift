@@ -10,6 +10,7 @@ import FirebaseFirestore
 import Firebase
 import WebKit
 import youtube_ios_player_helper
+import UserNotifications
 
 
 class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITableViewDelegate, UITableViewDataSource {
@@ -166,6 +167,13 @@ class ComedianDetailViewController: UIViewController, YTPlayerViewDelegate, UITa
         self.scheduleButton.imageView?.contentMode = .scaleAspectFill
         self.scheduleButton.contentHorizontalAlignment = .fill // オリジナルの画像サイズを超えて拡大（水平）
         self.scheduleButton.contentVerticalAlignment = .fill // オリジナルの画像サイズを超えて拡大(垂直)
+        
+        
+//        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+//        UNUserNotificationCenter.current().requestAuthorization(
+//          options: authOptions,
+//          completionHandler: { _, _ in }
+//        )
 
 
         

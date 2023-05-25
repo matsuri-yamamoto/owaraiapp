@@ -27,6 +27,7 @@ target 'owaraimemo' do
   pod 'PromiseKit'
   pod 'PINRemoteImage'
   pod 'Onboard'
+  pod 'Firebase/Messaging'
 
 
 end
