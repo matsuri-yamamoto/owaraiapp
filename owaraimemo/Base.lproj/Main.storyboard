@@ -612,7 +612,7 @@
                                 </connections>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="GcA-qF-h5C">
-                                <rect key="frame" x="10" y="350" width="355" height="462"/>
+                                <rect key="frame" x="10" y="366" width="355" height="446"/>
                                 <color key="backgroundColor" red="0.95941394810000002" green="0.95941394810000002" blue="0.95941394810000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MyCalendarCell" id="nDa-Zr-Oas" customClass="MyCalendarTableViewCell" customModule="owaraimemo" customModuleProvider="target">
@@ -626,15 +626,43 @@
                                 </prototypes>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IXq-M0-J40">
-                                <rect key="frame" x="0.0" y="320" width="375" height="25"/>
+                                <rect key="frame" x="0.0" y="320" width="375" height="20"/>
                                 <color key="backgroundColor" red="0.85273484229999996" green="0.85273484229999996" blue="0.85273484229999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="25" id="wyv-P8-UoF"/>
+                                    <constraint firstAttribute="height" constant="20" id="wyv-P8-UoF"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qQy-qG-6dc">
+                                <rect key="frame" x="10" y="340" width="125" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="125" id="bCx-eu-hIJ"/>
+                                    <constraint firstAttribute="height" constant="25" id="j81-cv-bLs"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <color key="tintColor" red="0.1268742108" green="0.1268742108" blue="0.1268742108" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="フォロー中表示"/>
+                                <connections>
+                                    <action selector="tappedDisplayFollowingButton:" destination="cFa-br-09M" eventType="touchUpInside" id="sPP-yD-URM"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yXN-gx-AWS">
+                                <rect key="frame" x="145" y="340" width="125" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="hvy-0G-obC"/>
+                                    <constraint firstAttribute="width" constant="125" id="yFg-mh-lkq"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <color key="tintColor" red="0.1268742108" green="0.1268742108" blue="0.1268742108" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="全ライブ表示"/>
+                                <connections>
+                                    <action selector="tappedDisplayAllButton:" destination="cFa-br-09M" eventType="touchUpInside" id="tja-c2-Fs1"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="rsr-IE-jz6"/>
                         <color key="backgroundColor" red="0.95941394810000002" green="0.95941394810000002" blue="0.95941394810000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -642,18 +670,24 @@
                             <constraint firstItem="pxB-1F-fJP" firstAttribute="leading" secondItem="rsr-IE-jz6" secondAttribute="leading" id="2en-Em-CKQ"/>
                             <constraint firstItem="pxB-1F-fJP" firstAttribute="top" secondItem="rsr-IE-jz6" secondAttribute="top" id="5Al-d1-ZvN"/>
                             <constraint firstItem="GcA-qF-h5C" firstAttribute="leading" secondItem="rsr-IE-jz6" secondAttribute="leading" constant="10" id="66o-zJ-xf2"/>
+                            <constraint firstItem="yXN-gx-AWS" firstAttribute="leading" secondItem="qQy-qG-6dc" secondAttribute="trailing" constant="10" id="9RR-Zg-lat"/>
                             <constraint firstItem="rsr-IE-jz6" firstAttribute="trailing" secondItem="pxB-1F-fJP" secondAttribute="trailing" id="Arv-CR-e0A"/>
                             <constraint firstItem="IXq-M0-J40" firstAttribute="trailing" secondItem="rsr-IE-jz6" secondAttribute="trailing" id="CBu-N5-a3L"/>
+                            <constraint firstItem="yXN-gx-AWS" firstAttribute="top" secondItem="IXq-M0-J40" secondAttribute="bottom" id="EUN-FA-Ava"/>
+                            <constraint firstItem="qQy-qG-6dc" firstAttribute="leading" secondItem="rsr-IE-jz6" secondAttribute="leading" constant="10" id="HgC-KO-iXK"/>
                             <constraint firstItem="IXq-M0-J40" firstAttribute="top" secondItem="pxB-1F-fJP" secondAttribute="bottom" id="K9K-9G-Noi"/>
+                            <constraint firstItem="qQy-qG-6dc" firstAttribute="top" secondItem="IXq-M0-J40" secondAttribute="bottom" id="KcK-xg-t09"/>
                             <constraint firstItem="rsr-IE-jz6" firstAttribute="trailing" secondItem="GcA-qF-h5C" secondAttribute="trailing" constant="10" id="WHN-gf-NGY"/>
+                            <constraint firstItem="GcA-qF-h5C" firstAttribute="top" secondItem="qQy-qG-6dc" secondAttribute="bottom" constant="1" id="cbM-Yc-lox"/>
                             <constraint firstAttribute="bottom" secondItem="GcA-qF-h5C" secondAttribute="bottom" id="kje-dN-2PV"/>
-                            <constraint firstItem="GcA-qF-h5C" firstAttribute="top" secondItem="IXq-M0-J40" secondAttribute="bottom" constant="5" id="ksL-Cf-xQz"/>
                             <constraint firstItem="IXq-M0-J40" firstAttribute="leading" secondItem="rsr-IE-jz6" secondAttribute="leading" id="kuK-MQ-mnN"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="calendar" destination="pxB-1F-fJP" id="Nj2-H0-xBu"/>
                         <outlet property="calendarHeight" destination="bCq-Ep-fhu" id="AF7-TH-ev1"/>
+                        <outlet property="displayAllButton" destination="yXN-gx-AWS" id="8Yo-Cv-swj"/>
+                        <outlet property="displayFollowingButton" destination="qQy-qG-6dc" id="vzj-uo-mhd"/>
                         <outlet property="tableView" destination="GcA-qF-h5C" id="8dS-Cs-IAb"/>
                         <outlet property="updateInfoLabel" destination="IXq-M0-J40" id="ew2-H6-whb"/>
                     </connections>

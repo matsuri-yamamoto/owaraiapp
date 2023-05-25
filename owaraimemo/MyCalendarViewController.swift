@@ -18,8 +18,9 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     @IBOutlet weak var calendarHeight: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var updateInfoLabel: UILabel!
-
-
+    @IBOutlet weak var displayFollowingButton: UIButton!
+    @IBOutlet weak var displayAllButton: UIButton!
+    
     let df = DateFormatter()
 
     let db = Firestore.firestore()
@@ -31,6 +32,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
     //画像のパス
 //    let storage = Storage.storage(url:"gs://owaraiapp-f80fd.appspot.com").reference()
 
+    var displayAllFlag :Bool = false
 
 
     var followComedianIdArray: [String] = []
@@ -102,6 +104,21 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         // インジケーターを View に追加
         view.addSubview(indicator)
 
+//        self.displayFollowingButton.contentHorizontalAlignment = .left
+//        self.displayFollowingButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
+//        self.displayFollowingButton.setTitle("フォロー中表示", for: .normal)
+//
+//
+//        self.displayFollowingButton.contentHorizontalAlignment = .left
+//        self.displayFollowingButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
+//        self.displayAllButton.setTitle("全ライブ表示", for: .normal)
+        
+            
+        self.displayFollowingButton.backgroundColor = #colorLiteral(red: 1, green: 0.8921169233, blue: 0.1129042948, alpha: 1)
+        self.displayAllButton.backgroundColor = #colorLiteral(red: 0.9063372729, green: 0.9063372729, blue: 0.9063372729, alpha: 1)
+
+
+            
         //フォロー中の芸人さんとそのイベントのArrayを取得
         self.getFollowComedian()
 
@@ -176,6 +193,54 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         self.calendar.setScope(.month, animated: true)
     }
 
+    @IBAction func tappedDisplayFollowingButton(_ sender: Any) {
+
+        //フォロー中ボタンをタップ
+        //元々全件表示の場合、フラグをフォロー中に変更してデータを取得
+        //フォロー中ボタンをタップできない状態にして黄色にする
+        if self.displayAllFlag == true {
+
+
+            
+            self.getSchedule()
+
+            self.displayAllFlag = false
+            self.displayFollowingButton.backgroundColor = #colorLiteral(red: 1, green: 0.8921169233, blue: 0.1129042948, alpha: 1)
+            self.displayAllButton.backgroundColor = #colorLiteral(red: 0.9063372729, green: 0.9063372729, blue: 0.9063372729, alpha: 1)
+
+
+            
+        }
+    
+        //元々フォロー中のみの場合は何もしない
+            
+    }
+    
+    @IBAction func tappedDisplayAllButton(_ sender: Any) {
+        
+        //全件表示ボタンをタップ
+        //フォロー中表示の場合、フラグを全件表示に変更してデータを取得
+        //全件表示ボタンをタップできない状態にして黄色にする
+        if self.displayAllFlag == false {
+            
+            
+            self.getAllEvent()
+
+            self.displayAllFlag = true
+            self.displayAllButton.backgroundColor = #colorLiteral(red: 1, green: 0.8921169233, blue: 0.1129042948, alpha: 1)
+            self.displayFollowingButton.backgroundColor = #colorLiteral(red: 0.9063372729, green: 0.9063372729, blue: 0.9063372729, alpha: 1)
+
+            
+            
+        }
+    
+        //元々全件表示の場合は何もしない
+    }
+    
+    
+    
+    
+    
     func getFollowComedian() {
 
         self.followComedianIdArray = []
@@ -263,7 +328,7 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
 
     //日付がタップされたときの処理
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        // 処理
+        
         let tmpDate = Calendar(identifier: .gregorian)
         let year = tmpDate.component(.year, from: date)
         let month = tmpDate.component(.month, from: date)
@@ -273,9 +338,22 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
 
         print("tappedDate:\(self.eventDate)")
 
-        //フォロー中の芸人さんかつ日付=タップされた日付のscheduleのeventIdを取得しユニークにする（フォロー芸人さんが複数出演するeventが重複するため）
+        
+        //displayAllFlagがtrueだったら全eventを取得し、そうでなければフォロー中芸人さんのeventを取得する
+        if self.displayAllFlag == true {
 
-        getSchedule()
+            getAllEvent()
+            
+        }
+        
+        if self.displayAllFlag == false {
+            
+            
+            //フォロー中の芸人さんかつ日付=タップされた日付のscheduleのeventIdを取得しユニークにする（フォロー芸人さんが複数出演するeventが重複するため）
+            getSchedule()
+            
+        }
+        
 
         if self.currentUser?.uid != "Wsp1fLJUadXIZEiwvpuPWvhEjNW2"
             && self.currentUser?.uid != "AxW7CvvgzTh0djyeb7LceI1dCYF2"
@@ -410,6 +488,56 @@ class MyCalendarViewController: UIViewController ,FSCalendarDataSource ,FSCalend
         self.tableView.reloadData()
 
 
+    }
+    
+    func getAllEvent() {
+        
+        self.uniqueEventIdArray = []
+        self.uniqueAllEventDateArray = []
+        self.eventNameArray = []
+        self.eventAreaArray = []
+        self.eventOnlineFlagArray = []
+        self.eventStartArray = []
+        self.eventPlaceArray = []
+        self.eventCastArray = []
+        self.eventUrlArray = []
+        self.eventImageUrlArray = []
+        self.eventReferenceArray = []
+
+        
+        //uniqueEventIdArray、uniqueAllEventDateArray、
+        self.db.collection("event").whereField("delete_flag", isEqualTo: "false").whereField("event_date_for_array", isEqualTo: self.eventDate).getDocuments() { [self] (querySnapshot, err) in
+
+            if let err = err {
+                print("Error getting documents: \(err)")
+                return
+
+            } else {
+                for document in querySnapshot!.documents {
+
+                    self.uniqueEventIdArray.append(document.documentID)
+                    self.uniqueAllEventDateArray.append(document.data()["event_date"] as! String)
+                    self.eventNameArray.append(document.data()["event_name"] as! String)
+                    self.eventAreaArray.append(document.data()["event_area"] as! String)
+                    self.eventOnlineFlagArray.append(document.data()["online_flag"] as! String)
+                    self.eventStartArray.append(document.data()["event_start"] as! String)
+                    self.eventPlaceArray.append(document.data()["event_place"] as! String)
+                    self.eventCastArray.append(document.data()["event_cast"] as! String)
+                    self.eventUrlArray.append(document.data()["url"] as! String)
+                    self.eventImageUrlArray.append(document.data()["image_url"] as! String)
+                    self.eventReferenceArray.append(document.data()["event_reference"] as! String)
+
+
+                }
+                
+                
+                print("全件表示eventNameArray:\(self.eventNameArray)")
+                self.tableView.reloadData()
+
+                
+            }
+        }
+        
     }
 
 
